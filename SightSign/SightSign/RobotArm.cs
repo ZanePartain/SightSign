@@ -124,7 +124,9 @@ namespace SightSign
             Move(LastPoint);
         }
 
-        private bool _scaraMode = true;
+        //flag for movement based on orientation of robot arm 
+        //set to false for the uArm Swift pro
+        private bool _scaraMode = false;
         public void MoveRT(double r, double t)
         {
             if (!Connected) return;
