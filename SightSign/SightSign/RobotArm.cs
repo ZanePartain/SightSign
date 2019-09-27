@@ -124,6 +124,7 @@ namespace SightSign
             Move(LastPoint);
         }
 
+        // note: scara mode is only supported by UArm Metal
         private bool _scaraMode = true;
         public void MoveRT(double r, double t)
         {

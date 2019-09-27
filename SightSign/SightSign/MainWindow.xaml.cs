@@ -44,9 +44,9 @@ namespace SightSign
             var yScreen = SystemParameters.PrimaryScreenHeight;
 
             RobotArm = new RobotArm(
-                xScreen / 2.0, 
-                yScreen / 2.0, 
-                Math.Min(xScreen, yScreen) / 2.0, 
+                xScreen / 2.0,
+                yScreen / 2.0,
+                Math.Min(xScreen, yScreen) / 2.0,
                 Settings1.Default.RobotType == "Swift" ? ((IArm)new UArmSwiftPro()) : ((IArm)new UArmMetal()));
 
             _settings = new Settings(RobotArm);
