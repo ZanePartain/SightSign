@@ -36,6 +36,7 @@ namespace SightSign
             var yy = y * 100.0 * scale + 50.0;
             var zz = z * 20.0 + 50;
             System.Diagnostics.Debug.WriteLine($"X={xx} Y={yy} Z={zz}");
+
             _arm.MoveXYZ(xx, yy, zz, 20000);
         }
     }
