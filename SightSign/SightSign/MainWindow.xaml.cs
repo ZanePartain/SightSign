@@ -32,6 +32,7 @@ namespace SightSign
         private bool _inTimer;
 
         private bool _stampInProgress;
+        
 
         public MainWindow()
         {
@@ -42,7 +43,6 @@ namespace SightSign
             // Assume the screen size won't change after the app starts.
             var xScreen = SystemParameters.PrimaryScreenWidth;
             var yScreen = SystemParameters.PrimaryScreenHeight;
-
             RobotArm = new RobotArm(
                 xScreen / 2.0,
                 yScreen / 2.0,
@@ -547,6 +547,7 @@ namespace SightSign
         {
             ResetWriting();
 
+            //edit
             if (StampButton.Visibility == Visibility.Visible)
             {
                 EditButton.Content = "Done";
@@ -556,7 +557,7 @@ namespace SightSign
 
                 inkCanvas.IsEnabled = true;
             }
-            else
+            else //done
             {
                 EditButton.Content = "Edit";
 
@@ -588,20 +589,21 @@ namespace SightSign
             return fileName;
         }
 
-        private void Create_SaveFile_Directory(string filePath)
+        private void Create_SaveFile_Directory()
         {
-            if (!Directory.Exists(filePath)){
-                Directory.CreateDirectory(filePath);
+            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank";
+            if (!Directory.Exists(fileName)){
+                Directory.CreateDirectory(fileName);
             }
         }
 
         // Save whatever ink is shown in the InkCanvas that the user can ink on, to an ISF file.
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            this.Create_SaveFile_Directory();  // makes sure sigBank directory exists 
             try
             {
                 string fileName = this.Generate_FilePath();
-                this.Create_SaveFile_Directory(fileName);
                 var file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
                 inkCanvas.Strokes.Save(file);
                 file.Close();
@@ -616,9 +618,29 @@ namespace SightSign
             }
         }
 
+        //Exit out of load pop up
+        private void HideButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadButton.Content = "Load";
+            SigBank.Visibility = Visibility.Collapsed;
+        }
+
         // Load up ink from an ISF file that the user selects from the OpenFileDialog.
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
+            
+            if (SigBank.Visibility == Visibility.Collapsed){
+                LoadButton.Content = "Close";
+                SigBank.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                LoadButton.Content = "Load";
+                SigBank.Visibility = Visibility.Collapsed;
+            }
+            
+
+            /*
             var dlg = new OpenFileDialog
             {
                 DefaultExt = ".isf",
@@ -633,7 +655,7 @@ namespace SightSign
                 // This ink will be automatically loaded when the app next starts.
                 Settings1.Default.LoadedInkLocation = dlg.FileName;
                 Settings1.Default.Save();
-            }
+            }*/
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
