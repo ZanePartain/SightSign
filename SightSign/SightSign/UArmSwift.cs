@@ -31,7 +31,7 @@ namespace SightSign
         public void Move(double x, double y, double z, bool scara)
         {
             // note: scara not supported
-            var scale = 3.0;
+            var scale = 2.0;
             var xx = x * 70.0 * scale + 200.0; 
             var yy = y * 100.0 * scale + 50.0;
             var zz = z * 20.0 + 50;
