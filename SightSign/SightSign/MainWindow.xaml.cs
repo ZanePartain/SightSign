@@ -625,13 +625,28 @@ namespace SightSign
             SigBank.Visibility = Visibility.Collapsed;
         }
 
+
         // Load up ink from an ISF file that the user selects from the OpenFileDialog.
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
+
             
             if (SigBank.Visibility == Visibility.Collapsed){
                 LoadButton.Content = "Close";
+                
+                //read all signatures from ..//sigBank
+                string sigBankPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank";
+                string[] sigFiles = Directory.GetFiles(sigBankPath);
+
+                /*Need to figure out how to diaplay as a thumbnail
+                 1. consider creating a copy of the .isf to a .png when saving
+                    so we just simply display the image, and the upon selection we load the .isf
+                 2. research ways to display images from .isf, or easy conversions to .isf can be hadnled here
+                    but I think will add clutter/time consuming.
+                */
+              
                 SigBank.Visibility = Visibility.Visible;
+                
             }
             else
             {
