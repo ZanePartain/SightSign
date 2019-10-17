@@ -12,6 +12,7 @@
     MouseWheel="Window_MouseWheel"
     Loaded="MainWindow_OnLoaded"
     Closing="MainWindow_OnClosing">
+    
 
     <Window.Resources>
 
@@ -135,8 +136,26 @@
                 Content="Edit" Click="EditButton_Click" />
         </Grid>
 
+
+
+        <Grid
+            x:Name="SigBank"
+            Grid.Column="1" Grid.ColumnSpan="2"
+            Width="900"
+            Height="600"
+            Background="Coral"
+            Panel.ZIndex="1"
+            Visibility="Collapsed">
+            <Button  x:Name="HideButton"                
+                    Style="{StaticResource SimpleButton}"
+                    Foreground="{Binding ButtonTextColor,
+                    Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Content="Signature" Margin="0 0 0 20" Click="HideButton_Click"/>
+        </Grid>
+        
         <!-- The main area showing the ink and animating dot. -->
         <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
+            
 
             <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
             <InkCanvas 
@@ -236,5 +255,7 @@
                 FontSize="48"
                 Click="SettingsButton_Click" />
         </Grid>
+        
     </Grid>
+    
 </Window>
