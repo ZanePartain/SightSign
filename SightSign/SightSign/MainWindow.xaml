@@ -72,16 +72,16 @@
     </Window.Resources>
 
     <!-- The main app area. -->
-    <Grid Margin="40">
+    <Grid Margin="40" d:IsLocked="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
-        
+
         <!-- The column of big round buttons down the left side of the app. -->
         <Grid HorizontalAlignment="Left"
-            Background="Transparent">
+            Background="Transparent" d:IsLocked="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -136,15 +136,15 @@
         </Grid>
 
         <!-- The main area showing the ink and animating dot. -->
-        <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
-            
+        <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2" d:IsLocked="True">
+
             <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
             <InkCanvas 
                 AutomationProperties.Name="Background ink canvas"
                 x:Name="inkCanvas" 
                 Background="Transparent"
                 IsEnabled="False" />
-            
+
             <!-- The InkCanvas showing the ink as it's being traced out. -->
             <InkCanvas 
                 AutomationProperties.Name="Tracing ink canvas"
@@ -215,9 +215,9 @@
                 </Button.Style>
             </Button>
         </Grid>
-        
+
         <!-- A grid column showing the Settings button at the right of the window. -->
-        <Grid Grid.Column="2">
+        <Grid Grid.Column="2" d:IsLocked="True">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="auto" />

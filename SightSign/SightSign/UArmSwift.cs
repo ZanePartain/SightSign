@@ -12,7 +12,7 @@ namespace SightSign
 
         public UArmSwiftPro()
         {
-            _port = PortDetails.FindPort();
+            //_port = PortDetails.FindPort();
         }
 
         public void Connect()

@@ -588,20 +588,21 @@ namespace SightSign
             return fileName;
         }
 
-        private void Create_SaveFile_Directory(string filePath)
+        private void Create_SaveFile_Directory()
         {
-            if (!Directory.Exists(filePath)){
-                Directory.CreateDirectory(filePath);
+            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank";
+            if (!Directory.Exists(fileName)){
+                Directory.CreateDirectory(fileName);
             }
         }
 
         // Save whatever ink is shown in the InkCanvas that the user can ink on, to an ISF file.
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            this.Create_SaveFile_Directory();  // makes sure sigBank directory exists 
             try
             {
                 string fileName = this.Generate_FilePath();
-                this.Create_SaveFile_Directory(fileName);
                 var file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
                 inkCanvas.Strokes.Save(file);
                 file.Close();
