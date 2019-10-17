@@ -579,32 +579,40 @@ namespace SightSign
             inkCanvasAnimations.Strokes.Clear();
         }
 
+        // Generate a file path for the saved signature.
+        private string Generate_FilePath()
+        {
+            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank" + "\\" + DateTime.Now.ToString("dd_MMM_yyy_HH_mm") + ".isf";
+            fileName.Replace(":", "_");
+            fileName.Replace(",", "_");
+            return fileName;
+        }
+
+        private void Create_SaveFile_Directory(string filePath)
+        {
+            if (!Directory.Exists(filePath)){
+                Directory.CreateDirectory(filePath);
+            }
+        }
+
         // Save whatever ink is shown in the InkCanvas that the user can ink on, to an ISF file.
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new SaveFileDialog
+            try
             {
-                DefaultExt = ".isf",
-                Filter = "ISF files (*.isf)|*.isf"
-            };
+                string fileName = this.Generate_FilePath();
+                this.Create_SaveFile_Directory(fileName);
+                var file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+                inkCanvas.Strokes.Save(file);
+                file.Close();
 
-            var result = dlg.ShowDialog();
-            if (result == true)
+                // This ink will be automatically loaded when the app next starts.
+                Settings1.Default.LoadedInkLocation = fileName;
+                Settings1.Default.Save();
+            }
+            catch (Exception ex)
             {
-                try
-                {
-                    var file = new FileStream(dlg.FileName, FileMode.Create, FileAccess.Write);
-                    inkCanvas.Strokes.Save(file);
-                    file.Close();
-
-                    // This ink will be automatically loaded when the app next starts.
-                    Settings1.Default.LoadedInkLocation = dlg.FileName;
-                    Settings1.Default.Save();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("Failed to save ink: " + ex.Message);
-                }
+                Debug.WriteLine("Failed to save ink: " + ex.Message);
             }
         }
 
