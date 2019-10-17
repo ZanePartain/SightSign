@@ -583,7 +583,7 @@ namespace SightSign
         // Generate a file path for the saved signature.
         private string Generate_FilePath()
         {
-            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank" + "\\" + DateTime.Now.ToString("dd_MMM_yyy_HH_mm") + ".isf";
+            string fileName = AppDomain.CurrentDomain.BaseDirectory + "\\" + "sigBank" + "\\" + DateTime.Now.ToString("yyy_MMM_dd_HH_mm_ss") + ".isf";
             fileName.Replace(":", "_");
             fileName.Replace(",", "_");
             return fileName;
@@ -591,7 +591,7 @@ namespace SightSign
 
         private void Create_SaveFile_Directory()
         {
-            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank";
+            string fileName = AppDomain.CurrentDomain.BaseDirectory + "\\" + "sigBank";
             if (!Directory.Exists(fileName)){
                 Directory.CreateDirectory(fileName);
             }
