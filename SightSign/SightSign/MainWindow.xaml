@@ -78,7 +78,7 @@
             <ColumnDefinition />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
-        
+
         <!-- The column of big round buttons down the left side of the app. -->
         <Grid HorizontalAlignment="Left"
             Background="Transparent">
@@ -137,14 +137,14 @@
 
         <!-- The main area showing the ink and animating dot. -->
         <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
-            
+
             <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
             <InkCanvas 
                 AutomationProperties.Name="Background ink canvas"
                 x:Name="inkCanvas" 
                 Background="Transparent"
                 IsEnabled="False" />
-            
+
             <!-- The InkCanvas showing the ink as it's being traced out. -->
             <InkCanvas 
                 AutomationProperties.Name="Tracing ink canvas"
@@ -215,7 +215,7 @@
                 </Button.Style>
             </Button>
         </Grid>
-        
+
         <!-- A grid column showing the Settings button at the right of the window. -->
         <Grid Grid.Column="2">
             <Grid.RowDefinitions>
