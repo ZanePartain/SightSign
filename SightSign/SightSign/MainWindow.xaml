@@ -146,11 +146,14 @@
             Background="Coral"
             Panel.ZIndex="1"
             Visibility="Collapsed">
-            <Button  x:Name="HideButton"                
-                    Style="{StaticResource SimpleButton}"
-                    Foreground="{Binding ButtonTextColor,
-                    Converter={StaticResource ColorToSolidBrushConverter}}"
-                    Content="Signature" Margin="0 0 0 20" Click="HideButton_Click"/>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="auto"/>
+              <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="auto"/>
+              <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
         </Grid>
         
         <!-- The main area showing the ink and animating dot. -->

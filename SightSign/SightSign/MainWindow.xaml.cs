@@ -634,9 +634,46 @@ namespace SightSign
             if (SigBank.Visibility == Visibility.Collapsed){
                 LoadButton.Content = "Close";
                 
-                //read all signatures from ..//sigBank
+                // Read all signatures from ..//sigBank
                 string sigBankPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank";
                 string[] sigFiles = Directory.GetFiles(sigBankPath);
+                string[] lastFourSignatureFiles = new string[4];
+                int buttonContentIndex = 0;
+
+                // Get array with last 4 entries of "sigFiles", associate these with the buttons somehow (TODO)
+                if (sigFiles.Length >= 4)
+                {
+                    int j = 0;
+                    for (int i = sigFiles.Length - 4; i < sigFiles.Length; i++)
+                    {
+                        lastFourSignatureFiles[j] = sigFiles[i];
+                        j++;
+                    }
+                }
+                else
+                {
+                    int i = 0;
+                    while (sigFiles[i] != null)
+                    {
+                        lastFourSignatureFiles[i] = sigFiles[i];
+                    }
+                }
+
+                // Append the buttons to the load grid.
+                for (int i = 0; i < SigBank.RowDefinitions.Count; i++)
+                {
+                    for (int j = 0; j < SigBank.ColumnDefinitions.Count; j++)
+                    {
+                        System.Windows.Controls.Button b = new System.Windows.Controls.Button();
+                        b.Content = buttonContentIndex.ToString();
+                        b.Click += SignatureButton_Click;
+                        b.Style = (Style) FindResource("SimpleButton");
+                        b.SetValue(System.Windows.Controls.Grid.ColumnProperty, j);
+                        b.SetValue(System.Windows.Controls.Grid.RowProperty, i);
+                        SigBank.Children.Add(b);
+                        buttonContentIndex++;
+                    }
+                }
 
                 /*Need to figure out how to diaplay as a thumbnail
                  1. consider creating a copy of the .isf to a .png when saving
@@ -671,6 +708,12 @@ namespace SightSign
                 Settings1.Default.LoadedInkLocation = dlg.FileName;
                 Settings1.Default.Save();
             }*/
+        }
+
+        private void SignatureButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Get filepath of signature that the button represents (not sure how yet)
+            // Load ink of file at filepath
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
