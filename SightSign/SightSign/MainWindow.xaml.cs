@@ -560,7 +560,9 @@ namespace SightSign
             else //done
             {
                 EditButton.Content = "Edit";
+                LoadButton.Content = "Load";
 
+                SigBank.Visibility = Visibility.Collapsed;
                 StampButton.Visibility = Visibility.Visible;
                 ClearButton.Visibility = Visibility.Collapsed;
 
@@ -619,7 +621,7 @@ namespace SightSign
         }
 
         //Exit out of load pop up
-        private void HideButton_Click(object sender, RoutedEventArgs e)
+        private void SignatureButton_Click(object sender, RoutedEventArgs e)
         {
             LoadButton.Content = "Load";
             SigBank.Visibility = Visibility.Collapsed;
@@ -699,11 +701,6 @@ namespace SightSign
             }*/
         }
 
-        private void SignatureButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Get filepath of signature that the button represents (not sure how yet)
-            // Load ink of file at filepath
-        }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
