@@ -641,22 +641,11 @@ namespace SightSign
                 int buttonContentIndex = 0;
 
                 // Get array with last 4 entries of "sigFiles", associate these with the buttons somehow (TODO)
-                if (sigFiles.Length >= 4)
+                int count = 0;
+                while (count < sigFiles.Length && count < 4)
                 {
-                    int j = 0;
-                    for (int i = sigFiles.Length - 4; i < sigFiles.Length; i++)
-                    {
-                        lastFourSignatureFiles[j] = sigFiles[i];
-                        j++;
-                    }
-                }
-                else
-                {
-                    int i = 0;
-                    while (sigFiles[i] != null)
-                    {
-                        lastFourSignatureFiles[i] = sigFiles[i];
-                    }
+                    lastFourSignatureFiles[count] = sigFiles[(sigFiles.Length-1) - count];
+                    count++;
                 }
 
                 // Append the buttons to the load grid.
@@ -675,7 +664,7 @@ namespace SightSign
                     }
                 }
 
-                /*Need to figure out how to diaplay as a thumbnail
+                /*Need to figure out how to display as a thumbnail
                  1. consider creating a copy of the .isf to a .png when saving
                     so we just simply display the image, and the upon selection we load the .isf
                  2. research ways to display images from .isf, or easy conversions to .isf can be hadnled here
