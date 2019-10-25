@@ -586,7 +586,7 @@ namespace SightSign
         // Generate a file path for the saved signature.
         private string Generate_FilePath()
         {
-            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank" + "\\" + DateTime.Now.ToString("dd_MMM_yyy_HH_mm") + ".isf";
+            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\ink\\" + DateTime.Now.ToString("dd_MMM_yyy_HH_mm") + ".isf";
             fileName.Replace(":", "_");
             fileName.Replace(",", "_");
             return fileName;
@@ -598,7 +598,7 @@ namespace SightSign
             //get the virtual screen dimensions w/o left and right navigation grid columns
             double screenLeft = (1.4)*NavGrid.ActualWidth;
             double screenTop = SystemParameters.VirtualScreenTop + NavGrid.ActualWidth/2;
-            double screenWidth = canvas.ActualWidth - (1.2)*settingGrid.ActualWidth;
+            double screenWidth = canvas.ActualWidth - (1.2)*settingsGrid.ActualWidth;
             double screenHeight = SystemParameters.VirtualScreenHeight - NavGrid.ActualWidth;
 
             using (System.Drawing.Bitmap bmap = new System.Drawing.Bitmap((int)screenWidth, (int)screenHeight))
@@ -609,16 +609,23 @@ namespace SightSign
                 }
 
                 //save jpeg of ink file
-                string imgFilePath = fileDest.Replace(".isf", ".jpg");
+                string imgFilePath = fileDest.Replace("\\ink", "\\img");
+                imgFilePath = imgFilePath.Replace(".isf", ".jpg");
                 bmap.Save(imgFilePath, System.Drawing.Imaging.ImageFormat.Jpeg);
             }
         }
 
         private void Create_SaveFile_Directory()
         {
-            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank";
-            if (!Directory.Exists(fileName)){
-                Directory.CreateDirectory(fileName);
+            string inkDir = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\ink";
+            string imgDir = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\img";
+            if (!Directory.Exists(inkDir))
+            {
+                Directory.CreateDirectory(inkDir);
+            }
+            if (!Directory.Exists(imgDir))
+            {
+                Directory.CreateDirectory(imgDir);
             }
         }
 
@@ -658,7 +665,6 @@ namespace SightSign
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
 
-           /* 
             if (SigBank.Visibility == Visibility.Collapsed){
                 LoadButton.Content = "Close";
                 
@@ -676,10 +682,13 @@ namespace SightSign
                     count++;
                 }
 
+                System.Windows.Controls.Grid thumbnailGrid = new System.Windows.Controls.Grid();
+
+
                 // Append the buttons to the load grid.
                 for (int i = 0; i < SigBank.RowDefinitions.Count; i++)
                 {
-                    for (int j = 0; j < SigBank.ColumnDefinitions.Count; j++)
+                    for (int j = 1; j < SigBank.ColumnDefinitions.Count; j++)
                     {
                         System.Windows.Controls.Button b = new System.Windows.Controls.Button();
                         b.Content = buttonContentIndex.ToString();
@@ -692,11 +701,12 @@ namespace SightSign
                     }
                 }
 
+
                 /*Need to figure out how to display as a thumbnail
                  1. consider creating a copy of the .isf to a .png when saving
                     so we just simply display the image, and the upon selection we load the .isf
                  2. research ways to display images from .isf, or easy conversions to .isf can be hadnled here
-                    but I think will add clutter/time consuming.
+                    but I think will add clutter/time consuming.*/
                 
               
                 SigBank.Visibility = Visibility.Visible;
@@ -706,7 +716,7 @@ namespace SightSign
             {
                 LoadButton.Content = "Load";
                 SigBank.Visibility = Visibility.Collapsed;
-            }*/
+            }
             
 
             /*

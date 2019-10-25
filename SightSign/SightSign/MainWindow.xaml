@@ -150,10 +150,8 @@
             Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-              <RowDefinition Height="auto"/>
               <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
         </Grid>
@@ -242,7 +240,7 @@
 
         <!-- A grid column showing the Settings button at the right of the window. -->
         <Grid 
-            x:Name="settingGrid"
+            x:Name="settingsGrid"
             Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition />
