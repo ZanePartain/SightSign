@@ -73,7 +73,7 @@
     </Window.Resources>
 
     <!-- The main app area. -->
-    <Grid Margin="40">
+    <Grid x:Name="MainAppGrid" Margin="40">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition />
@@ -81,7 +81,9 @@
         </Grid.ColumnDefinitions>
 
         <!-- The column of big round buttons down the left side of the app. -->
-        <Grid HorizontalAlignment="Left"
+        <Grid
+            x:Name="NavGrid"
+            HorizontalAlignment="Left"
             Background="Transparent">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -239,7 +241,9 @@
         </Grid>
 
         <!-- A grid column showing the Settings button at the right of the window. -->
-        <Grid Grid.Column="2">
+        <Grid 
+            x:Name="settingGrid"
+            Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="auto" />

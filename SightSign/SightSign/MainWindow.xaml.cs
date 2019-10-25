@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.HandsFree.Mouse;
 using Microsoft.Win32;
+using System.Windows.Media.Imaging;
 
 namespace SightSign
 {
@@ -591,6 +592,28 @@ namespace SightSign
             return fileName;
         }
 
+        // Caputre the screen and save it as a jpeg in sigBank with same file path as fileDest
+        private void CaptureScreen(string fileDest)
+        {
+            //get the virtual screen dimensions w/o left and right navigation grid columns
+            double screenLeft = (1.4)*NavGrid.ActualWidth;
+            double screenTop = SystemParameters.VirtualScreenTop + NavGrid.ActualWidth/2;
+            double screenWidth = canvas.ActualWidth - (1.2)*settingGrid.ActualWidth;
+            double screenHeight = SystemParameters.VirtualScreenHeight - NavGrid.ActualWidth;
+
+            using (System.Drawing.Bitmap bmap = new System.Drawing.Bitmap((int)screenWidth, (int)screenHeight))
+            {
+                using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bmap))
+                {
+                    graphics.CopyFromScreen((int)screenLeft, (int)screenTop, 0, 0, bmap.Size);
+                }
+
+                //save jpeg of ink file
+                string imgFilePath = fileDest.Replace(".isf", ".jpg");
+                bmap.Save(imgFilePath, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+        }
+
         private void Create_SaveFile_Directory()
         {
             string fileName = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank";
@@ -605,11 +628,14 @@ namespace SightSign
             this.Create_SaveFile_Directory();  // makes sure sigBank directory exists 
             try
             {
+                //save ink file
                 string fileName = this.Generate_FilePath();
                 var file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
                 inkCanvas.Strokes.Save(file);
                 file.Close();
-
+        
+                this.CaptureScreen(fileName);
+                
                 // This ink will be automatically loaded when the app next starts.
                 Settings1.Default.LoadedInkLocation = fileName;
                 Settings1.Default.Save();
@@ -632,7 +658,7 @@ namespace SightSign
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
 
-            
+           /* 
             if (SigBank.Visibility == Visibility.Collapsed){
                 LoadButton.Content = "Close";
                 
@@ -671,7 +697,7 @@ namespace SightSign
                     so we just simply display the image, and the upon selection we load the .isf
                  2. research ways to display images from .isf, or easy conversions to .isf can be hadnled here
                     but I think will add clutter/time consuming.
-                */
+                
               
                 SigBank.Visibility = Visibility.Visible;
                 
@@ -680,14 +706,14 @@ namespace SightSign
             {
                 LoadButton.Content = "Load";
                 SigBank.Visibility = Visibility.Collapsed;
-            }
+            }*/
             
 
             /*
             var dlg = new OpenFileDialog
             {
                 DefaultExt = ".isf",
-                Filter = "ISF files (*.isf)|*.isf"
+                //Filter = "ISF files (*.isf)|*.isf"
             };
 
             var result = dlg.ShowDialog();
@@ -698,7 +724,8 @@ namespace SightSign
                 // This ink will be automatically loaded when the app next starts.
                 Settings1.Default.LoadedInkLocation = dlg.FileName;
                 Settings1.Default.Save();
-            }*/
+            }
+            */
         }
 
 
