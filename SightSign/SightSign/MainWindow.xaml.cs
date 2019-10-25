@@ -669,26 +669,24 @@ namespace SightSign
                 LoadButton.Content = "Close";
                 
                 // Read all signatures from ..//sigBank
-                string sigBankPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "sigBank";
-                string[] sigFiles = Directory.GetFiles(sigBankPath);
-                string[] lastFourSignatureFiles = new string[4];
+                string sigBankImagePath = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\img";
+                string[] sigImagePaths = Directory.GetFiles(sigBankImagePath);
+                string[] recentSigImagePaths = new string[4];
                 int buttonContentIndex = 0;
 
-                // Get array with last 4 entries of "sigFiles", associate these with the buttons somehow (TODO)
+                // Get array with last 4 entries of "sigImagePaths", associate these with the buttons somehow (TODO)
                 int count = 0;
-                while (count < sigFiles.Length && count < 4)
+                while (count < sigImagePaths.Length && count < 4)
                 {
-                    lastFourSignatureFiles[count] = sigFiles[(sigFiles.Length-1) - count];
+                    recentSigImagePaths[count] = sigImagePaths[(sigImagePaths.Length-1) - count];
                     count++;
                 }
-
-                System.Windows.Controls.Grid thumbnailGrid = new System.Windows.Controls.Grid();
 
 
                 // Append the buttons to the load grid.
                 for (int i = 0; i < SigBank.RowDefinitions.Count; i++)
                 {
-                    for (int j = 1; j < SigBank.ColumnDefinitions.Count; j++)
+                    for (int j = 0; j < SigBank.ColumnDefinitions.Count; j++)
                     {
                         System.Windows.Controls.Button b = new System.Windows.Controls.Button();
                         b.Content = buttonContentIndex.ToString();
