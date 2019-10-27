@@ -148,16 +148,8 @@
             Background="Coral"
             Panel.ZIndex="1"
             Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
+            <StackPanel Name="sp">
+            </StackPanel>
         </Grid>
         
         <!-- The main area showing the ink and animating dot. -->

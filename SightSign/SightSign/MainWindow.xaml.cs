@@ -664,7 +664,7 @@ namespace SightSign
         // Load up ink from an ISF file that the user selects from the OpenFileDialog.
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-
+            sp.Children.Clear();
             if (SigBank.Visibility == Visibility.Collapsed){
                 LoadButton.Content = "Close";
                 
@@ -682,31 +682,26 @@ namespace SightSign
                     count++;
                 }
 
-
-                // Append the buttons to the load grid.
-                for (int i = 0; i < SigBank.RowDefinitions.Count; i++)
+                for (int i = 0; i < recentSigImagePaths.Length && recentSigImagePaths[i] != null; i++)
                 {
-                    for (int j = 0; j < SigBank.ColumnDefinitions.Count; j++)
-                    {
-                        System.Windows.Controls.Button b = new System.Windows.Controls.Button();
-                        b.Content = buttonContentIndex.ToString();
-                        b.Click += SignatureButton_Click;
-                        b.Style = (Style) FindResource("SimpleButton");
-                        b.SetValue(System.Windows.Controls.Grid.ColumnProperty, j);
-                        b.SetValue(System.Windows.Controls.Grid.RowProperty, i);
-                        SigBank.Children.Add(b);
-                        buttonContentIndex++;
-                    }
+                    System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+                    BitmapImage src = new BitmapImage();
+                    src.BeginInit();
+                    src.UriSource = new Uri(recentSigImagePaths[i], UriKind.Relative);
+                    src.CacheOption = BitmapCacheOption.OnLoad;
+                    src.EndInit();
+                    img.Source = src;
+                    img.Stretch = Stretch.Uniform;
+                    sp.Children.Add(img);
                 }
-
 
                 /*Need to figure out how to display as a thumbnail
                  1. consider creating a copy of the .isf to a .png when saving
                     so we just simply display the image, and the upon selection we load the .isf
                  2. research ways to display images from .isf, or easy conversions to .isf can be hadnled here
                     but I think will add clutter/time consuming.*/
-                
-              
+
+
                 SigBank.Visibility = Visibility.Visible;
                 
             }
