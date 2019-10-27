@@ -664,7 +664,7 @@ namespace SightSign
         // Load up ink from an ISF file that the user selects from the OpenFileDialog.
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-            sp.Children.Clear();
+            SigBank.Children.Clear();
             if (SigBank.Visibility == Visibility.Collapsed){
                 LoadButton.Content = "Close";
                 
@@ -682,8 +682,11 @@ namespace SightSign
                     count++;
                 }
 
-                for (int i = 0; i < recentSigImagePaths.Length && recentSigImagePaths[i] != null; i++)
+                int row = 0;
+                for (int i = 0; i < 4 && recentSigImagePaths[i] != null; i++)
                 {
+                    if (i == 2) { row++; }
+
                     System.Windows.Controls.Image img = new System.Windows.Controls.Image();
                     BitmapImage src = new BitmapImage();
                     src.BeginInit();
@@ -691,8 +694,12 @@ namespace SightSign
                     src.CacheOption = BitmapCacheOption.OnLoad;
                     src.EndInit();
                     img.Source = src;
+                    img.Height = Height / 3;
+                    img.Width = Width / 3;
+                    img.SetValue(System.Windows.Controls.Grid.ColumnProperty, i%2);
+                    img.SetValue(System.Windows.Controls.Grid.RowProperty, row);
                     img.Stretch = Stretch.Uniform;
-                    sp.Children.Add(img);
+                    SigBank.Children.Add(img);
                 }
 
                 /*Need to figure out how to display as a thumbnail

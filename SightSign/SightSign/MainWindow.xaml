@@ -147,15 +147,24 @@
             Height="600"
             Background="Coral"
             Panel.ZIndex="1"
-            Visibility="Collapsed">
-            <StackPanel Name="sp">
-            </StackPanel>
+            Visibility="Collapsed"
+            VerticalAlignment="Center" 
+            HorizontalAlignment="Center"
+            
+           >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
         </Grid>
         
         <!-- The main area showing the ink and animating dot. -->
         <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
             
-
             <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
             <InkCanvas 
                 AutomationProperties.Name="Background ink canvas"
