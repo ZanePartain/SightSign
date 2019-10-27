@@ -702,10 +702,12 @@ namespace SightSign
                     img.Width = Width / 3;
                     img.Stretch = Stretch.Uniform;
 
+                    //replace special characters in path with octal rep. for btn name property
+                    string name = recentSigImagePaths[i].Replace(":", "3A").Replace("\\", "5C").Replace(".jpg", "");
+
                     //create button to wrap image and bind Click event
                     System.Windows.Controls.Button btn = new System.Windows.Controls.Button();
-                    string[] names = recentSigImagePaths[i].Split('\\');
-                    btn.Name = "img_" + names[names.Length - 1].Replace(".jpg","");  //set the button name to the file path
+                    btn.Name = name;
                     btn.Click += ThumbnailButton_Click;
                     btn.Content = img;
                     btn.SetValue(System.Windows.Controls.Grid.ColumnProperty, i%2); //assign row & column and row propeties 
@@ -713,14 +715,10 @@ namespace SightSign
                     btn.MaxHeight = img.Height;
                     btn.MaxWidth = img.Width;
                     btn.Background = Brushes.Transparent;
-                    btn.BorderBrush = Brushes.Transparent;
-
-                    System.Windows.Controls.Image test = (System.Windows.Controls.Image)btn.Content;
-                  
+                    btn.BorderBrush = Brushes.Transparent;                  
 
                     SigBank.Children.Add(btn);
                 }
- 
 
                 SigBank.Visibility = Visibility.Visible;               
             }
@@ -729,33 +727,26 @@ namespace SightSign
                 LoadButton.Content = "Load";
                 SigBank.Visibility = Visibility.Collapsed;
             }
-            
 
-            /*
-            var dlg = new OpenFileDialog
-            {
-                DefaultExt = ".isf",
-                //Filter = "ISF files (*.isf)|*.isf"
-            };
-
-            var result = dlg.ShowDialog();
-            if (result == true)
-            {
-                AddInkFromFile(dlg.FileName);
-
-                // This ink will be automatically loaded when the app next starts.
-                Settings1.Default.LoadedInkLocation = dlg.FileName;
-                Settings1.Default.Save();
-            }
-            */
         }
 
 
         private void ThumbnailButton_Click(object sender, RoutedEventArgs e)
         {
-            //convert sender to button
+            //convert sender to button; replace octal 
             System.Windows.Controls.Button btn_clicked = (System.Windows.Controls.Button)sender;
-            btn_clicked.Content = btn_clicked.Name;
+            string fileName = btn_clicked.Name; 
+            fileName = fileName.Replace("3A", ":").Replace("5C", "\\").Replace("img","ink") + ".isf";
+
+
+            AddInkFromFile(fileName);
+
+            LoadButton.Content = "Load";
+            SigBank.Visibility = Visibility.Collapsed;
+
+            // This ink will be automatically loaded when the app next starts.
+            Settings1.Default.LoadedInkLocation = fileName;
+            Settings1.Default.Save();
         }
 
 
