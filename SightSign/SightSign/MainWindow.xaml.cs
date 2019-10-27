@@ -672,7 +672,6 @@ namespace SightSign
                 string sigBankImagePath = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\img";
                 string[] sigImagePaths = Directory.GetFiles(sigBankImagePath);
                 string[] recentSigImagePaths = new string[4];
-                int buttonContentIndex = 0;
 
                 // Get array with last 4 entries of "sigImagePaths", associate these with the buttons somehow (TODO)
                 int count = 0;
