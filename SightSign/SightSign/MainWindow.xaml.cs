@@ -682,11 +682,15 @@ namespace SightSign
                     count++;
                 }
 
+                // Iterate over thumbnails files and convert to Image.
+                // Then add Image to respective sigBank column & row.
+                // NOTE:: if you have time you can dynamically allocate rows and columns for better UI.
                 int row = 0;
                 for (int i = 0; i < 4 && recentSigImagePaths[i] != null; i++)
                 {
-                    if (i == 2) { row++; }
+                    if (i == 2) { row++; } // go to next row for 3rd and 4th thumbnails
 
+                    // create new image from file path
                     System.Windows.Controls.Image img = new System.Windows.Controls.Image();
                     BitmapImage src = new BitmapImage();
                     src.BeginInit();
@@ -694,23 +698,31 @@ namespace SightSign
                     src.CacheOption = BitmapCacheOption.OnLoad;
                     src.EndInit();
                     img.Source = src;
-                    img.Height = Height / 3;
+                    img.Height = Height / 3;  //set image size (consider programatically creating margins)
                     img.Width = Width / 3;
-                    img.SetValue(System.Windows.Controls.Grid.ColumnProperty, i%2);
-                    img.SetValue(System.Windows.Controls.Grid.RowProperty, row);
                     img.Stretch = Stretch.Uniform;
-                    SigBank.Children.Add(img);
+
+                    //create button to wrap image and bind Click event
+                    System.Windows.Controls.Button btn = new System.Windows.Controls.Button();
+                    string[] names = recentSigImagePaths[i].Split('\\');
+                    btn.Name = "img_" + names[names.Length - 1].Replace(".jpg","");  //set the button name to the file path
+                    btn.Click += ThumbnailButton_Click;
+                    btn.Content = img;
+                    btn.SetValue(System.Windows.Controls.Grid.ColumnProperty, i%2); //assign row & column and row propeties 
+                    btn.SetValue(System.Windows.Controls.Grid.RowProperty, row);
+                    btn.MaxHeight = img.Height;
+                    btn.MaxWidth = img.Width;
+                    btn.Background = Brushes.Transparent;
+                    btn.BorderBrush = Brushes.Transparent;
+
+                    System.Windows.Controls.Image test = (System.Windows.Controls.Image)btn.Content;
+                  
+
+                    SigBank.Children.Add(btn);
                 }
+ 
 
-                /*Need to figure out how to display as a thumbnail
-                 1. consider creating a copy of the .isf to a .png when saving
-                    so we just simply display the image, and the upon selection we load the .isf
-                 2. research ways to display images from .isf, or easy conversions to .isf can be hadnled here
-                    but I think will add clutter/time consuming.*/
-
-
-                SigBank.Visibility = Visibility.Visible;
-                
+                SigBank.Visibility = Visibility.Visible;               
             }
             else
             {
@@ -737,6 +749,15 @@ namespace SightSign
             }
             */
         }
+
+
+        private void ThumbnailButton_Click(object sender, RoutedEventArgs e)
+        {
+            //convert sender to button
+            System.Windows.Controls.Button btn_clicked = (System.Windows.Controls.Button)sender;
+            btn_clicked.Content = btn_clicked.Name;
+        }
+
 
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
