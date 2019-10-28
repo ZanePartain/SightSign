@@ -201,10 +201,16 @@ namespace SightSign
                         Point pt;
                         Point ptTangent;
 
-                        pathGeometry.GetPointAtFractionLength(
-                            distanceFraction, out pt, out ptTangent);
+                        try
+                        {
+                            pathGeometry.GetPointAtFractionLength(
+                                distanceFraction, out pt, out ptTangent);
+                            stylusPoints.Add(new StylusPoint(pt.X, pt.Y));
+                        }
+                        catch (Exception e){
+                            Debug.WriteLine(e.ToString());
+                        }
 
-                        stylusPoints.Add(new StylusPoint(pt.X, pt.Y));
                     }
 
                     // Now add the new stroke with the evenly distributed points to the InkCanvas.
