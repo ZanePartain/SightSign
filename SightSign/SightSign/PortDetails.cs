@@ -46,7 +46,7 @@
                     return port.ComName;
                 }
             }
-
+            return "COM3";
             throw new Exception("Could not find COM port");
         }
     }
