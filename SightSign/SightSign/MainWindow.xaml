@@ -12,6 +12,7 @@
     MouseWheel="Window_MouseWheel"
     Loaded="MainWindow_OnLoaded"
     Closing="MainWindow_OnClosing">
+    
 
     <Window.Resources>
 
@@ -24,15 +25,17 @@
     </Window.Resources>
 
     <!-- The main app area. -->
-    <Grid Margin="40">
+    <Grid x:Name="MainAppGrid" Margin="40">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
-        
+
         <!-- The column of big round buttons down the left side of the app. -->
-        <Grid HorizontalAlignment="Left"
+        <Grid
+            x:Name="NavGrid"
+            HorizontalAlignment="Left"
             Background="Transparent">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -114,6 +117,30 @@
                                           StrokeThickness="5"/>
         </Grid>
 
+
+        <!--Signature Bank Grid that will display when the user selects Load.-->
+        <Grid
+            x:Name="SigBank"
+            Grid.Column="1" Grid.ColumnSpan="2"
+            Width="900"
+            Height="600"
+            Background="Coral"
+            Panel.ZIndex="1"
+            Visibility="Collapsed"
+            VerticalAlignment="Center" 
+            HorizontalAlignment="Center"
+            
+           >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        
         <!-- The main area showing the ink and animating dot. -->
         <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
             
@@ -123,7 +150,7 @@
                 x:Name="inkCanvas" 
                 Background="Transparent"
                 IsEnabled="False" />
-            
+
             <!-- The InkCanvas showing the ink as it's being traced out. -->
             <InkCanvas 
                 AutomationProperties.Name="Tracing ink canvas"
@@ -194,9 +221,11 @@
                 </Button.Style>
             </Button>
         </Grid>
-        
+
         <!-- A grid column showing the Settings button at the right of the window. -->
-        <Grid Grid.Column="2">
+        <Grid 
+            x:Name="settingsGrid"
+            Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="auto" />
@@ -219,5 +248,7 @@
                                           FontSize="48"
                                           Margin="0,0,0,20"/>
         </Grid>
+        
     </Grid>
+    
 </Window>

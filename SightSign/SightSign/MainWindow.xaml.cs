@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.HandsFree.Mouse;
 using Microsoft.Win32;
+using System.Windows.Media.Imaging;
 
 namespace SightSign
 {
@@ -32,6 +33,7 @@ namespace SightSign
         private bool _inTimer;
 
         private bool _stampInProgress;
+        
 
         public MainWindow()
         {
@@ -42,7 +44,6 @@ namespace SightSign
             // Assume the screen size won't change after the app starts.
             var xScreen = SystemParameters.PrimaryScreenWidth;
             var yScreen = SystemParameters.PrimaryScreenHeight;
-
             RobotArm = new RobotArm(
                 xScreen / 2.0,
                 yScreen / 2.0,
@@ -547,6 +548,7 @@ namespace SightSign
         {
             ResetWriting();
 
+            //edit
             if (StampButton.Visibility == Visibility.Visible)
             {
                 EditButton.Content = "Done";
@@ -556,10 +558,12 @@ namespace SightSign
 
                 inkCanvas.IsEnabled = true;
             }
-            else
+            else //done
             {
                 EditButton.Content = "Edit";
+                LoadButton.Content = "Load";
 
+                SigBank.Visibility = Visibility.Collapsed;
                 StampButton.Visibility = Visibility.Visible;
                 ClearButton.Visibility = Visibility.Collapsed;
 
@@ -579,54 +583,172 @@ namespace SightSign
             inkCanvasAnimations.Strokes.Clear();
         }
 
+        // Generate a file path for the saved signature.
+        private string Generate_FilePath()
+        {
+            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\ink\\" + DateTime.Now.ToString("dd_MMM_yyy_HH_mm") + ".isf";
+            fileName.Replace(":", "_");
+            fileName.Replace(",", "_");
+            return fileName;
+        }
+
+        // Caputre the screen and save it as a jpeg in sigBank with same file path as fileDest
+        private void CaptureScreen(string fileDest)
+        {
+            //get the virtual screen dimensions w/o left and right navigation grid columns
+            double screenLeft = (1.4)*NavGrid.ActualWidth;
+            double screenTop = SystemParameters.VirtualScreenTop + NavGrid.ActualWidth/2;
+            double screenWidth = canvas.ActualWidth - (1.2)*settingsGrid.ActualWidth;
+            double screenHeight = SystemParameters.VirtualScreenHeight - NavGrid.ActualWidth;
+
+            using (System.Drawing.Bitmap bmap = new System.Drawing.Bitmap((int)screenWidth, (int)screenHeight))
+            {
+                using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bmap))
+                {
+                    graphics.CopyFromScreen((int)screenLeft, (int)screenTop, 0, 0, bmap.Size);
+                }
+
+                //save jpeg of ink file
+                string imgFilePath = fileDest.Replace("\\ink", "\\img");
+                imgFilePath = imgFilePath.Replace(".isf", ".jpg");
+                bmap.Save(imgFilePath, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+        }
+
+        private void Create_SaveFile_Directory()
+        {
+            string inkDir = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\ink";
+            string imgDir = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\img";
+            if (!Directory.Exists(inkDir))
+            {
+                Directory.CreateDirectory(inkDir);
+            }
+            if (!Directory.Exists(imgDir))
+            {
+                Directory.CreateDirectory(imgDir);
+            }
+        }
+
         // Save whatever ink is shown in the InkCanvas that the user can ink on, to an ISF file.
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new SaveFileDialog
+            this.Create_SaveFile_Directory();  // makes sure sigBank directory exists 
+            try
             {
-                DefaultExt = ".isf",
-                Filter = "ISF files (*.isf)|*.isf"
-            };
-
-            var result = dlg.ShowDialog();
-            if (result == true)
+                //save ink file
+                string fileName = this.Generate_FilePath();
+                var file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+                inkCanvas.Strokes.Save(file);
+                file.Close();
+        
+                this.CaptureScreen(fileName);
+                
+                // This ink will be automatically loaded when the app next starts.
+                Settings1.Default.LoadedInkLocation = fileName;
+                Settings1.Default.Save();
+            }
+            catch (Exception ex)
             {
-                try
-                {
-                    var file = new FileStream(dlg.FileName, FileMode.Create, FileAccess.Write);
-                    inkCanvas.Strokes.Save(file);
-                    file.Close();
-
-                    // This ink will be automatically loaded when the app next starts.
-                    Settings1.Default.LoadedInkLocation = dlg.FileName;
-                    Settings1.Default.Save();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("Failed to save ink: " + ex.Message);
-                }
+                Debug.WriteLine("Failed to save ink: " + ex.Message);
             }
         }
+
+        //Exit out of load pop up
+        private void SignatureButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadButton.Content = "Load";
+            SigBank.Visibility = Visibility.Collapsed;
+        }
+
 
         // Load up ink from an ISF file that the user selects from the OpenFileDialog.
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new OpenFileDialog
-            {
-                DefaultExt = ".isf",
-                Filter = "ISF files (*.isf)|*.isf"
-            };
+            SigBank.Children.Clear();
+            if (SigBank.Visibility == Visibility.Collapsed){
+                LoadButton.Content = "Close";
+                
+                // Read all signatures from ..//sigBank
+                string sigBankImagePath = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\img";
+                string[] sigImagePaths = Directory.GetFiles(sigBankImagePath);
+                string[] recentSigImagePaths = new string[4];
 
-            var result = dlg.ShowDialog();
-            if (result == true)
-            {
-                AddInkFromFile(dlg.FileName);
+                // Get array with last 4 entries of "sigImagePaths", associate these with the buttons somehow (TODO)
+                int count = 0;
+                while (count < sigImagePaths.Length && count < 4)
+                {
+                    recentSigImagePaths[count] = sigImagePaths[(sigImagePaths.Length-1) - count];
+                    count++;
+                }
 
-                // This ink will be automatically loaded when the app next starts.
-                Settings1.Default.LoadedInkLocation = dlg.FileName;
-                Settings1.Default.Save();
+                // Iterate over thumbnails files and convert to Image.
+                // Then add Image to respective sigBank column & row.
+                // NOTE:: if you have time you can dynamically allocate rows and columns for better UI.
+                int row = 0;
+                for (int i = 0; i < 4 && recentSigImagePaths[i] != null; i++)
+                {
+                    if (i == 2) { row++; } // go to next row for 3rd and 4th thumbnails
+
+                    // create new image from file path
+                    System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+                    BitmapImage src = new BitmapImage();
+                    src.BeginInit();
+                    src.UriSource = new Uri(recentSigImagePaths[i], UriKind.Relative);
+                    src.CacheOption = BitmapCacheOption.OnLoad;
+                    src.EndInit();
+                    img.Source = src;
+                    img.Height = Height / 3;  //set image size (consider programatically creating margins)
+                    img.Width = Width / 3;
+                    img.Stretch = Stretch.Uniform;
+
+                    //replace special characters in path with octal rep. for btn name property
+                    string name = recentSigImagePaths[i].Replace(":", "3A").Replace("\\", "5C").Replace(".jpg", "");
+
+                    //create button to wrap image and bind Click event
+                    System.Windows.Controls.Button btn = new System.Windows.Controls.Button();
+                    btn.Name = name;
+                    btn.Click += ThumbnailButton_Click;
+                    btn.Content = img;
+                    btn.SetValue(System.Windows.Controls.Grid.ColumnProperty, i%2); //assign row & column and row propeties 
+                    btn.SetValue(System.Windows.Controls.Grid.RowProperty, row);
+                    btn.MaxHeight = img.Height;
+                    btn.MaxWidth = img.Width;
+                    btn.Background = Brushes.Transparent;
+                    btn.BorderBrush = Brushes.Transparent;                  
+
+                    SigBank.Children.Add(btn);
+                }
+
+                SigBank.Visibility = Visibility.Visible;               
             }
+            else
+            {
+                LoadButton.Content = "Load";
+                SigBank.Visibility = Visibility.Collapsed;
+            }
+
         }
+
+
+        private void ThumbnailButton_Click(object sender, RoutedEventArgs e)
+        {
+            //convert sender to button; replace octal 
+            System.Windows.Controls.Button btn_clicked = (System.Windows.Controls.Button)sender;
+            string fileName = btn_clicked.Name; 
+            fileName = fileName.Replace("3A", ":").Replace("5C", "\\").Replace("img","ink") + ".isf";
+
+
+            AddInkFromFile(fileName);
+
+            LoadButton.Content = "Load";
+            SigBank.Visibility = Visibility.Collapsed;
+
+            // This ink will be automatically loaded when the app next starts.
+            Settings1.Default.LoadedInkLocation = fileName;
+            Settings1.Default.Save();
+        }
+
+
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {

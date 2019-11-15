@@ -21,12 +21,11 @@
         public static string FindPort()
         {
             var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PnPEntity");
-
             var comPorts = new Dictionary<string, PortDetails>();
             foreach (var queryObj in searcher.Get())
             {
                 if (queryObj["Name"] == null || !queryObj["Name"].ToString().Contains("(COM")) continue;
-
+                
                 var portDetails = new PortDetails
                 {
                     Name = (string)queryObj["Name"],
@@ -46,7 +45,6 @@
                     return port.ComName;
                 }
             }
-            return "COM3";
             throw new Exception("Could not find COM port");
         }
     }
