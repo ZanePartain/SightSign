@@ -47,7 +47,8 @@
                 }
             }
 
-            throw new Exception("Could not find COM port");
+            // throw new Exception("Could not find COM port");
+            return "Nothing";
         }
     }
 }
