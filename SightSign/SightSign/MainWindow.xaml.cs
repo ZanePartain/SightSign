@@ -712,7 +712,7 @@ namespace SightSign
 
         private void AreaButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
+            System.Windows.Controls.Button btn = (System.Windows.Controls. Button)sender;
             if (btn.Content.ToString() == "Area")
             {
                 this.ToggleDrawingAreaButtons(true);
