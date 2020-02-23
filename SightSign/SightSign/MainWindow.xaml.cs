@@ -678,7 +678,53 @@ namespace SightSign
             }
         }
 
-        private void DrawingAreaButton_Click(object sender, RoutedEventArgs e)
+        private void ToggleDrawingAreaButtons(bool show)
+        {
+            if (show)
+            {
+                // set the Increase and Drecrease and Draw buttons visibility to visible
+                this.IncreaseDrawingAreaButton.Visibility = Visibility.Visible;
+                this.DecreaseDrawingAreaButton.Visibility = Visibility.Visible;
+                this.DrawAreaButton.Visibility = Visibility.Visible;
+                this.DoneDrawingAreaButton.Visibility = Visibility.Visible;
+
+                this.StampButton.Visibility = Visibility.Collapsed;
+                this.WriteButton.Visibility = Visibility.Collapsed;
+                this.AreaButton.Visibility = Visibility.Collapsed;
+                this.EditButton.Visibility = Visibility.Collapsed;
+
+            }
+            if (!show)
+            {
+                // set the Increase and Drecrease and Draw buttons visibility to collapsed
+                this.IncreaseDrawingAreaButton.Visibility = Visibility.Collapsed;
+                this.DecreaseDrawingAreaButton.Visibility = Visibility.Collapsed;
+                this.DrawAreaButton.Visibility = Visibility.Collapsed;
+                this.DoneDrawingAreaButton.Visibility = Visibility.Collapsed;
+
+                this.StampButton.Visibility = Visibility.Visible;
+                this.WriteButton.Visibility = Visibility.Visible;
+                this.AreaButton.Visibility = Visibility.Visible;
+                this.EditButton.Visibility = Visibility.Visible;
+            }
+
+        }
+
+        private void AreaButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
+            if (btn.Content.ToString() == "Area")
+            {
+                this.ToggleDrawingAreaButtons(true);
+
+            }
+            else
+            {
+                this.ToggleDrawingAreaButtons(false);
+            }
+        }
+
+        private void DrawAreaButton_Click(object sender, RoutedEventArgs e)
         {
             Rect rectBounds = inkCanvas.Strokes.GetBounds();
             StylusPoint[] edgePoints = new StylusPoint[4];
@@ -698,8 +744,8 @@ namespace SightSign
             // Set index 3 as the starting top-right corner 
             edgePoints[3].Y = rectBounds.Top;
             edgePoints[3].X = rectBounds.Right;
-            
-           
+
+
             MoveDotAndRobotToStylusPoint(edgePoints[0]);  // dot at top-left
             RobotArm.ArmDown(true);
             RobotArm.ArmDown(false);
@@ -717,6 +763,14 @@ namespace SightSign
             RobotArm.ArmDown(false);
 
             MoveDotAndRobotToStylusPoint(edgePoints[0]);  // move back to start
+        }
+
+
+
+        private void AdjustDrawingAreaButton_Click(object sender, RoutedEventArgs e)
+        {
+            var er = e;
+            var se = sender;
         }
 
         #endregion ButtonClickHandlers

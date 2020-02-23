@@ -105,12 +105,46 @@
                 Content="Write" Click="WriteButton_Click" Margin="0 0 0 40" />
 
             <Button Grid.Row="2"
-                x:Name="DrawingAreaButton"
+                x:Name="AreaButton"
                 Style="{StaticResource SimpleButton}"
                 Foreground="{Binding ButtonTextColor,
                     Converter={StaticResource ColorToSolidBrushConverter}}"
-                Content="Area" Click="DrawingAreaButton_Click" Margin="0 0 0 40" />
-          
+                Content="Area" Click="AreaButton_Click" Margin="0 0 0 40" />
+            
+            <!-- The buttons related to increasing or decreasing the Drawing Area 
+                 Only displayed when the are button is clicked -->
+            <Button
+                x:Name="IncreaseDrawingAreaButton"
+                Visibility="Collapsed"
+                Style="{StaticResource SimpleButton}"
+                Foreground="{Binding ButtonTextColor,
+                    Converter={StaticResource ColorToSolidBrushConverter}}"
+                Content="+" Click="AdjustDrawingAreaButton_Click" Margin="0 0 0 40" />
+            
+            <Button Grid.Row="1"
+                x:Name="DecreaseDrawingAreaButton"
+                Visibility="Collapsed"
+                Style="{StaticResource SimpleButton}"
+                Foreground="{Binding ButtonTextColor,
+                    Converter={StaticResource ColorToSolidBrushConverter}}"
+                Content="-" Click="AdjustDrawingAreaButton_Click" Margin="0 0 0 40" />
+
+            <Button Grid.Row="2"
+                x:Name="DrawAreaButton"
+                Visibility="Collapsed"
+                Style="{StaticResource SimpleButton}"
+                Foreground="{Binding ButtonTextColor,
+                    Converter={StaticResource ColorToSolidBrushConverter}}"
+                Content="Draw" Click="DrawAreaButton_Click" Margin="0 0 0 40" />
+
+            <Button Grid.Row="4"
+                x:Name="DoneDrawingAreaButton"
+                Visibility="Collapsed"
+                Style="{StaticResource SimpleButton}"
+                Foreground="{Binding ButtonTextColor,
+                    Converter={StaticResource ColorToSolidBrushConverter}}"
+                Content="Done" Click="AreaButton_Click" Margin="0 0 0 40" />
+
             <!-- The inking-related Clear, Save and Load buttons. -->
             <Button Grid.Row="0"
                 x:Name="ClearButton"
