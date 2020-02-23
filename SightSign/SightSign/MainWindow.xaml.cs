@@ -32,6 +32,7 @@ namespace SightSign
         private bool _inTimer;
 
         private bool _stampInProgress;
+        private Size inkSize;
 
         public MainWindow()
         {
@@ -63,6 +64,9 @@ namespace SightSign
             SetDrawingAttributesFromSettings(inkCanvas.DefaultDrawingAttributes);
 
             LoadInkOnStartup();
+
+            // set original size of the imported ink
+            inkSize = inkCanvas.Strokes.GetBounds().Size;
         }
 
         private void SetDrawingAttributesFromSettings(DrawingAttributes attributes)
@@ -678,6 +682,7 @@ namespace SightSign
             }
         }
 
+
         private void ToggleDrawingAreaButtons(bool show)
         {
             if (show)
@@ -688,6 +693,7 @@ namespace SightSign
                 this.DrawAreaButton.Visibility = Visibility.Visible;
                 this.DoneDrawingAreaButton.Visibility = Visibility.Visible;
 
+                // set all of the Drawing buttons visibility to collapsed
                 this.StampButton.Visibility = Visibility.Collapsed;
                 this.WriteButton.Visibility = Visibility.Collapsed;
                 this.AreaButton.Visibility = Visibility.Collapsed;
@@ -702,6 +708,7 @@ namespace SightSign
                 this.DrawAreaButton.Visibility = Visibility.Collapsed;
                 this.DoneDrawingAreaButton.Visibility = Visibility.Collapsed;
 
+                // set all of the Drawing buttons visibility to visible
                 this.StampButton.Visibility = Visibility.Visible;
                 this.WriteButton.Visibility = Visibility.Visible;
                 this.AreaButton.Visibility = Visibility.Visible;
@@ -710,13 +717,13 @@ namespace SightSign
 
         }
 
+
         private void AreaButton_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button btn = (System.Windows.Controls. Button)sender;
             if (btn.Content.ToString() == "Area")
             {
                 this.ToggleDrawingAreaButtons(true);
-
             }
             else
             {
@@ -724,8 +731,9 @@ namespace SightSign
             }
         }
 
+
         private void DrawAreaButton_Click(object sender, RoutedEventArgs e)
-        {
+        { 
             Rect rectBounds = inkCanvas.Strokes.GetBounds();
             StylusPoint[] edgePoints = new StylusPoint[4];
 
@@ -766,11 +774,36 @@ namespace SightSign
         }
 
 
-
+        private double signatureScale = 1.0;
         private void AdjustDrawingAreaButton_Click(object sender, RoutedEventArgs e)
         {
-            var er = e;
-            var se = sender;
+            System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
+            StrokeCollection strokeCollection = inkCanvas.Strokes;
+
+            // logic to scale the strokes on the inkCanvas by 0.5
+            if(btn.Content.ToString() == "-" && 
+                inkCanvas.Strokes.GetBounds().Width > this.inkSize.Width * 0.8)
+            {
+                Matrix matrix = new Matrix();
+                matrix.Scale(signatureScale - 0.25, signatureScale - 0.25);
+
+                foreach (Stroke stroke in strokeCollection)
+                {
+                    stroke.Transform(matrix, false);
+                }
+            }
+            // logic to scale the strokes on the inkCanvas by 0.5
+            else if (btn.Content.ToString() == "+" &&
+                inkCanvas.Strokes.GetBounds().Width <= this.inkSize.Width * 1.1)
+            {
+                Matrix matrix = new Matrix();
+                matrix.Scale(signatureScale + 0.25, signatureScale + 0.25);
+
+                foreach (Stroke stroke in strokeCollection)
+                {
+                    stroke.Transform(matrix, false);
+                }
+            }
         }
 
         #endregion ButtonClickHandlers
