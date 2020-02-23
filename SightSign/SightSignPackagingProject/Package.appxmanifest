@@ -9,7 +9,7 @@
   <Identity
     Name="5bcfa8bc-6375-4559-a128-8b6b52463737"
     Publisher="CN=brcamp13"
-    Version="1.0.1.0" />
+    Version="1.0.2.0" />
 
   <Properties>
     <DisplayName>SightSignPackagingProject</DisplayName>
