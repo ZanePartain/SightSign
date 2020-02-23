@@ -678,6 +678,47 @@ namespace SightSign
             }
         }
 
+        private void DrawingAreaButton_Click(object sender, RoutedEventArgs e)
+        {
+            Rect rectBounds = inkCanvas.Strokes.GetBounds();
+            StylusPoint[] edgePoints = new StylusPoint[4];
+
+            // Set index 0 as the starting top-left corner 
+            edgePoints[0].Y = rectBounds.Top;
+            edgePoints[0].X = rectBounds.Left;
+
+            // Set index 1 as the starting bottom-left corner 
+            edgePoints[1].Y = rectBounds.Bottom;
+            edgePoints[1].X = rectBounds.Left;
+
+            // Set index 2 as the starting bottom-right corner 
+            edgePoints[2].Y = rectBounds.Bottom;
+            edgePoints[2].X = rectBounds.Right;
+
+            // Set index 3 as the starting top-right corner 
+            edgePoints[3].Y = rectBounds.Top;
+            edgePoints[3].X = rectBounds.Right;
+            
+           
+            MoveDotAndRobotToStylusPoint(edgePoints[0]);  // dot at top-left
+            RobotArm.ArmDown(true);
+            RobotArm.ArmDown(false);
+
+            MoveDotAndRobotToStylusPoint(edgePoints[1]);  // dot at bottom-left
+            RobotArm.ArmDown(true);
+            RobotArm.ArmDown(false);
+
+            MoveDotAndRobotToStylusPoint(edgePoints[2]);  // dot at bottom-right
+            RobotArm.ArmDown(true);
+            RobotArm.ArmDown(false);
+
+            MoveDotAndRobotToStylusPoint(edgePoints[3]);  // dot at top-right
+            RobotArm.ArmDown(true);
+            RobotArm.ArmDown(false);
+
+            MoveDotAndRobotToStylusPoint(edgePoints[0]);  // move back to start
+        }
+
         #endregion ButtonClickHandlers
 
         #region RobotControl

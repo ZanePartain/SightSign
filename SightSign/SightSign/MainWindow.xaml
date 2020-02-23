@@ -90,12 +90,13 @@
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
-            <!-- The Write and Stamp buttons. -->
+            <!-- The Write and Stamp and Area buttons. -->
             <Button x:Name="StampButton"
                 Style="{StaticResource SimpleButton}"
                 Foreground="{Binding ButtonTextColor,
                     Converter={StaticResource ColorToSolidBrushConverter}}"
                 Content="Stamp" Click="StampButton_Click" Margin="0 0 0 40" />
+            
             <Button Grid.Row="1" 
                 x:Name="WriteButton"
                 Style="{StaticResource SimpleButton}"
@@ -103,6 +104,13 @@
                     Converter={StaticResource ColorToSolidBrushConverter}}"
                 Content="Write" Click="WriteButton_Click" Margin="0 0 0 40" />
 
+            <Button Grid.Row="2"
+                x:Name="DrawingAreaButton"
+                Style="{StaticResource SimpleButton}"
+                Foreground="{Binding ButtonTextColor,
+                    Converter={StaticResource ColorToSolidBrushConverter}}"
+                Content="Area" Click="DrawingAreaButton_Click" Margin="0 0 0 40" />
+          
             <!-- The inking-related Clear, Save and Load buttons. -->
             <Button Grid.Row="0"
                 x:Name="ClearButton"
