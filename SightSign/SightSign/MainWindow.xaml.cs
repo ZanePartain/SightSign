@@ -334,6 +334,12 @@ namespace SightSign
                 return;
             }
 
+            // Prevent the robot from writing strokes that are off of the primary screen.
+            Rect newBounds = new Rect();
+            newBounds.Width = SystemParameters.PrimaryScreenWidth -125;     // any ink behind the buttons column will be cropped
+            newBounds.Height = SystemParameters.PrimaryScreenHeight - 125;  // any ink below the settings button will be cropped
+            inkCanvas.Strokes.Clip(newBounds);
+
             dot.Visibility = Visibility.Visible;
             dot.Opacity = 1.0;
 
@@ -733,7 +739,7 @@ namespace SightSign
 
 
         private void DrawAreaButton_Click(object sender, RoutedEventArgs e)
-        { 
+         { 
             Rect rectBounds = inkCanvas.Strokes.GetBounds();
             StylusPoint[] edgePoints = new StylusPoint[4];
 
@@ -782,27 +788,27 @@ namespace SightSign
 
             // logic to scale the strokes on the inkCanvas by 0.5
             if(btn.Content.ToString() == "-" && 
-                inkCanvas.Strokes.GetBounds().Width > this.inkSize.Width * 0.8)
+                inkCanvas.Strokes.GetBounds().Width >= this.inkSize.Width * 0.8)
             {
-                Matrix matrix = new Matrix();
-                matrix.Scale(signatureScale - 0.25, signatureScale - 0.25);
-
-                foreach (Stroke stroke in strokeCollection)
-                {
-                    stroke.Transform(matrix, false);
-                }
+                Rect newBounds = new Rect();
+                newBounds.Width = inkCanvas.Strokes.GetBounds().Width * .9;
+                newBounds.Height = inkCanvas.Strokes.GetBounds().Height * .9;
+                strokeCollection.Clip(newBounds);
+                //Matrix matrix = new Matrix();
+                //matrix.Scale(signatureScale - 0.25, signatureScale - 0.25);
+                //strokeCollection.Transform(matrix, false);
             }
             // logic to scale the strokes on the inkCanvas by 0.5
             else if (btn.Content.ToString() == "+" &&
-                inkCanvas.Strokes.GetBounds().Width <= this.inkSize.Width * 1.1)
+                inkCanvas.Strokes.GetBounds().Width <= this.inkSize.Width * 1.2)
             {
-                Matrix matrix = new Matrix();
-                matrix.Scale(signatureScale + 0.25, signatureScale + 0.25);
-
-                foreach (Stroke stroke in strokeCollection)
-                {
-                    stroke.Transform(matrix, false);
-                }
+                Rect newBounds = new Rect();
+                newBounds.Width = inkCanvas.Strokes.GetBounds().Width * 1.1;
+                newBounds.Height = inkCanvas.Strokes.GetBounds().Height * 1.1;
+                strokeCollection.Clip(newBounds);
+                //Matrix matrix = new Matrix();
+                //matrix.Scale(signatureScale + 0.25, signatureScale + 0.25);
+                //strokeCollection.Transform(matrix, false);
             }
         }
 
