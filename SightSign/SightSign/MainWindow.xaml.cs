@@ -334,6 +334,7 @@ namespace SightSign
                 return;
             }
 
+
             // Prevent the robot from writing strokes that are off of the primary screen.
             Rect newBounds = new Rect();
             newBounds.Width = SystemParameters.PrimaryScreenWidth -125;     // any ink behind the buttons column will be cropped
@@ -386,6 +387,10 @@ namespace SightSign
             }
 
             // Send the point to the robot too.
+            // Leave the arm in its current down state.
+            // Applu the scalingFactor to the point that the robot will draw.
+            pt.X *= scalingFactor;
+            pt.Y *= scalingFactor;
             RobotArm.Move(pt);
         }
 
@@ -485,7 +490,6 @@ namespace SightSign
             else
             {
                 // We're continuing to animate the stroke that we're were already on.
-
                 var stylusPt = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[_currentAnimatedPointIndex];
                 var stylusPtPrevious = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[_currentAnimatedPointIndex - 1];
 
@@ -505,7 +509,6 @@ namespace SightSign
                     stylusPt = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[_currentAnimatedPointIndex];
                 }
 
-                // Leave the arm in its current down state.
                 MoveDotAndRobotToStylusPoint(stylusPt);
 
                 // Extend the ink stroke being drawn out to include the point where the dot is now.
@@ -647,6 +650,7 @@ namespace SightSign
 
         private void Dot_OnClick(object sender, RoutedEventArgs e)
         {
+
             if (_dispatcherTimerDotAnimation != null)
             {
                 // Only react to the click on the dot if the the timer's not currently running.
@@ -738,9 +742,18 @@ namespace SightSign
         }
 
 
+        private int count = 0;
         private void DrawAreaButton_Click(object sender, RoutedEventArgs e)
          { 
             Rect rectBounds = inkCanvas.Strokes.GetBounds();
+
+            // testing adjusting the size based on a scaling factor
+            if (count == 0)
+            {
+                rectBounds.Height *= scalingFactor;
+                rectBounds.Width *= scalingFactor;
+            }
+
             StylusPoint[] edgePoints = new StylusPoint[4];
 
             // Set index 0 as the starting top-left corner 
@@ -777,35 +790,29 @@ namespace SightSign
             RobotArm.ArmDown(false);
 
             MoveDotAndRobotToStylusPoint(edgePoints[0]);  // move back to start
+
+            count++;
         }
 
 
-        private double signatureScale = 1.0;
+        private double scalingFactor = 1.0;
         private void AdjustDrawingAreaButton_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
             StrokeCollection strokeCollection = inkCanvas.Strokes;
 
             // logic to scale the strokes on the inkCanvas by 0.5
-            if(btn.Content.ToString() == "-" && 
-                inkCanvas.Strokes.GetBounds().Width >= this.inkSize.Width * 0.8)
+            if(btn.Content.ToString() == "-" && scalingFactor > 0.5)
             {
-                Rect newBounds = new Rect();
-                newBounds.Width = inkCanvas.Strokes.GetBounds().Width * .9;
-                newBounds.Height = inkCanvas.Strokes.GetBounds().Height * .9;
-                strokeCollection.Clip(newBounds);
+                scalingFactor -= 0.25;
                 //Matrix matrix = new Matrix();
-                //matrix.Scale(signatureScale - 0.25, signatureScale - 0.25);
+                //matrix.Scale(signatureScale * 0.25, signatureScale * 0.25);
                 //strokeCollection.Transform(matrix, false);
             }
             // logic to scale the strokes on the inkCanvas by 0.5
-            else if (btn.Content.ToString() == "+" &&
-                inkCanvas.Strokes.GetBounds().Width <= this.inkSize.Width * 1.2)
+            else if (btn.Content.ToString() == "+" && scalingFactor < 1.5)
             {
-                Rect newBounds = new Rect();
-                newBounds.Width = inkCanvas.Strokes.GetBounds().Width * 1.1;
-                newBounds.Height = inkCanvas.Strokes.GetBounds().Height * 1.1;
-                strokeCollection.Clip(newBounds);
+                scalingFactor += 0.25;
                 //Matrix matrix = new Matrix();
                 //matrix.Scale(signatureScale + 0.25, signatureScale + 0.25);
                 //strokeCollection.Transform(matrix, false);
