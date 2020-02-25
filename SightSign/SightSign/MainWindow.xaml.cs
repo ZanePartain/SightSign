@@ -386,14 +386,18 @@ namespace SightSign
                 dotTranslateTransform.Y = pt.Y - (inkCanvas.ActualHeight / 2);
             }
 
-            // Send the point to the robot too.
-            // Leave the arm in its current down state.
-            // Applu the scalingFactor to the point that the robot will draw.
+  
+            // Apply the scalingFactor to the point that the robot will draw,
+            // IFF the point is not the first point of the signature.
             pt.X *= scalingFactor;
             pt.Y *= scalingFactor;
+
+            // Send the point to the robot too.
+            // Leave the arm in its current down state.
             RobotArm.Move(pt);
         }
 
+        private StylusPoint firstPoint;
         private void dispatcherTimerDotAnimation_Tick(object sender, EventArgs e)
         {
             if (_inTimer)
@@ -408,6 +412,7 @@ namespace SightSign
             {
                 // No, so create the first stroke and add th3 first dot to it.
                 var firstPt = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[0];
+                firstPoint = firstPt;
 
                 RobotArm.ArmDown(true);
 
@@ -746,14 +751,12 @@ namespace SightSign
         private void DrawAreaButton_Click(object sender, RoutedEventArgs e)
          { 
             Rect rectBounds = inkCanvas.Strokes.GetBounds();
+            double left = rectBounds.Left;
+            double right = rectBounds.Right;
 
             // testing adjusting the size based on a scaling factor
-            if (count == 0)
-            {
-                rectBounds.Height *= scalingFactor;
-                rectBounds.Width *= scalingFactor;
-            }
-
+            rectBounds.Scale(scalingFactor, scalingFactor);
+          
             StylusPoint[] edgePoints = new StylusPoint[4];
 
             // Set index 0 as the starting top-left corner 
@@ -791,7 +794,6 @@ namespace SightSign
 
             MoveDotAndRobotToStylusPoint(edgePoints[0]);  // move back to start
 
-            count++;
         }
 
 
