@@ -808,20 +808,15 @@ namespace SightSign
             StrokeCollection strokeCollection = inkCanvas.Strokes;
 
             // logic to scale the strokes on the inkCanvas by 0.5
-            if (btn.Content.ToString() == "-" && scalingFactor > 0.5)
+            if (btn.Content.ToString() == "-" && scalingFactor >= 0.5)
             {
                 scalingFactor -= 0.25;
-                //Matrix matrix = new Matrix();
-                //matrix.Scale(signatureScale * 0.25, signatureScale * 0.25);
-                //strokeCollection.Transform(matrix, false);
             }
             // logic to scale the strokes on the inkCanvas by 0.5
-            else if (btn.Content.ToString() == "+" && scalingFactor < 1.5)
+            else if (btn.Content.ToString() == "+" && scalingFactor < 1.25)
             {
                 scalingFactor += 0.25;
-                //Matrix matrix = new Matrix();
-                //matrix.Scale(signatureScale + 0.25, signatureScale + 0.25);
-                //strokeCollection.Transform(matrix, false);
+ 
             }
         }
 
