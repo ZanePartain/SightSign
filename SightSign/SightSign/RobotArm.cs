@@ -14,8 +14,8 @@ namespace SightSign
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public readonly double _xShift;
-        public readonly double _yShift;
+        private readonly double _xShift;
+        private readonly double _yShift;
         private double _zShift = Settings1.Default.RobotZShift;
         private readonly double _minDimensionHalf;
 

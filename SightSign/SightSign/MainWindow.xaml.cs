@@ -337,7 +337,7 @@ namespace SightSign
 
             // Prevent the robot from writing strokes that are off of the primary screen.
             Rect newBounds = new Rect();
-            newBounds.Width = SystemParameters.PrimaryScreenWidth -125;     // any ink behind the buttons column will be cropped
+            newBounds.Width = SystemParameters.PrimaryScreenWidth - 125;     // any ink behind the buttons column will be cropped
             newBounds.Height = SystemParameters.PrimaryScreenHeight - 125;  // any ink below the settings button will be cropped
             inkCanvas.Strokes.Clip(newBounds);
 
@@ -386,9 +386,8 @@ namespace SightSign
                 dotTranslateTransform.Y = pt.Y - (inkCanvas.ActualHeight / 2);
             }
 
-  
-            // Apply the scalingFactor to the point that the robot will draw,
-            // IFF the point is not the first point of the signature.
+
+            // Apply the scalingFactor to the point that the robot will draw.
             pt.X *= scalingFactor;
             pt.Y *= scalingFactor;
 
@@ -533,7 +532,7 @@ namespace SightSign
         private void AddFirstPointToNewStroke(StylusPoint pt)
         {
             // Create a new stroke for the continuing animation.
-            var ptCollection = new StylusPointCollection {pt};
+            var ptCollection = new StylusPointCollection { pt };
 
             _strokeBeingAnimated = new Stroke(ptCollection);
 
@@ -648,7 +647,7 @@ namespace SightSign
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            var settingsWindow = new SettingsWindow(this, _settings, RobotArm) {Owner = this};
+            var settingsWindow = new SettingsWindow(this, _settings, RobotArm) { Owner = this };
 
             settingsWindow.ShowDialog();
         }
@@ -735,7 +734,7 @@ namespace SightSign
 
         private void AreaButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Controls.Button btn = (System.Windows.Controls. Button)sender;
+            System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
             if (btn.Content.ToString() == "Area")
             {
                 this.ToggleDrawingAreaButtons(true);
@@ -749,14 +748,17 @@ namespace SightSign
 
         private int count = 0;
         private void DrawAreaButton_Click(object sender, RoutedEventArgs e)
-         { 
+        {
             Rect rectBounds = inkCanvas.Strokes.GetBounds();
-            double left = rectBounds.Left;
-            double right = rectBounds.Right;
 
             // testing adjusting the size based on a scaling factor
-            rectBounds.Scale(scalingFactor, scalingFactor);
-          
+            // testing adjusting the size based on a scaling factor
+            if (count == 0)
+            {
+                rectBounds.Height *= scalingFactor;
+                rectBounds.Width *= scalingFactor;
+            }
+
             StylusPoint[] edgePoints = new StylusPoint[4];
 
             // Set index 0 as the starting top-left corner 
@@ -794,6 +796,8 @@ namespace SightSign
 
             MoveDotAndRobotToStylusPoint(edgePoints[0]);  // move back to start
 
+            count++;
+
         }
 
 
@@ -804,7 +808,7 @@ namespace SightSign
             StrokeCollection strokeCollection = inkCanvas.Strokes;
 
             // logic to scale the strokes on the inkCanvas by 0.5
-            if(btn.Content.ToString() == "-" && scalingFactor > 0.5)
+            if (btn.Content.ToString() == "-" && scalingFactor > 0.5)
             {
                 scalingFactor -= 0.25;
                 //Matrix matrix = new Matrix();
