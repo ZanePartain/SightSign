@@ -69,6 +69,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+      
     </Window.Resources>
 
     <!-- The main app area. -->
@@ -137,6 +138,13 @@
 
         <!-- The main area showing the ink and animating dot. -->
         <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
+          
+          <!-- The canvasBackground showing ImageBrush to trace. -->
+          <Grid x:Name="canvasBackground">
+            <Grid.Background>
+              <ImageBrush x:Name="backGroundd" Opacity="0.4" />
+            </Grid.Background>
+          </Grid>          
             
             <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
             <InkCanvas 
@@ -235,6 +243,15 @@
                 FontFamily="Segoe MDL2 Assets"
                 FontSize="48"
                 Click="SettingsButton_Click" />
+          <Button Grid.Row="0"
+              x:Name="ImportButton"
+              Visibility="Collapsed"
+              Height="50"
+              Width="50"
+              VerticalAlignment="Top"
+              Click="ImportButton_Click">
+            <Image Source="/Icons/Import.jpg"/>
+          </Button>
         </Grid>
     </Grid>
 </Window>

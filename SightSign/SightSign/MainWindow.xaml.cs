@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.HandsFree.Mouse;
 using Microsoft.Win32;
@@ -553,6 +554,7 @@ namespace SightSign
 
                 StampButton.Visibility = Visibility.Collapsed;
                 ClearButton.Visibility = Visibility.Visible;
+                ImportButton.Visibility = Visibility.Visible;
 
                 inkCanvas.IsEnabled = true;
             }
@@ -562,7 +564,8 @@ namespace SightSign
 
                 StampButton.Visibility = Visibility.Visible;
                 ClearButton.Visibility = Visibility.Collapsed;
-
+                ImportButton.Visibility = Visibility.Collapsed;
+                backGroundd.ImageSource = null;
                 inkCanvas.IsEnabled = false;
             }
 
@@ -577,6 +580,16 @@ namespace SightSign
         {
             inkCanvas.Strokes.Clear();
             inkCanvasAnimations.Strokes.Clear();
+        }
+
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+            dialog.Title = "Please select an image file to import.";
+			if(dialog.ShowDialog() == true){
+                backGroundd.ImageSource = new BitmapImage(new Uri(dialog.FileName)); 
+            }
         }
 
         // Save whatever ink is shown in the InkCanvas that the user can ink on, to an ISF file.
