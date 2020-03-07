@@ -756,12 +756,9 @@ namespace SightSign
         {
             System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
 
-           
-
             if (btn.Content.ToString() == "Area")
             {
                 this.ToggleDrawingAreaButtons(true);
-                
             }
             else
             {
@@ -770,21 +767,36 @@ namespace SightSign
         }
 
 
-        private int count = 0;
+        private void RobotPlaceDot()
+        {
+            RobotArm.ArmDown(true);
+            RobotArm.ArmDown(false);
+        }
+
+        private void MoveRobotToShowDrawZone(StylusPoint[] edgePoints)
+        {
+            if (edgePoints.Length >= 4)
+            {
+                MoveDotAndRobotToStylusPoint(edgePoints[0]);  // dot top-left
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[1]);  // dot bottom-left
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[2]);  // dot bottom-right
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[3]);  // dot top-right
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[0]);  // move back to start
+            }
+        }
+
+
         bool isShowingDrawZone = false;
         private void DrawAreaButton_Click(object sender, RoutedEventArgs e)
         {
-            // the logic below will be used for aplying a scaling factor to the 
-            // drawing zone that the robot will write the signature within.
-
-            // test adjusting the size based on a scaling factor
-            //if (count == 0)
-            //{
-            //    drawZoneRect.Height *= scalingFactor;
-            //    drawZoneRect.Width *= scalingFactor;
-            //}
-
-            // set the drawDimensionSize for scaling the points to be drawn
             StylusPoint[] edgePoints = new StylusPoint[4];
 
             // Set index 0 as the starting top-left corner 
@@ -803,28 +815,10 @@ namespace SightSign
             edgePoints[3].Y = drawZoneRect.Top;
             edgePoints[3].X = drawZoneRect.Right;
 
+            // flag is true so we dont apply scaling factor
             isShowingDrawZone = true;
-            MoveDotAndRobotToStylusPoint(edgePoints[0]);  // dot at top-left
-            RobotArm.ArmDown(true);
-            RobotArm.ArmDown(false);
-             
-            MoveDotAndRobotToStylusPoint(edgePoints[1]);  // dot at bottom-left
-            RobotArm.ArmDown(true);
-            RobotArm.ArmDown(false);
-
-            MoveDotAndRobotToStylusPoint(edgePoints[2]);  // dot at bottom-right
-            RobotArm.ArmDown(true);
-            RobotArm.ArmDown(false);
-
-            MoveDotAndRobotToStylusPoint(edgePoints[3]);  // dot at top-right
-            RobotArm.ArmDown(true);
-            RobotArm.ArmDown(false);
-
-            MoveDotAndRobotToStylusPoint(edgePoints[0]);  // move back to start
+            MoveRobotToShowDrawZone(edgePoints);
             isShowingDrawZone = false;
-
-            count++;
-
         }
 
 
@@ -832,7 +826,6 @@ namespace SightSign
         private void AdjustDrawingAreaButton_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
-            StrokeCollection strokeCollection = inkCanvas.Strokes;
 
             // logic to scale the strokes on the inkCanvas by 0.5
             if (btn.Content.ToString() == "-" && targetArea >= -1)
