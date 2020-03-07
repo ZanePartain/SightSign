@@ -20,7 +20,7 @@
         <sightSign:ArmStateToDotFillConverter x:Key="ArmStateToDotFillConverter"/>
         <sightSign:ArmStateToDotWidthConverter x:Key="ArmStateToDotWidthConverter"/>
         <sightSign:ColorToSolidBrushConverter x:Key="ColorToSolidBrushConverter"/>
-
+        
         <!-- Style for the big round buttons shown in the app. -->
         <Style x:Key="SimpleButton" TargetType="{x:Type Button}" BasedOn="{x:Null}">
             <Setter Property="FontSize" Value="32"/>
@@ -71,7 +71,8 @@
         </Style>
     </Window.Resources>
 
-    <!-- The main app area. -->
+    <Border x:Name="mainWindowBorder" BorderThickness="8">
+        <!-- The main app area. -->
     <Grid Margin="40">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
@@ -289,4 +290,6 @@
                 Click="SettingsButton_Click" />
         </Grid>
     </Grid>
+    </Border>
+
 </Window>

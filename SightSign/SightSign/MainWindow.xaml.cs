@@ -67,6 +67,7 @@ namespace SightSign
 
             // set original size of the imported ink
             inkSize = inkCanvas.Strokes.GetBounds().Size;
+            this.SetDrawingZoneRectangle(0);  // set the init drawing zone rectangle
         }
 
         private void SetDrawingAttributesFromSettings(DrawingAttributes attributes)
@@ -806,7 +807,7 @@ namespace SightSign
             MoveDotAndRobotToStylusPoint(edgePoints[0]);  // dot at top-left
             RobotArm.ArmDown(true);
             RobotArm.ArmDown(false);
-
+             
             MoveDotAndRobotToStylusPoint(edgePoints[1]);  // dot at bottom-left
             RobotArm.ArmDown(true);
             RobotArm.ArmDown(false);
@@ -845,12 +846,12 @@ namespace SightSign
  
             }
 
-            this.setDrawingZoneRectangle(targetArea);
+            this.SetDrawingZoneRectangle(targetArea);
         }
 
 
         Rect drawZoneRect = new Rect();
-        private void setDrawingZoneRectangle(double targetArea)
+        private void SetDrawingZoneRectangle(double targetArea)
         {
             switch (targetArea)
             {
@@ -862,6 +863,8 @@ namespace SightSign
                         X = 150,
                         Y = 50,
                     };
+                    this.areaText.Text = "6'' X 8''";
+                    this.mainWindowBorder.BorderBrush = Brushes.BurlyWood;
                     break;
                 case -1:
                     drawZoneRect.Height = 450;  // 4in. X 6in.
@@ -871,6 +874,8 @@ namespace SightSign
                         X = 250,
                         Y = 150,
                     };
+                    this.areaText.Text = "4'' X 6''";
+                    this.mainWindowBorder.BorderBrush = Brushes.Crimson;
                     break;
                 case -2:
                     drawZoneRect.Height = 225;  // 2in. X 4in.
@@ -880,12 +885,13 @@ namespace SightSign
                         X = 350,
                         Y = 250,
                     };
+                    this.areaText.Text = "2'' X 4''";
+                    this.mainWindowBorder.BorderBrush = Brushes.Indigo;
                     break;
                 default:
                     break;
             }
 
-            this.areaText.Text = this.drawZoneRect.Height.ToString() + " X " + this.drawZoneRect.Width.ToString();
         }
 
         #endregion ButtonClickHandlers
