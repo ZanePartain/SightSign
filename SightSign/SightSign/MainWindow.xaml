@@ -120,7 +120,6 @@
                 Foreground="{Binding ButtonTextColor,
                     Converter={StaticResource ColorToSolidBrushConverter}}"
                 Content="+" Click="AdjustDrawingAreaButton_Click" Margin="0 0 0 40" />
-            
             <Button Grid.Row="1"
                 x:Name="DecreaseDrawingAreaButton"
                 Visibility="Collapsed"
@@ -128,7 +127,6 @@
                 Foreground="{Binding ButtonTextColor,
                     Converter={StaticResource ColorToSolidBrushConverter}}"
                 Content="-" Click="AdjustDrawingAreaButton_Click" Margin="0 0 0 40" />
-
             <Button Grid.Row="2"
                 x:Name="DrawAreaButton"
                 Visibility="Collapsed"
@@ -136,7 +134,6 @@
                 Foreground="{Binding ButtonTextColor,
                     Converter={StaticResource ColorToSolidBrushConverter}}"
                 Content="Draw" Click="DrawAreaButton_Click" Margin="0 0 0 40" />
-
             <Button Grid.Row="4"
                 x:Name="DoneDrawingAreaButton"
                 Visibility="Collapsed"
@@ -180,6 +177,19 @@
         <!-- The main area showing the ink and animating dot. -->
         <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
             
+            <!-- The text to show the current area for the drawing zone -->
+            <TextBlock 
+                x:Name="areaText" 
+                Background="AliceBlue"
+                HorizontalAlignment="Left" 
+                TextWrapping="Wrap" 
+                Padding="6" 
+                VerticalAlignment="Center" 
+                Margin="45,0,0,0" 
+                Height="30" 
+                Width="386" 
+                Text="" />
+
             <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
             <InkCanvas 
                 AutomationProperties.Name="Background ink canvas"

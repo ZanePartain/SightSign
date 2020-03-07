@@ -137,6 +137,10 @@ namespace SightSign
 
                 ApplySettingsToInk();
             }
+
+            // show current area.
+            // also establishes  4-dot configuration scale for robot.
+            // this.DrawAreaButton_Click(null, null);
         }
 
         // Apply the current settings to the currently loaded ink.
@@ -386,11 +390,22 @@ namespace SightSign
                 dotTranslateTransform.Y = pt.Y - (inkCanvas.ActualHeight / 2);
             }
 
-
+            //TODO :: handle case where drawDimensionSize is less than the inkCanvas.Strokes size
             // Apply the scalingFactor to the point that the robot will draw.
-            pt.X *= scalingFactor;
-            pt.Y *= scalingFactor;
+            // FOR TESTING
+            if (!isShowingDrawZone)
+            {
+                // get the scaleFactor between the (inkSize + (drawDimensionSize - inkSize))
+                // and  the actual inkSize.
 
+                // TODO :: establish a new origin to be the Top Left of the Draw Rectangle
+                double scaleFactorX = (drawZoneRect.Width / (inkCanvas.ActualWidth));
+                double scaleFactorY = (drawZoneRect.Height / (inkCanvas.ActualHeight));
+
+                pt.X = (pt.X * scaleFactorX) + drawZoneRect.Left;
+                pt.Y = (pt.Y * scaleFactorY) + drawZoneRect.Top;
+            }
+          
             // Send the point to the robot too.
             // Leave the arm in its current down state.
             RobotArm.Move(pt);
@@ -581,6 +596,10 @@ namespace SightSign
                 ClearButton.Visibility = Visibility.Collapsed;
 
                 inkCanvas.IsEnabled = false;
+
+                // show current area.
+                // also establishes  4-dot configuration scale for robot.
+                // this.DrawAreaButton_Click(null, null);
             }
 
             WriteButton.Visibility = StampButton.Visibility;
@@ -735,9 +754,13 @@ namespace SightSign
         private void AreaButton_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
+
+           
+
             if (btn.Content.ToString() == "Area")
             {
                 this.ToggleDrawingAreaButtons(true);
+                
             }
             else
             {
@@ -747,37 +770,39 @@ namespace SightSign
 
 
         private int count = 0;
+        bool isShowingDrawZone = false;
         private void DrawAreaButton_Click(object sender, RoutedEventArgs e)
         {
-            Rect rectBounds = inkCanvas.Strokes.GetBounds();
+            // the logic below will be used for aplying a scaling factor to the 
+            // drawing zone that the robot will write the signature within.
 
-            // testing adjusting the size based on a scaling factor
-            // testing adjusting the size based on a scaling factor
-            if (count == 0)
-            {
-                rectBounds.Height *= scalingFactor;
-                rectBounds.Width *= scalingFactor;
-            }
+            // test adjusting the size based on a scaling factor
+            //if (count == 0)
+            //{
+            //    drawZoneRect.Height *= scalingFactor;
+            //    drawZoneRect.Width *= scalingFactor;
+            //}
 
+            // set the drawDimensionSize for scaling the points to be drawn
             StylusPoint[] edgePoints = new StylusPoint[4];
 
             // Set index 0 as the starting top-left corner 
-            edgePoints[0].Y = rectBounds.Top;
-            edgePoints[0].X = rectBounds.Left;
+            edgePoints[0].Y = drawZoneRect.Top;
+            edgePoints[0].X = drawZoneRect.Left;
 
             // Set index 1 as the starting bottom-left corner 
-            edgePoints[1].Y = rectBounds.Bottom;
-            edgePoints[1].X = rectBounds.Left;
+            edgePoints[1].Y = drawZoneRect.Bottom;
+            edgePoints[1].X = drawZoneRect.Left;
 
             // Set index 2 as the starting bottom-right corner 
-            edgePoints[2].Y = rectBounds.Bottom;
-            edgePoints[2].X = rectBounds.Right;
+            edgePoints[2].Y = drawZoneRect.Bottom;
+            edgePoints[2].X = drawZoneRect.Right;
 
             // Set index 3 as the starting top-right corner 
-            edgePoints[3].Y = rectBounds.Top;
-            edgePoints[3].X = rectBounds.Right;
+            edgePoints[3].Y = drawZoneRect.Top;
+            edgePoints[3].X = drawZoneRect.Right;
 
-
+            isShowingDrawZone = true;
             MoveDotAndRobotToStylusPoint(edgePoints[0]);  // dot at top-left
             RobotArm.ArmDown(true);
             RobotArm.ArmDown(false);
@@ -795,29 +820,72 @@ namespace SightSign
             RobotArm.ArmDown(false);
 
             MoveDotAndRobotToStylusPoint(edgePoints[0]);  // move back to start
+            isShowingDrawZone = false;
 
             count++;
 
         }
 
 
-        private double scalingFactor = 1.0;
+        private double targetArea = 0.0;
         private void AdjustDrawingAreaButton_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
             StrokeCollection strokeCollection = inkCanvas.Strokes;
 
             // logic to scale the strokes on the inkCanvas by 0.5
-            if (btn.Content.ToString() == "-" && scalingFactor >= 0.5)
+            if (btn.Content.ToString() == "-" && targetArea >= -1)
             {
-                scalingFactor -= 0.25;
+                targetArea -= 1;
             }
             // logic to scale the strokes on the inkCanvas by 0.5
-            else if (btn.Content.ToString() == "+" && scalingFactor < 1.25)
+            else if (btn.Content.ToString() == "+" && targetArea < 0)
             {
-                scalingFactor += 0.25;
+                targetArea += 1;
  
             }
+
+            this.setDrawingZoneRectangle(targetArea);
+        }
+
+
+        Rect drawZoneRect = new Rect();
+        private void setDrawingZoneRectangle(double targetArea)
+        {
+            switch (targetArea)
+            {
+                case 0:
+                    drawZoneRect.Height = 685;  // 6in. X 8in.
+                    drawZoneRect.Width = 825;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 150,
+                        Y = 50,
+                    };
+                    break;
+                case -1:
+                    drawZoneRect.Height = 450;  // 4in. X 6in.
+                    drawZoneRect.Width = 620;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 250,
+                        Y = 150,
+                    };
+                    break;
+                case -2:
+                    drawZoneRect.Height = 225;  // 2in. X 4in.
+                    drawZoneRect.Width = 415;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 350,
+                        Y = 250,
+                    };
+                    break;
+                default:
+                    break;
+            }
+
+            this.areaText.Text = this.drawZoneRect.Height.ToString() + " X " + this.drawZoneRect.Width.ToString();
         }
 
         #endregion ButtonClickHandlers
