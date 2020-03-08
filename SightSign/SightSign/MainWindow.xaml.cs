@@ -65,9 +65,8 @@ namespace SightSign
 
             LoadInkOnStartup();
 
-            // set original size of the imported ink
-            inkSize = inkCanvas.Strokes.GetBounds().Size;
             this.SetDrawingZoneRectangle(0);  // set the init drawing zone rectangle
+            this.areaText.Visibility = Visibility.Collapsed;  // init as collapsed
         }
 
         private void SetDrawingAttributesFromSettings(DrawingAttributes attributes)
@@ -726,6 +725,7 @@ namespace SightSign
                 this.DecreaseDrawingAreaButton.Visibility = Visibility.Visible;
                 this.DrawAreaButton.Visibility = Visibility.Visible;
                 this.DoneDrawingAreaButton.Visibility = Visibility.Visible;
+                this.areaText.Visibility = Visibility.Visible;
 
                 // set all of the Drawing buttons visibility to collapsed
                 this.StampButton.Visibility = Visibility.Collapsed;
@@ -741,6 +741,7 @@ namespace SightSign
                 this.DecreaseDrawingAreaButton.Visibility = Visibility.Collapsed;
                 this.DrawAreaButton.Visibility = Visibility.Collapsed;
                 this.DoneDrawingAreaButton.Visibility = Visibility.Collapsed;
+                this.areaText.Visibility = Visibility.Collapsed;
 
                 // set all of the Drawing buttons visibility to visible
                 this.StampButton.Visibility = Visibility.Visible;
@@ -853,18 +854,18 @@ namespace SightSign
                     drawZoneRect.Width = 825;
                     drawZoneRect.Location = new Point
                     {
-                        X = 150,
+                        X = 75,
                         Y = 50,
                     };
                     this.areaText.Text = "6'' X 8''";
-                    this.mainWindowBorder.BorderBrush = Brushes.BurlyWood;
+                    this.mainWindowBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(200, 254, 212, 42));
                     break;
                 case -1:
                     drawZoneRect.Height = 450;  // 4in. X 6in.
                     drawZoneRect.Width = 620;
                     drawZoneRect.Location = new Point
                     {
-                        X = 250,
+                        X = 175,
                         Y = 150,
                     };
                     this.areaText.Text = "4'' X 6''";
@@ -875,11 +876,11 @@ namespace SightSign
                     drawZoneRect.Width = 415;
                     drawZoneRect.Location = new Point
                     {
-                        X = 350,
+                        X = 275,
                         Y = 250,
                     };
                     this.areaText.Text = "2'' X 4''";
-                    this.mainWindowBorder.BorderBrush = Brushes.Indigo;
+                    this.mainWindowBorder.BorderBrush = Brushes.CadetBlue;
                     break;
                 default:
                     break;

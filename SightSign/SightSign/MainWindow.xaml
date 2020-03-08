@@ -21,6 +21,7 @@
         <sightSign:ArmStateToDotWidthConverter x:Key="ArmStateToDotWidthConverter"/>
         <sightSign:ColorToSolidBrushConverter x:Key="ColorToSolidBrushConverter"/>
         
+        
         <!-- Style for the big round buttons shown in the app. -->
         <Style x:Key="SimpleButton" TargetType="{x:Type Button}" BasedOn="{x:Null}">
             <Setter Property="FontSize" Value="32"/>
@@ -72,15 +73,16 @@
     </Window.Resources>
 
     <Border x:Name="mainWindowBorder" BorderThickness="8">
+        <!-- The text to show the current area for the drawing zone -->
         <!-- The main app area. -->
     <Grid Margin="40">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition />
-            <ColumnDefinition Width="auto" />
-        </Grid.ColumnDefinitions>
         
-        <!-- The column of big round buttons down the left side of the app. -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <!-- The column of big round buttons down the left side of the app. -->
         <Grid HorizontalAlignment="Left"
             Background="Transparent">
             <Grid.RowDefinitions>
@@ -176,22 +178,11 @@
         </Grid>
 
         <!-- The main area showing the ink and animating dot. -->
-        <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
-            
-            <!-- The text to show the current area for the drawing zone -->
-            <TextBlock 
-                x:Name="areaText" 
-                Background="AliceBlue"
-                HorizontalAlignment="Left" 
-                TextWrapping="Wrap" 
-                Padding="6" 
-                VerticalAlignment="Center" 
-                Margin="45,0,0,0" 
-                Height="30" 
-                Width="386" 
-                Text="" />
+            <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
 
-            <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
+           
+
+                <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
             <InkCanvas 
                 AutomationProperties.Name="Background ink canvas"
                 x:Name="inkCanvas" 
@@ -288,7 +279,19 @@
                 FontFamily="Segoe MDL2 Assets"
                 FontSize="48"
                 Click="SettingsButton_Click" />
-        </Grid>
+            
+            <TextBlock 
+                x:Name="areaText" 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Top"
+                FontSize="25" 
+                Foreground="AntiqueWhite"
+                Padding="0" 
+                Margin="0,-10,0,0" 
+                Height="auto" 
+                Width="auto" 
+                Text="" />
+            </Grid>
     </Grid>
     </Border>
 
