@@ -829,7 +829,7 @@ namespace SightSign
             System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
 
             // logic to scale the strokes on the inkCanvas by 0.5
-            if (btn.Content.ToString() == "-" && targetArea >= -1)
+            if (btn.Content.ToString() == "-" && targetArea >= -2)
             {
                 targetArea -= 1;
             }
@@ -857,7 +857,7 @@ namespace SightSign
                         X = 75,
                         Y = 50,
                     };
-                    this.areaText.Text = "6'' X 8''";
+                    this.areaText.Text = "8'' X 6''";
                     this.mainWindowBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(200, 254, 212, 42));
                     break;
                 case -1:
@@ -868,19 +868,30 @@ namespace SightSign
                         X = 175,
                         Y = 150,
                     };
-                    this.areaText.Text = "4'' X 6''";
-                    this.mainWindowBorder.BorderBrush = Brushes.Crimson;
+                    this.areaText.Text = "6'' X 4''";
+                    this.mainWindowBorder.BorderBrush = Brushes.CadetBlue;
                     break;
                 case -2:
-                    drawZoneRect.Height = 225;  // 2in. X 4in.
+                    drawZoneRect.Height = 225;  // 4in. X 2in.
                     drawZoneRect.Width = 415;
                     drawZoneRect.Location = new Point
                     {
                         X = 275,
                         Y = 250,
                     };
-                    this.areaText.Text = "2'' X 4''";
-                    this.mainWindowBorder.BorderBrush = Brushes.CadetBlue;
+                    this.areaText.Text = "4'' X 2''";
+                    this.mainWindowBorder.BorderBrush = Brushes.Gray;
+                    break;
+                case -3:
+                    drawZoneRect.Height = 100;  // 2in. X 1in.
+                    drawZoneRect.Width = 200;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 375,
+                        Y = 315,
+                    };
+                    this.areaText.Text = "2'' X 1''";
+                    this.mainWindowBorder.BorderBrush = Brushes.Crimson;
                     break;
                 default:
                     break;
