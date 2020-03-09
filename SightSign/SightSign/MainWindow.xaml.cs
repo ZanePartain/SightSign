@@ -588,6 +588,7 @@ namespace SightSign
                 ClearButton.Visibility = Visibility.Visible;
                 ImportButton.Visibility = Visibility.Visible;
 
+
                 inkCanvas.IsEnabled = true;
             }
             else
@@ -606,6 +607,7 @@ namespace SightSign
             }
 
             WriteButton.Visibility = StampButton.Visibility;
+            AreaButton.Visibility = StampButton.Visibility;
 
             SaveButton.Visibility = ClearButton.Visibility;
             LoadButton.Visibility = ClearButton.Visibility;
@@ -819,7 +821,13 @@ namespace SightSign
 
             // Set index 1 as the starting bottom-left corner 
             edgePoints[1].Y = drawZoneRect.Bottom;
-            edgePoints[1].X = drawZoneRect.Left;
+            edgePoints[1].X = targetArea == 0   // the code below is added adjust the bottom left dot
+                ? drawZoneRect.Left + 30
+                : targetArea == -1
+                ? drawZoneRect.Left + 15
+                : targetArea == -2
+                ? drawZoneRect.Left + 10
+                : drawZoneRect.Left;
 
             // Set index 2 as the starting bottom-right corner 
             edgePoints[2].Y = drawZoneRect.Bottom;
@@ -867,7 +875,7 @@ namespace SightSign
                     drawZoneRect.Width = 825;
                     drawZoneRect.Location = new Point
                     {
-                        X = 75,
+                        X = 100,
                         Y = 50,
                     };
                     this.areaText.Text = "8'' X 6''";
@@ -878,7 +886,7 @@ namespace SightSign
                     drawZoneRect.Width = 620;
                     drawZoneRect.Location = new Point
                     {
-                        X = 175,
+                        X = 200,
                         Y = 150,
                     };
                     this.areaText.Text = "6'' X 4''";
@@ -889,7 +897,7 @@ namespace SightSign
                     drawZoneRect.Width = 415;
                     drawZoneRect.Location = new Point
                     {
-                        X = 275,
+                        X = 300,
                         Y = 250,
                     };
                     this.areaText.Text = "4'' X 2''";
@@ -900,7 +908,7 @@ namespace SightSign
                     drawZoneRect.Width = 200;
                     drawZoneRect.Location = new Point
                     {
-                        X = 375,
+                        X = 400,
                         Y = 315,
                     };
                     this.areaText.Text = "2'' X 1''";
