@@ -289,7 +289,7 @@ namespace SightSign {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public double ButtonBorderWidth {
             get {
                 return ((double)(this["ButtonBorderWidth"]));

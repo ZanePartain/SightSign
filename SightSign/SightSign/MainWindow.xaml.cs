@@ -582,7 +582,7 @@ namespace SightSign
             //edit
             if (StampButton.Visibility == Visibility.Visible)
             {
-                EditButton.Content = "Done";
+                EditButton.ButtonText = "Done";
 
                 StampButton.Visibility = Visibility.Collapsed;
                 ClearButton.Visibility = Visibility.Visible;
@@ -593,8 +593,8 @@ namespace SightSign
             }
             else //done
             {
-                EditButton.Content = "Edit";
-                LoadButton.Content = "Load";
+                EditButton.ButtonText = "Edit";
+                LoadButton.ButtonText = "Load";
 
                 SigBank.Visibility = Visibility.Collapsed;
                 StampButton.Visibility = Visibility.Visible;
@@ -620,6 +620,17 @@ namespace SightSign
         {
             inkCanvas.Strokes.Clear();
             inkCanvasAnimations.Strokes.Clear();
+        }
+
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+            dialog.Title = "Please select an image file to import.";
+            if (dialog.ShowDialog() == true)
+            {
+                backGroundd.ImageSource = new BitmapImage(new Uri(dialog.FileName));
+            }
         }
 
         // Generate a file path for the saved signature.
@@ -880,9 +891,9 @@ namespace SightSign
 
         private void AreaButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
+            CircularGazeButton btn = (CircularGazeButton)sender;
 
-            if (btn.Content.ToString() == "Area")
+            if (btn.ButtonText == "Area")
             {
                 this.ToggleDrawingAreaButtons(true);
             }
@@ -957,15 +968,15 @@ namespace SightSign
         private double targetArea = 0.0;
         private void AdjustDrawingAreaButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
+            CircularGazeButton btn = (CircularGazeButton)sender;
 
             // logic to scale the strokes on the inkCanvas by 0.5
-            if (btn.Content.ToString() == "-" && targetArea >= -2)
+            if (btn.ButtonText == "-" && targetArea >= -2)
             {
                 targetArea -= 1;
             }
             // logic to scale the strokes on the inkCanvas by 0.5
-            else if (btn.Content.ToString() == "+" && targetArea < 0)
+            else if (btn.ButtonText == "+" && targetArea < 0)
             {
                 targetArea += 1;
  
@@ -1061,22 +1072,6 @@ namespace SightSign
     }
 
     #region ValueConverters
-
-    public class ColorToSolidBrushConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var color = (Color)value;
-
-            return new SolidColorBrush(Color.FromArgb(
-                color.A, color.R, color.G, color.B));
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     public class ArmConnectedToContentConverter : IValueConverter
     {
