@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.HandsFree.Mouse;
 using Microsoft.Win32;
@@ -33,7 +34,6 @@ namespace SightSign
         private bool _inTimer;
 
         private bool _stampInProgress;
-        
 
         public MainWindow()
         {
@@ -64,6 +64,9 @@ namespace SightSign
             SetDrawingAttributesFromSettings(inkCanvas.DefaultDrawingAttributes);
 
             LoadInkOnStartup();
+
+            this.SetDrawingZoneRectangle(0);  // set the init drawing zone rectangle
+            this.areaText.Visibility = Visibility.Collapsed;  // init as collapsed
         }
 
         private void SetDrawingAttributesFromSettings(DrawingAttributes attributes)
@@ -134,6 +137,10 @@ namespace SightSign
 
                 ApplySettingsToInk();
             }
+
+            // show current area.
+            // also establishes  4-dot configuration scale for robot.
+            // this.DrawAreaButton_Click(null, null);
         }
 
         // Apply the current settings to the currently loaded ink.
@@ -331,6 +338,13 @@ namespace SightSign
                 return;
             }
 
+
+            // Prevent the robot from writing strokes that are off of the primary screen.
+            Rect newBounds = new Rect();
+            newBounds.Width = SystemParameters.PrimaryScreenWidth - 125;     // any ink behind the buttons column will be cropped
+            newBounds.Height = SystemParameters.PrimaryScreenHeight - 125;  // any ink below the settings button will be cropped
+            inkCanvas.Strokes.Clip(newBounds);
+
             dot.Visibility = Visibility.Visible;
             dot.Opacity = 1.0;
 
@@ -376,10 +390,28 @@ namespace SightSign
                 dotTranslateTransform.Y = pt.Y - (inkCanvas.ActualHeight / 2);
             }
 
+            //TODO :: handle case where drawDimensionSize is less than the inkCanvas.Strokes size
+            // Apply the scalingFactor to the point that the robot will draw.
+            // FOR TESTING
+            if (!isShowingDrawZone)
+            {
+                // get the scaleFactor between the (inkSize + (drawDimensionSize - inkSize))
+                // and  the actual inkSize.
+
+                // TODO :: establish a new origin to be the Top Left of the Draw Rectangle
+                double scaleFactorX = (drawZoneRect.Width / (inkCanvas.ActualWidth));
+                double scaleFactorY = (drawZoneRect.Height / (inkCanvas.ActualHeight));
+
+                pt.X = (pt.X * scaleFactorX) + drawZoneRect.Left;
+                pt.Y = (pt.Y * scaleFactorY) + drawZoneRect.Top;
+            }
+          
             // Send the point to the robot too.
+            // Leave the arm in its current down state.
             RobotArm.Move(pt);
         }
 
+        private StylusPoint firstPoint;
         private void dispatcherTimerDotAnimation_Tick(object sender, EventArgs e)
         {
             if (_inTimer)
@@ -394,6 +426,7 @@ namespace SightSign
             {
                 // No, so create the first stroke and add th3 first dot to it.
                 var firstPt = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[0];
+                firstPoint = firstPt;
 
                 RobotArm.ArmDown(true);
 
@@ -476,7 +509,6 @@ namespace SightSign
             else
             {
                 // We're continuing to animate the stroke that we're were already on.
-
                 var stylusPt = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[_currentAnimatedPointIndex];
                 var stylusPtPrevious = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[_currentAnimatedPointIndex - 1];
 
@@ -496,7 +528,6 @@ namespace SightSign
                     stylusPt = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[_currentAnimatedPointIndex];
                 }
 
-                // Leave the arm in its current down state.
                 MoveDotAndRobotToStylusPoint(stylusPt);
 
                 // Extend the ink stroke being drawn out to include the point where the dot is now.
@@ -516,7 +547,7 @@ namespace SightSign
         private void AddFirstPointToNewStroke(StylusPoint pt)
         {
             // Create a new stroke for the continuing animation.
-            var ptCollection = new StylusPointCollection {pt};
+            var ptCollection = new StylusPointCollection { pt };
 
             _strokeBeingAnimated = new Stroke(ptCollection);
 
@@ -555,6 +586,8 @@ namespace SightSign
 
                 StampButton.Visibility = Visibility.Collapsed;
                 ClearButton.Visibility = Visibility.Visible;
+                ImportButton.Visibility = Visibility.Visible;
+
 
                 inkCanvas.IsEnabled = true;
             }
@@ -566,11 +599,17 @@ namespace SightSign
                 SigBank.Visibility = Visibility.Collapsed;
                 StampButton.Visibility = Visibility.Visible;
                 ClearButton.Visibility = Visibility.Collapsed;
-
+                ImportButton.Visibility = Visibility.Collapsed;
+                backGroundd.ImageSource = null;
                 inkCanvas.IsEnabled = false;
+
+                // show current area.
+                // also establishes  4-dot configuration scale for robot.
+                // this.DrawAreaButton_Click(null, null);
             }
 
             WriteButton.Visibility = StampButton.Visibility;
+            AreaButton.Visibility = StampButton.Visibility;
 
             SaveButton.Visibility = ClearButton.Visibility;
             LoadButton.Visibility = ClearButton.Visibility;
@@ -752,13 +791,14 @@ namespace SightSign
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            var settingsWindow = new SettingsWindow(this, _settings, RobotArm) {Owner = this};
+            var settingsWindow = new SettingsWindow(this, _settings, RobotArm) { Owner = this };
 
             settingsWindow.ShowDialog();
         }
 
         private void Dot_OnClick(object sender, RoutedEventArgs e)
         {
+
             if (_dispatcherTimerDotAnimation != null)
             {
                 // Only react to the click on the dot if the the timer's not currently running.
@@ -800,6 +840,196 @@ namespace SightSign
             }
         }
 
+
+        private void ToggleDrawingAreaButtons(bool show)
+        {
+            if (show)
+            {
+                // set the Increase and Drecrease and Draw buttons visibility to visible
+                this.IncreaseDrawingAreaButton.Visibility = Visibility.Visible;
+                this.DecreaseDrawingAreaButton.Visibility = Visibility.Visible;
+                this.DrawAreaButton.Visibility = Visibility.Visible;
+                this.DoneDrawingAreaButton.Visibility = Visibility.Visible;
+                this.areaText.Visibility = Visibility.Visible;
+
+                // set all of the Drawing buttons visibility to collapsed
+                this.StampButton.Visibility = Visibility.Collapsed;
+                this.WriteButton.Visibility = Visibility.Collapsed;
+                this.AreaButton.Visibility = Visibility.Collapsed;
+                this.EditButton.Visibility = Visibility.Collapsed;
+
+            }
+            if (!show)
+            {
+                // set the Increase and Drecrease and Draw buttons visibility to collapsed
+                this.IncreaseDrawingAreaButton.Visibility = Visibility.Collapsed;
+                this.DecreaseDrawingAreaButton.Visibility = Visibility.Collapsed;
+                this.DrawAreaButton.Visibility = Visibility.Collapsed;
+                this.DoneDrawingAreaButton.Visibility = Visibility.Collapsed;
+                this.areaText.Visibility = Visibility.Collapsed;
+
+                // set all of the Drawing buttons visibility to visible
+                this.StampButton.Visibility = Visibility.Visible;
+                this.WriteButton.Visibility = Visibility.Visible;
+                this.AreaButton.Visibility = Visibility.Visible;
+                this.EditButton.Visibility = Visibility.Visible;
+            }
+
+        }
+
+
+        private void AreaButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
+
+            if (btn.Content.ToString() == "Area")
+            {
+                this.ToggleDrawingAreaButtons(true);
+            }
+            else
+            {
+                this.ToggleDrawingAreaButtons(false);
+            }
+        }
+
+
+        private void RobotPlaceDot()
+        {
+            RobotArm.ArmDown(true);
+            RobotArm.ArmDown(false);
+        }
+
+        private void MoveRobotToShowDrawZone(StylusPoint[] edgePoints)
+        {
+            if (edgePoints.Length >= 4)
+            {
+                MoveDotAndRobotToStylusPoint(edgePoints[0]);  // dot top-left
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[1]);  // dot bottom-left
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[2]);  // dot bottom-right
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[3]);  // dot top-right
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[0]);  // move back to start
+            }
+        }
+
+
+        bool isShowingDrawZone = false;
+        private void DrawAreaButton_Click(object sender, RoutedEventArgs e)
+        {
+            StylusPoint[] edgePoints = new StylusPoint[4];
+
+            // Set index 0 as the starting top-left corner 
+            edgePoints[0].Y = drawZoneRect.Top;
+            edgePoints[0].X = drawZoneRect.Left;
+
+            // Set index 1 as the starting bottom-left corner 
+            edgePoints[1].Y = drawZoneRect.Bottom;
+            edgePoints[1].X = targetArea == 0   // the code below is added adjust the bottom left dot
+                ? drawZoneRect.Left + 30
+                : targetArea == -1
+                ? drawZoneRect.Left + 15
+                : targetArea == -2
+                ? drawZoneRect.Left + 10
+                : drawZoneRect.Left;
+
+            // Set index 2 as the starting bottom-right corner 
+            edgePoints[2].Y = drawZoneRect.Bottom;
+            edgePoints[2].X = drawZoneRect.Right;
+
+            // Set index 3 as the starting top-right corner 
+            edgePoints[3].Y = drawZoneRect.Top;
+            edgePoints[3].X = drawZoneRect.Right;
+
+            // flag is true so we dont apply scaling factor
+            isShowingDrawZone = true;
+            MoveRobotToShowDrawZone(edgePoints);
+            isShowingDrawZone = false;
+        }
+
+
+        private double targetArea = 0.0;
+        private void AdjustDrawingAreaButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.Button btn = (System.Windows.Controls.Button)sender;
+
+            // logic to scale the strokes on the inkCanvas by 0.5
+            if (btn.Content.ToString() == "-" && targetArea >= -2)
+            {
+                targetArea -= 1;
+            }
+            // logic to scale the strokes on the inkCanvas by 0.5
+            else if (btn.Content.ToString() == "+" && targetArea < 0)
+            {
+                targetArea += 1;
+ 
+            }
+
+            this.SetDrawingZoneRectangle(targetArea);
+        }
+
+
+        Rect drawZoneRect = new Rect();
+        private void SetDrawingZoneRectangle(double targetArea)
+        {
+            switch (targetArea)
+            {
+                case 0:
+                    drawZoneRect.Height = 685;  // 6in. X 8in.
+                    drawZoneRect.Width = 825;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 100,
+                        Y = 50,
+                    };
+                    this.areaText.Text = "8'' X 6''";
+                    this.mainWindowBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(200, 254, 212, 42));
+                    break;
+                case -1:
+                    drawZoneRect.Height = 450;  // 4in. X 6in.
+                    drawZoneRect.Width = 620;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 200,
+                        Y = 150,
+                    };
+                    this.areaText.Text = "6'' X 4''";
+                    this.mainWindowBorder.BorderBrush = Brushes.CadetBlue;
+                    break;
+                case -2:
+                    drawZoneRect.Height = 225;  // 4in. X 2in.
+                    drawZoneRect.Width = 415;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 300,
+                        Y = 250,
+                    };
+                    this.areaText.Text = "4'' X 2''";
+                    this.mainWindowBorder.BorderBrush = Brushes.Gray;
+                    break;
+                case -3:
+                    drawZoneRect.Height = 100;  // 2in. X 1in.
+                    drawZoneRect.Width = 200;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 400,
+                        Y = 315,
+                    };
+                    this.areaText.Text = "2'' X 1''";
+                    this.mainWindowBorder.BorderBrush = Brushes.Crimson;
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
         #endregion ButtonClickHandlers
 
         #region RobotControl
@@ -831,6 +1061,22 @@ namespace SightSign
     }
 
     #region ValueConverters
+
+    public class ColorToSolidBrushConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var color = (Color)value;
+
+            return new SolidColorBrush(Color.FromArgb(
+                color.A, color.R, color.G, color.B));
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public class ArmConnectedToContentConverter : IValueConverter
     {

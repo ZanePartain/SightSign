@@ -71,5 +71,8 @@
     <Setting Name="ButtonBorderWidth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="RobotType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Swift</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
