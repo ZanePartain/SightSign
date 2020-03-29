@@ -202,6 +202,7 @@
                 <sightSign:CircularGazeButton Grid.Row="1"
                     x:Name="SaveButton"
                     Visibility="Collapsed"
+                    IsEnabled="False"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
                     Radius="60"
@@ -215,6 +216,7 @@
                 <sightSign:CircularGazeButton Grid.Row="2"
                     x:Name="LoadButton"
                     Visibility="Collapsed"
+                    IsEnabled="False"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
                     Radius="60"

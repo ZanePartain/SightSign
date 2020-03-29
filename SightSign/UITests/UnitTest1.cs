@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
@@ -32,11 +33,25 @@ namespace UITests
         [TestMethod]
         public void TestEditButtonClick()
         {
-            // The edit button gets pressed when running the test, but the last assert
-            // doesn't work although it should be working.
-            Assert.IsFalse(session.FindElementByAccessibilityId("ClearButton").Enabled);
-            session.FindElementByAccessibilityId("EditButton").Click();
-            Assert.IsTrue(session.FindElementByAccessibilityId("ClearButton").Enabled);
+
+            PointerInputDevice mouseDevice = new PointerInputDevice(PointerKind.Touch);
+
+            var editButton = session.FindElementByAccessibilityId("EditButton");
+            var clearButton = session.FindElementByAccessibilityId("ClearButton");
+            var loadButton = session.FindElementByAccessibilityId("LoadButton");
+            var saveButton = session.FindElementByAccessibilityId("SaveButton");
+
+            Assert.IsFalse(clearButton.Enabled);
+            Assert.IsFalse(loadButton.Enabled);
+            Assert.IsFalse(saveButton.Enabled);
+
+            editButton.Click();
+
+            Thread.Sleep(TimeSpan.FromSeconds(3));
+
+            Assert.IsTrue(clearButton.Enabled);
+            Assert.IsTrue(loadButton.Enabled);
+            Assert.IsTrue(saveButton.Enabled);
         }
     }
 }
