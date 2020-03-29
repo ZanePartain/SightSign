@@ -790,7 +790,7 @@ namespace SightSign
 
             AddInkFromFile(fileName);
 
-            LoadButton.Content = "Load";
+            LoadButton.ButtonText = "Load";
             SigBank.Visibility = Visibility.Collapsed;
 
             // This ink will be automatically loaded when the app next starts.
