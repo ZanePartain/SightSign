@@ -75,7 +75,7 @@ namespace SightSign
             _mainWindow.RobotArm.ZShift += 0.02;
         }
 
-        private void ShowCornersButton_Click(object sender, RoutedEventArgs e)
+        /*private void ShowCornersButton_Click(object sender, RoutedEventArgs e)
         {
             // Find the bounding rectangle of all the strokes in the ink.
             var countStrokes = _mainWindow.inkCanvas.Strokes.Count;
@@ -117,5 +117,6 @@ namespace SightSign
                 _mainWindow.RobotArm.ArmDown(false);
             }
         }
+        */
     }
 }

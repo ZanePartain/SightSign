@@ -9,9 +9,11 @@ using System.Windows.Data;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.HandsFree.Mouse;
 using Microsoft.Win32;
+using System.Windows.Media.Imaging;
 
 namespace SightSign
 {
@@ -42,7 +44,6 @@ namespace SightSign
             // Assume the screen size won't change after the app starts.
             var xScreen = SystemParameters.PrimaryScreenWidth;
             var yScreen = SystemParameters.PrimaryScreenHeight;
-
             RobotArm = new RobotArm(
                 xScreen / 2.0,
                 yScreen / 2.0,
@@ -63,6 +64,9 @@ namespace SightSign
             SetDrawingAttributesFromSettings(inkCanvas.DefaultDrawingAttributes);
 
             LoadInkOnStartup();
+
+            this.SetDrawingZoneRectangle(0);  // set the init drawing zone rectangle
+            this.areaText.Visibility = Visibility.Collapsed;  // init as collapsed
         }
 
         private void SetDrawingAttributesFromSettings(DrawingAttributes attributes)
@@ -133,6 +137,10 @@ namespace SightSign
 
                 ApplySettingsToInk();
             }
+
+            // show current area.
+            // also establishes  4-dot configuration scale for robot.
+            // this.DrawAreaButton_Click(null, null);
         }
 
         // Apply the current settings to the currently loaded ink.
@@ -330,6 +338,13 @@ namespace SightSign
                 return;
             }
 
+
+            // Prevent the robot from writing strokes that are off of the primary screen.
+            Rect newBounds = new Rect();
+            newBounds.Width = SystemParameters.PrimaryScreenWidth - 125;     // any ink behind the buttons column will be cropped
+            newBounds.Height = SystemParameters.PrimaryScreenHeight - 125;  // any ink below the settings button will be cropped
+            inkCanvas.Strokes.Clip(newBounds);
+
             dot.Visibility = Visibility.Visible;
             dot.Opacity = 1.0;
 
@@ -375,10 +390,28 @@ namespace SightSign
                 dotTranslateTransform.Y = pt.Y - (inkCanvas.ActualHeight / 2);
             }
 
+            //TODO :: handle case where drawDimensionSize is less than the inkCanvas.Strokes size
+            // Apply the scalingFactor to the point that the robot will draw.
+            // FOR TESTING
+            if (!isShowingDrawZone)
+            {
+                // get the scaleFactor between the (inkSize + (drawDimensionSize - inkSize))
+                // and  the actual inkSize.
+
+                // TODO :: establish a new origin to be the Top Left of the Draw Rectangle
+                double scaleFactorX = (drawZoneRect.Width / (inkCanvas.ActualWidth));
+                double scaleFactorY = (drawZoneRect.Height / (inkCanvas.ActualHeight));
+
+                pt.X = (pt.X * scaleFactorX) + drawZoneRect.Left;
+                pt.Y = (pt.Y * scaleFactorY) + drawZoneRect.Top;
+            }
+          
             // Send the point to the robot too.
+            // Leave the arm in its current down state.
             RobotArm.Move(pt);
         }
 
+        private StylusPoint firstPoint;
         private void dispatcherTimerDotAnimation_Tick(object sender, EventArgs e)
         {
             if (_inTimer)
@@ -393,6 +426,7 @@ namespace SightSign
             {
                 // No, so create the first stroke and add th3 first dot to it.
                 var firstPt = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[0];
+                firstPoint = firstPt;
 
                 RobotArm.ArmDown(true);
 
@@ -475,7 +509,6 @@ namespace SightSign
             else
             {
                 // We're continuing to animate the stroke that we're were already on.
-
                 var stylusPt = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[_currentAnimatedPointIndex];
                 var stylusPtPrevious = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[_currentAnimatedPointIndex - 1];
 
@@ -495,7 +528,6 @@ namespace SightSign
                     stylusPt = inkCanvas.Strokes[_currentAnimatedStrokeIndex].StylusPoints[_currentAnimatedPointIndex];
                 }
 
-                // Leave the arm in its current down state.
                 MoveDotAndRobotToStylusPoint(stylusPt);
 
                 // Extend the ink stroke being drawn out to include the point where the dot is now.
@@ -515,7 +547,7 @@ namespace SightSign
         private void AddFirstPointToNewStroke(StylusPoint pt)
         {
             // Create a new stroke for the continuing animation.
-            var ptCollection = new StylusPointCollection {pt};
+            var ptCollection = new StylusPointCollection { pt };
 
             _strokeBeingAnimated = new Stroke(ptCollection);
 
@@ -547,26 +579,37 @@ namespace SightSign
         {
             ResetWriting();
 
+            //edit
             if (StampButton.Visibility == Visibility.Visible)
             {
-                EditButton.Content = "Done";
+                EditButton.ButtonText = "Done";
 
                 StampButton.Visibility = Visibility.Collapsed;
                 ClearButton.Visibility = Visibility.Visible;
+                ImportButton.Visibility = Visibility.Visible;
+
 
                 inkCanvas.IsEnabled = true;
             }
-            else
+            else //done
             {
-                EditButton.Content = "Edit";
+                EditButton.ButtonText = "Edit";
+                LoadButton.ButtonText = "Load";
 
+                SigBank.Visibility = Visibility.Collapsed;
                 StampButton.Visibility = Visibility.Visible;
                 ClearButton.Visibility = Visibility.Collapsed;
-
+                ImportButton.Visibility = Visibility.Collapsed;
+                backGroundd.ImageSource = null;
                 inkCanvas.IsEnabled = false;
+
+                // show current area.
+                // also establishes  4-dot configuration scale for robot.
+                // this.DrawAreaButton_Click(null, null);
             }
 
             WriteButton.Visibility = StampButton.Visibility;
+            AreaButton.Visibility = StampButton.Visibility;
 
             SaveButton.Visibility = ClearButton.Visibility;
             LoadButton.Visibility = ClearButton.Visibility;
@@ -579,64 +622,194 @@ namespace SightSign
             inkCanvasAnimations.Strokes.Clear();
         }
 
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+            dialog.Title = "Please select an image file to import.";
+            if (dialog.ShowDialog() == true)
+            {
+                backGroundd.ImageSource = new BitmapImage(new Uri(dialog.FileName));
+            }
+        }
+
+        // Generate a file path for the saved signature.
+        private string Generate_FilePath()
+        {
+            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\ink\\" + DateTime.Now.ToString("dd_MMM_yyy_HH_mm") + ".isf";
+            fileName.Replace(":", "_");
+            fileName.Replace(",", "_");
+            return fileName;
+        }
+
+        // Caputre the screen and save it as a jpeg in sigBank with same file path as fileDest
+        private void CaptureScreen(string fileDest)
+        {
+            //get the virtual screen dimensions w/o left and right navigation grid columns
+            double screenLeft = (1.4)*NavGrid.ActualWidth;
+            double screenTop = SystemParameters.VirtualScreenTop + NavGrid.ActualWidth/2;
+            double screenWidth = canvas.ActualWidth - (1.2)*settingsGrid.ActualWidth;
+            double screenHeight = SystemParameters.VirtualScreenHeight - NavGrid.ActualWidth;
+
+            using (System.Drawing.Bitmap bmap = new System.Drawing.Bitmap((int)screenWidth, (int)screenHeight))
+            {
+                using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(bmap))
+                {
+                    graphics.CopyFromScreen((int)screenLeft, (int)screenTop, 0, 0, bmap.Size);
+                }
+
+                //save jpeg of ink file
+                string imgFilePath = fileDest.Replace("\\ink", "\\img");
+                imgFilePath = imgFilePath.Replace(".isf", ".jpg");
+                bmap.Save(imgFilePath, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+        }
+
+        private void Create_SaveFile_Directory()
+        {
+            string inkDir = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\ink";
+            string imgDir = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\img";
+            if (!Directory.Exists(inkDir))
+            {
+                Directory.CreateDirectory(inkDir);
+            }
+            if (!Directory.Exists(imgDir))
+            {
+                Directory.CreateDirectory(imgDir);
+            }
+        }
+
         // Save whatever ink is shown in the InkCanvas that the user can ink on, to an ISF file.
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new SaveFileDialog
+            this.Create_SaveFile_Directory();  // makes sure sigBank directory exists 
+            try
             {
-                DefaultExt = ".isf",
-                Filter = "ISF files (*.isf)|*.isf"
-            };
-
-            var result = dlg.ShowDialog();
-            if (result == true)
+                //save ink file
+                string fileName = this.Generate_FilePath();
+                var file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+                inkCanvas.Strokes.Save(file);
+                file.Close();
+        
+                this.CaptureScreen(fileName);
+                
+                // This ink will be automatically loaded when the app next starts.
+                Settings1.Default.LoadedInkLocation = fileName;
+                Settings1.Default.Save();
+            }
+            catch (Exception ex)
             {
-                try
-                {
-                    var file = new FileStream(dlg.FileName, FileMode.Create, FileAccess.Write);
-                    inkCanvas.Strokes.Save(file);
-                    file.Close();
-
-                    // This ink will be automatically loaded when the app next starts.
-                    Settings1.Default.LoadedInkLocation = dlg.FileName;
-                    Settings1.Default.Save();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("Failed to save ink: " + ex.Message);
-                }
+                Debug.WriteLine("Failed to save ink: " + ex.Message);
             }
         }
+
+        //Exit out of load pop up
+        private void SignatureButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadButton.ButtonText = "Load";
+            SigBank.Visibility = Visibility.Collapsed;
+        }
+
 
         // Load up ink from an ISF file that the user selects from the OpenFileDialog.
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new OpenFileDialog
-            {
-                DefaultExt = ".isf",
-                Filter = "ISF files (*.isf)|*.isf"
-            };
+            SigBank.Children.Clear();
+            if (SigBank.Visibility == Visibility.Collapsed){
+                LoadButton.ButtonText = "Close";
+                
+                // Read all signatures from ..//sigBank
+                string sigBankImagePath = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\img";
+                string[] sigImagePaths = Directory.GetFiles(sigBankImagePath);
+                string[] recentSigImagePaths = new string[4];
 
-            var result = dlg.ShowDialog();
-            if (result == true)
-            {
-                AddInkFromFile(dlg.FileName);
+                // Get array with last 4 entries of "sigImagePaths", associate these with the buttons somehow (TODO)
+                int count = 0;
+                while (count < sigImagePaths.Length && count < 4)
+                {
+                    recentSigImagePaths[count] = sigImagePaths[(sigImagePaths.Length-1) - count];
+                    count++;
+                }
 
-                // This ink will be automatically loaded when the app next starts.
-                Settings1.Default.LoadedInkLocation = dlg.FileName;
-                Settings1.Default.Save();
+                // Iterate over thumbnails files and convert to Image.
+                // Then add Image to respective sigBank column & row.
+                // NOTE:: if you have time you can dynamically allocate rows and columns for better UI.
+                int row = 0;
+                for (int i = 0; i < 4 && recentSigImagePaths[i] != null; i++)
+                {
+                    if (i == 2) { row++; } // go to next row for 3rd and 4th thumbnails
+
+                    // create new image from file path
+                    System.Windows.Controls.Image img = new System.Windows.Controls.Image();
+                    BitmapImage src = new BitmapImage();
+                    src.BeginInit();
+                    src.UriSource = new Uri(recentSigImagePaths[i], UriKind.Relative);
+                    src.CacheOption = BitmapCacheOption.OnLoad;
+                    src.EndInit();
+                    img.Source = src;
+                    img.Height = Height / 3;  //set image size (consider programatically creating margins)
+                    img.Width = Width / 3;
+                    img.Stretch = Stretch.Uniform;
+
+                    //replace special characters in path with octal rep. for btn name property
+                    string name = recentSigImagePaths[i].Replace(":", "3A").Replace("\\", "5C").Replace(".jpg", "");
+
+                    //create button to wrap image and bind Click event
+                    System.Windows.Controls.Button btn = new System.Windows.Controls.Button();
+                    btn.Name = name;
+                    btn.Click += ThumbnailButton_Click;
+                    btn.Content = img;
+                    btn.SetValue(System.Windows.Controls.Grid.ColumnProperty, i%2); //assign row & column and row propeties 
+                    btn.SetValue(System.Windows.Controls.Grid.RowProperty, row);
+                    btn.MaxHeight = img.Height;
+                    btn.MaxWidth = img.Width;
+                    btn.Background = Brushes.Transparent;
+                    btn.BorderBrush = Brushes.Transparent;                  
+
+                    SigBank.Children.Add(btn);
+                }
+
+                SigBank.Visibility = Visibility.Visible;               
             }
+            else
+            {
+                LoadButton.ButtonText = "Load";
+                SigBank.Visibility = Visibility.Collapsed;
+            }
+
         }
+
+
+        private void ThumbnailButton_Click(object sender, RoutedEventArgs e)
+        {
+            //convert sender to button; replace octal 
+            System.Windows.Controls.Button btn_clicked = (System.Windows.Controls.Button)sender;
+            string fileName = btn_clicked.Name; 
+            fileName = fileName.Replace("3A", ":").Replace("5C", "\\").Replace("img","ink") + ".isf";
+
+
+            AddInkFromFile(fileName);
+
+            LoadButton.ButtonText = "Load";
+            SigBank.Visibility = Visibility.Collapsed;
+
+            // This ink will be automatically loaded when the app next starts.
+            Settings1.Default.LoadedInkLocation = fileName;
+            Settings1.Default.Save();
+        }
+
+
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            var settingsWindow = new SettingsWindow(this, _settings, RobotArm) {Owner = this};
+            var settingsWindow = new SettingsWindow(this, _settings, RobotArm) { Owner = this };
 
             settingsWindow.ShowDialog();
         }
 
         private void Dot_OnClick(object sender, RoutedEventArgs e)
         {
+
             if (_dispatcherTimerDotAnimation != null)
             {
                 // Only react to the click on the dot if the the timer's not currently running.
@@ -678,6 +851,196 @@ namespace SightSign
             }
         }
 
+
+        private void ToggleDrawingAreaButtons(bool show)
+        {
+            if (show)
+            {
+                // set the Increase and Drecrease and Draw buttons visibility to visible
+                this.IncreaseDrawingAreaButton.Visibility = Visibility.Visible;
+                this.DecreaseDrawingAreaButton.Visibility = Visibility.Visible;
+                this.DrawAreaButton.Visibility = Visibility.Visible;
+                this.DoneDrawingAreaButton.Visibility = Visibility.Visible;
+                this.areaText.Visibility = Visibility.Visible;
+
+                // set all of the Drawing buttons visibility to collapsed
+                this.StampButton.Visibility = Visibility.Collapsed;
+                this.WriteButton.Visibility = Visibility.Collapsed;
+                this.AreaButton.Visibility = Visibility.Collapsed;
+                this.EditButton.Visibility = Visibility.Collapsed;
+
+            }
+            if (!show)
+            {
+                // set the Increase and Drecrease and Draw buttons visibility to collapsed
+                this.IncreaseDrawingAreaButton.Visibility = Visibility.Collapsed;
+                this.DecreaseDrawingAreaButton.Visibility = Visibility.Collapsed;
+                this.DrawAreaButton.Visibility = Visibility.Collapsed;
+                this.DoneDrawingAreaButton.Visibility = Visibility.Collapsed;
+                this.areaText.Visibility = Visibility.Collapsed;
+
+                // set all of the Drawing buttons visibility to visible
+                this.StampButton.Visibility = Visibility.Visible;
+                this.WriteButton.Visibility = Visibility.Visible;
+                this.AreaButton.Visibility = Visibility.Visible;
+                this.EditButton.Visibility = Visibility.Visible;
+            }
+
+        }
+
+
+        private void AreaButton_Click(object sender, RoutedEventArgs e)
+        {
+            CircularGazeButton btn = (CircularGazeButton)sender;
+
+            if (btn.ButtonText == "Area")
+            {
+                this.ToggleDrawingAreaButtons(true);
+            }
+            else
+            {
+                this.ToggleDrawingAreaButtons(false);
+            }
+        }
+
+
+        private void RobotPlaceDot()
+        {
+            RobotArm.ArmDown(true);
+            RobotArm.ArmDown(false);
+        }
+
+        private void MoveRobotToShowDrawZone(StylusPoint[] edgePoints)
+        {
+            if (edgePoints.Length >= 4)
+            {
+                MoveDotAndRobotToStylusPoint(edgePoints[0]);  // dot top-left
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[1]);  // dot bottom-left
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[2]);  // dot bottom-right
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[3]);  // dot top-right
+                RobotPlaceDot();
+
+                MoveDotAndRobotToStylusPoint(edgePoints[0]);  // move back to start
+            }
+        }
+
+
+        bool isShowingDrawZone = false;
+        private void DrawAreaButton_Click(object sender, RoutedEventArgs e)
+        {
+            StylusPoint[] edgePoints = new StylusPoint[4];
+
+            // Set index 0 as the starting top-left corner 
+            edgePoints[0].Y = drawZoneRect.Top;
+            edgePoints[0].X = drawZoneRect.Left;
+
+            // Set index 1 as the starting bottom-left corner 
+            edgePoints[1].Y = drawZoneRect.Bottom;
+            edgePoints[1].X = targetArea == 0   // the code below is added adjust the bottom left dot
+                ? drawZoneRect.Left + 30
+                : targetArea == -1
+                ? drawZoneRect.Left + 15
+                : targetArea == -2
+                ? drawZoneRect.Left + 10
+                : drawZoneRect.Left;
+
+            // Set index 2 as the starting bottom-right corner 
+            edgePoints[2].Y = drawZoneRect.Bottom;
+            edgePoints[2].X = drawZoneRect.Right;
+
+            // Set index 3 as the starting top-right corner 
+            edgePoints[3].Y = drawZoneRect.Top;
+            edgePoints[3].X = drawZoneRect.Right;
+
+            // flag is true so we dont apply scaling factor
+            isShowingDrawZone = true;
+            MoveRobotToShowDrawZone(edgePoints);
+            isShowingDrawZone = false;
+        }
+
+
+        private double targetArea = 0.0;
+        private void AdjustDrawingAreaButton_Click(object sender, RoutedEventArgs e)
+        {
+            CircularGazeButton btn = (CircularGazeButton)sender;
+
+            // logic to scale the strokes on the inkCanvas by 0.5
+            if (btn.ButtonText == "-" && targetArea >= -2)
+            {
+                targetArea -= 1;
+            }
+            // logic to scale the strokes on the inkCanvas by 0.5
+            else if (btn.ButtonText == "+" && targetArea < 0)
+            {
+                targetArea += 1;
+ 
+            }
+
+            this.SetDrawingZoneRectangle(targetArea);
+        }
+
+
+        Rect drawZoneRect = new Rect();
+        private void SetDrawingZoneRectangle(double targetArea)
+        {
+            switch (targetArea)
+            {
+                case 0:
+                    drawZoneRect.Height = 685;  // 6in. X 8in.
+                    drawZoneRect.Width = 825;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 100,
+                        Y = 50,
+                    };
+                    this.areaText.Text = "8'' X 6''";
+                    this.mainWindowBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(200, 254, 212, 42));
+                    break;
+                case -1:
+                    drawZoneRect.Height = 450;  // 4in. X 6in.
+                    drawZoneRect.Width = 620;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 200,
+                        Y = 150,
+                    };
+                    this.areaText.Text = "6'' X 4''";
+                    this.mainWindowBorder.BorderBrush = Brushes.CadetBlue;
+                    break;
+                case -2:
+                    drawZoneRect.Height = 225;  // 4in. X 2in.
+                    drawZoneRect.Width = 415;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 300,
+                        Y = 250,
+                    };
+                    this.areaText.Text = "4'' X 2''";
+                    this.mainWindowBorder.BorderBrush = Brushes.Gray;
+                    break;
+                case -3:
+                    drawZoneRect.Height = 100;  // 2in. X 1in.
+                    drawZoneRect.Width = 200;
+                    drawZoneRect.Location = new Point
+                    {
+                        X = 400,
+                        Y = 315,
+                    };
+                    this.areaText.Text = "2'' X 1''";
+                    this.mainWindowBorder.BorderBrush = Brushes.Crimson;
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
         #endregion ButtonClickHandlers
 
         #region RobotControl
@@ -709,22 +1072,6 @@ namespace SightSign
     }
 
     #region ValueConverters
-
-    public class ColorToSolidBrushConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var color = (Color)value;
-
-            return new SolidColorBrush(Color.FromArgb(
-                color.A, color.R, color.G, color.B));
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     public class ArmConnectedToContentConverter : IValueConverter
     {
