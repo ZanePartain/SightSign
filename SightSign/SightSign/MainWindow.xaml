@@ -371,12 +371,20 @@
                 <Button
                   x:Name="ImportButton"
                   Visibility="Collapsed"
-                  Height="50"
-                  Width="50"
+                  Height="auto" 
+                  Width="auto" 
                   HorizontalAlignment="Right"
                   VerticalAlignment="Top"
+                  FontSize="20"
+                  Content="Import"
+                  Margin="0,0,20,0"
+                  Foreground="White"
                   Click="ImportButton_Click">
-                    <!--<Image Source="/Icons/Import.jpg"/>-->
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <TextBlock Text="{TemplateBinding Content}"/>
+                        </ControlTemplate>
+                    </Button.Template>
                 </Button>
             </Grid>
         </Grid>

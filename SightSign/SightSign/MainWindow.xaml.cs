@@ -706,7 +706,7 @@ namespace SightSign
         //Exit out of load pop up
         private void SignatureButton_Click(object sender, RoutedEventArgs e)
         {
-            LoadButton.Content = "Load";
+            LoadButton.ButtonText = "Load";
             SigBank.Visibility = Visibility.Collapsed;
         }
 
@@ -716,7 +716,7 @@ namespace SightSign
         {
             SigBank.Children.Clear();
             if (SigBank.Visibility == Visibility.Collapsed){
-                LoadButton.Content = "Close";
+                LoadButton.ButtonText = "Close";
                 
                 // Read all signatures from ..//sigBank
                 string sigBankImagePath = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\img";
@@ -773,7 +773,7 @@ namespace SightSign
             }
             else
             {
-                LoadButton.Content = "Load";
+                LoadButton.ButtonText = "Load";
                 SigBank.Visibility = Visibility.Collapsed;
             }
 
