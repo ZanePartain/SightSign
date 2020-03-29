@@ -585,8 +585,12 @@ namespace SightSign
                 EditButton.ButtonText = "Done";
 
                 StampButton.Visibility = Visibility.Collapsed;
+                StampButton.IsEnabled = false;
+
                 ClearButton.Visibility = Visibility.Visible;
                 ImportButton.Visibility = Visibility.Visible;
+                ClearButton.IsEnabled = true;
+                ImportButton.IsEnabled = true;
 
 
                 inkCanvas.IsEnabled = true;
@@ -600,6 +604,12 @@ namespace SightSign
                 StampButton.Visibility = Visibility.Visible;
                 ClearButton.Visibility = Visibility.Collapsed;
                 ImportButton.Visibility = Visibility.Collapsed;
+
+                SigBank.IsEnabled = true;
+                StampButton.IsEnabled = true;
+                ClearButton.IsEnabled = false;
+                ImportButton.IsEnabled = false;
+
                 backGroundd.ImageSource = null;
                 inkCanvas.IsEnabled = false;
 
@@ -611,12 +621,34 @@ namespace SightSign
             WriteButton.Visibility = StampButton.Visibility;
             AreaButton.Visibility = StampButton.Visibility;
 
+            if (StampButton.Visibility == Visibility.Collapsed)
+            {
+                WriteButton.IsEnabled = false;
+                AreaButton.IsEnabled = false;
+            }
+            else
+            {
+                WriteButton.IsEnabled = true;
+                AreaButton.IsEnabled = true;
+            }
+
             SaveButton.Visibility = ClearButton.Visibility;
             LoadButton.Visibility = ClearButton.Visibility;
+
+            if (ClearButton.Visibility == Visibility.Collapsed)
+            {
+                SaveButton.IsEnabled = false;
+                LoadButton.IsEnabled = false;
+            }
+            else
+            {
+                SaveButton.IsEnabled = true;
+                LoadButton.IsEnabled = true;
+            }
         }
 
-        // Clear all ink from the app.
-        private void ClearButton_Click(object sender, RoutedEventArgs e)
+            // Clear all ink from the app.
+            private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
             inkCanvasAnimations.Strokes.Clear();
