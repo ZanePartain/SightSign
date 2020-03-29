@@ -67,6 +67,7 @@ namespace SightSign
 
             this.SetDrawingZoneRectangle(0);  // set the init drawing zone rectangle
             this.areaText.Visibility = Visibility.Collapsed;  // init as collapsed
+            this.Create_SaveFile_Directory(); // init the save file directory in the AppX folder
         }
 
         private void SetDrawingAttributesFromSettings(DrawingAttributes attributes)
@@ -105,6 +106,7 @@ namespace SightSign
             {
                 // Look for default ink if we can find it in the same folder as the exe.
                 filename = AppDomain.CurrentDomain.BaseDirectory + "Signature.isf";
+                
             }
 
             if (File.Exists(filename))
@@ -636,7 +638,7 @@ namespace SightSign
         // Generate a file path for the saved signature.
         private string Generate_FilePath()
         {
-            string fileName = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\ink\\" + DateTime.Now.ToString("dd_MMM_yyy_HH_mm") + ".isf";
+            string fileName =AppDomain.CurrentDomain.BaseDirectory + "\\sigBank\\ink\\" + DateTime.Now.ToString("dd_MMM_yyy_HH_mm") + ".isf";
             fileName.Replace(":", "_");
             fileName.Replace(",", "_");
             return fileName;
@@ -667,8 +669,8 @@ namespace SightSign
 
         private void Create_SaveFile_Directory()
         {
-            string inkDir = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\ink";
-            string imgDir = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\img";
+            string inkDir = AppDomain.CurrentDomain.BaseDirectory + "\\sigBank\\ink";
+            string imgDir = AppDomain.CurrentDomain.BaseDirectory + "\\sigBank\\img";
             if (!Directory.Exists(inkDir))
             {
                 Directory.CreateDirectory(inkDir);
@@ -679,6 +681,13 @@ namespace SightSign
             }
         }
 
+        private void SaveInkFile(string fileName)
+        {
+            var file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+            inkCanvas.Strokes.Save(file);
+            file.Close();
+        }
+
         // Save whatever ink is shown in the InkCanvas that the user can ink on, to an ISF file.
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
@@ -687,10 +696,7 @@ namespace SightSign
             {
                 //save ink file
                 string fileName = this.Generate_FilePath();
-                var file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-                inkCanvas.Strokes.Save(file);
-                file.Close();
-        
+                this.SaveInkFile(fileName);
                 this.CaptureScreen(fileName);
                 
                 // This ink will be automatically loaded when the app next starts.
@@ -719,7 +725,7 @@ namespace SightSign
                 LoadButton.ButtonText = "Close";
                 
                 // Read all signatures from ..//sigBank
-                string sigBankImagePath = System.IO.Directory.GetCurrentDirectory() + "\\sigBank\\img";
+                string sigBankImagePath = AppDomain.CurrentDomain.BaseDirectory + "\\sigBank\\img";
                 string[] sigImagePaths = Directory.GetFiles(sigBankImagePath);
                 string[] recentSigImagePaths = new string[4];
 
