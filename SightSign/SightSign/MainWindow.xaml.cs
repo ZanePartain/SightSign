@@ -629,11 +629,19 @@ namespace SightSign
         private void ImportButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
-            dialog.Title = "Please select an image file to import.";
+            dialog.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png, *.isf) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png; *.isf";
+            dialog.Title = "Please select a file to import.";
             if (dialog.ShowDialog() == true)
             {
-                backGroundd.ImageSource = new BitmapImage(new Uri(dialog.FileName));
+                if(System.IO.Path.GetExtension(dialog.FileName).Equals(".isf"))
+                {
+                    
+                    AddInkFromFile(dialog.FileName);
+                }
+                else
+                {
+                    backGroundd.ImageSource = new BitmapImage(new Uri(dialog.FileName));
+                }
             }
         }
 
