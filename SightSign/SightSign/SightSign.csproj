@@ -108,6 +108,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CircularGazeButton.xaml.cs">
+      <DependentUpon>CircularGazeButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IArm.cs" />
     <Compile Include="PortDetails.cs" />
     <Compile Include="RobotArm.cs" />
@@ -123,6 +126,10 @@
     </Compile>
     <Compile Include="UArmSwift.cs" />
     <Compile Include="UArmMetal.cs" />
+    <Page Include="CircularGazeButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -182,6 +189,7 @@
     <Content Include="..\..\LICENSE">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -204,6 +212,7 @@
   <ItemGroup>
     <Resource Include="SightSign.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
