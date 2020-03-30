@@ -14,7 +14,7 @@ variables:
   buildConfiguration: 'Release'
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
   version: $(Build.SourceBranch)-$(date:yyyyMMdd)$(rev:.r)
-  buildtp: ''
+  buildtp: 'abc'
 
 steps:
 - task: NuGetToolInstaller@1
