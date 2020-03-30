@@ -28,15 +28,14 @@ steps:
     script: |
       $createcert = New-SelfSignedCertificate -Type Custom -Subject "CN=Contoso Software, O=Contoso Corporation, C=US" -KeyUsage DigitalSignature -FriendlyName "Zane Partain" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
       Write-Host $createcert
-      $buildtp = $createcert.Thumbprint
-      Write-Host "##vso[task.setvariable variable=BepartmentTP;]$buildtp"
-      Write-Host $buildtp
+      $env:buildtp = $createcert.Thumbprint
+      #Write-Host "##vso[task.setvariable variable=BepartmentTP;]$buildtp"
 - task: VSBuild@1
   inputs:
     platform: ''
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:PackageCertificateThumbprint="$($env:BuildTP)"'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:PackageCertificateThumbprint="$($env:buildtp)"'
 
 - task: Windows Application Driver@0
   inputs:
