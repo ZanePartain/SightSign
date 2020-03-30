@@ -294,7 +294,7 @@ namespace SightSign
         {
             // Stop any in-progress writing.
             ResetWriting();
-
+            dot.IsEnabled = true;
             WriteSignature();
         }
 
@@ -801,12 +801,14 @@ namespace SightSign
                     SigBank.Children.Add(btn);
                 }
 
-                SigBank.Visibility = Visibility.Visible;               
+                SigBank.Visibility = Visibility.Visible;
+                SigBank.IsEnabled = true;
             }
             else
             {
                 LoadButton.Content = "Load";
                 SigBank.Visibility = Visibility.Collapsed;
+                SigBank.IsEnabled = false;
             }
 
         }
@@ -895,6 +897,12 @@ namespace SightSign
                 this.DoneDrawingAreaButton.Visibility = Visibility.Visible;
                 this.areaText.Visibility = Visibility.Visible;
 
+                // Enable the drawing buttons. Used for testing.
+                this.IncreaseDrawingAreaButton.IsEnabled = true;
+                this.DecreaseDrawingAreaButton.IsEnabled = true;
+                this.DrawAreaButton.IsEnabled = true;
+                this.DoneDrawingAreaButton.IsEnabled = true;
+
                 // set all of the Drawing buttons visibility to collapsed
                 this.StampButton.Visibility = Visibility.Collapsed;
                 this.WriteButton.Visibility = Visibility.Collapsed;
@@ -910,6 +918,12 @@ namespace SightSign
                 this.DrawAreaButton.Visibility = Visibility.Collapsed;
                 this.DoneDrawingAreaButton.Visibility = Visibility.Collapsed;
                 this.areaText.Visibility = Visibility.Collapsed;
+
+                // Disable the area buttons. Used for testing. 
+                this.IncreaseDrawingAreaButton.IsEnabled = false;
+                this.DecreaseDrawingAreaButton.IsEnabled = false;
+                this.DrawAreaButton.IsEnabled = false;
+                this.DoneDrawingAreaButton.IsEnabled = false;
 
                 // set all of the Drawing buttons visibility to visible
                 this.StampButton.Visibility = Visibility.Visible;

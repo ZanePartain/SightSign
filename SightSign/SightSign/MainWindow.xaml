@@ -128,12 +128,14 @@
                     SegmentColor="Black"
                     StrokeThickness="5"
                     GazeClick="AreaButton_Click"
-                    Margin="0,0,0,40" />
+                    Margin="0,0,0,40" 
+                    AutomationProperties.AutomationId="AreaButton"/>
 
                 <!-- The buttons related to increasing or decreasing the Drawing Area 
                  Only displayed when the are button is clicked -->
                 <sightSign:CircularGazeButton
                     x:Name="IncreaseDrawingAreaButton"
+                    IsEnabled="False"
                     Visibility="Collapsed"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
@@ -147,6 +149,7 @@
                 
                 <sightSign:CircularGazeButton Grid.Row="1"
                     x:Name="DecreaseDrawingAreaButton"
+                    IsEnabled="False"
                     Visibility="Collapsed"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
@@ -160,6 +163,7 @@
                 
                 <sightSign:CircularGazeButton Grid.Row="2"
                     x:Name="DrawAreaButton"
+                    IsEnabled="False"
                     Visibility="Collapsed"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
@@ -173,6 +177,7 @@
                 
                 <sightSign:CircularGazeButton Grid.Row="4"
                     x:Name="DoneDrawingAreaButton"
+                    IsEnabled="False"
                     Visibility="Collapsed"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
@@ -243,6 +248,7 @@
             <!--Signature Bank Grid that will display when the user selects Load.-->
             <Grid
                 x:Name="SigBank"
+                IsEnabled="False"
                 Grid.Column="1" Grid.ColumnSpan="2"
                 Width="900"
                 Height="600"
@@ -378,7 +384,8 @@
                     Margin="0,0,0,20"/>
 
                 <TextBlock 
-                    x:Name="areaText" 
+                    x:Name="areaText"
+                    AutomationProperties.AutomationId="AreaText"
                     HorizontalAlignment="Right" 
                     VerticalAlignment="Top"
                     FontSize="25" 
