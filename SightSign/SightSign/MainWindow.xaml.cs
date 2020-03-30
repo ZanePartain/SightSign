@@ -77,6 +77,8 @@ namespace SightSign
             attributes.Height = _settings.InkWidth;
 
             attributes.StylusTip = StylusTip.Ellipse;
+            SigBank.Background= new SolidColorBrush(Color.FromArgb(200, 254, 212, 42));
+            SigBank.Margin = new Thickness(0,0, 100, 0);
         }
 
         protected override void OnClosed(EventArgs e)
