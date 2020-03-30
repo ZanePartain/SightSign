@@ -289,13 +289,25 @@ namespace SightSign {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public double ButtonBorderWidth {
             get {
                 return ((double)(this["ButtonBorderWidth"]));
             }
             set {
                 this["ButtonBorderWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Swift")]
+        public string RobotType {
+            get {
+                return ((string)(this["RobotType"]));
+            }
+            set {
+                this["RobotType"] = value;
             }
         }
     }

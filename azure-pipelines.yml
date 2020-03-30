@@ -34,3 +34,4 @@ steps:
 - task: Windows Application Driver@0
   inputs:
     OperationType: 'Stop'
+

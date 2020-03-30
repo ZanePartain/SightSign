@@ -21,6 +21,7 @@
         <sightSign:ArmStateToDotWidthConverter x:Key="ArmStateToDotWidthConverter"/>
         <sightSign:ColorToSolidBrushConverter x:Key="ColorToSolidBrushConverter"/>
 
+
         <!-- Style for the big round buttons shown in the app. -->
         <Style x:Key="SimpleButton" TargetType="{x:Type Button}" BasedOn="{x:Null}">
             <Setter Property="FontSize" Value="32"/>
@@ -71,82 +72,199 @@
         </Style>
     </Window.Resources>
 
-    <!-- The main app area. -->
-    <Grid Margin="40">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition />
-            <ColumnDefinition Width="auto" />
-        </Grid.ColumnDefinitions>
-        
-        <!-- The column of big round buttons down the left side of the app. -->
-        <Grid HorizontalAlignment="Left"
-            Background="Transparent">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
+    <Border x:Name="mainWindowBorder" BorderThickness="8">
+        <!-- The text to show the current area for the drawing zone -->
+        <!-- The main app area. -->
+        <Grid Margin="40">
 
-            <!-- The Write and Stamp buttons. -->
-            <Button x:Name="StampButton"
-                Style="{StaticResource SimpleButton}"
-                Foreground="{Binding ButtonTextColor,
-                    Converter={StaticResource ColorToSolidBrushConverter}}"
-                Content="Stamp" Click="StampButton_Click" Margin="0 0 0 40" />
-            <Button Grid.Row="1" 
-                x:Name="WriteButton"
-                Style="{StaticResource SimpleButton}"
-                Foreground="{Binding ButtonTextColor,
-                    Converter={StaticResource ColorToSolidBrushConverter}}"
-                Content="Write" Click="WriteButton_Click" Margin="0 0 0 40" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <!-- The column of big round buttons down the left side of the app. -->
+            <Grid
+                x:Name="NavGrid"
+                HorizontalAlignment="Left"
+                Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
 
-            <!-- The inking-related Clear, Save and Load buttons. -->
-            <Button Grid.Row="0"
-                x:Name="ClearButton"
+                <!-- The Write and Stamp and Area buttons. -->
+                <sightSign:CircularGazeButton x:Name="StampButton"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    GazeClick="StampButton_Click"
+                    ButtonText="Stamp"
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    Margin="0,0,0,15"/>
+
+                <sightSign:CircularGazeButton Grid.Row="1"
+                    x:Name="WriteButton"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    GazeClick="WriteButton_Click"
+                    ButtonText="Write"
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    Margin="0,0,0,15"/>
+
+                <sightSign:CircularGazeButton Grid.Row="2"
+                    x:Name="AreaButton"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    ButtonText="Area" 
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    GazeClick="AreaButton_Click"
+                    Margin="0,0,0,40" />
+
+                <!-- The buttons related to increasing or decreasing the Drawing Area 
+                 Only displayed when the are button is clicked -->
+                <sightSign:CircularGazeButton
+                    x:Name="IncreaseDrawingAreaButton"
+                    Visibility="Collapsed"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    ButtonText="+" 
+                    Radius="60"
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    GazeClick="AdjustDrawingAreaButton_Click" 
+                    Margin="0,0,0,15" />
+                <sightSign:CircularGazeButton Grid.Row="1"
+                    x:Name="DecreaseDrawingAreaButton"
+                    Visibility="Collapsed"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    ButtonText="-" 
+                    GazeClick="AdjustDrawingAreaButton_Click"
+                    Margin="0,0,0,15" />
+                <sightSign:CircularGazeButton Grid.Row="2"
+                    x:Name="DrawAreaButton"
+                    Visibility="Collapsed"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    ButtonText="Draw" 
+                    GazeClick="DrawAreaButton_Click" 
+                    Margin="0,0,0,40" />
+                <sightSign:CircularGazeButton Grid.Row="4"
+                    x:Name="DoneDrawingAreaButton"
+                    Visibility="Collapsed"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    ButtonText="Done" 
+                    GazeClick="AreaButton_Click" 
+                    />
+
+
+                <!-- The inking-related Clear, Save and Load buttons. -->
+                <sightSign:CircularGazeButton Grid.Row="0"
+                    x:Name="ClearButton"
+                    Visibility="Collapsed"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    GazeClick="ClearButton_Click"
+                    ButtonText="Clear"
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    Margin="0,0,0,15"/>
+
+                <sightSign:CircularGazeButton Grid.Row="1"
+                    x:Name="SaveButton"
+                    Visibility="Collapsed"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    GazeClick="SaveButton_Click"
+                    ButtonText="Save"
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    Margin="0,0,0,15"/>
+
+                <sightSign:CircularGazeButton Grid.Row="2"
+                    x:Name="LoadButton"
+                    Visibility="Collapsed"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    GazeClick="LoadButton_Click"
+                    ButtonText="Load"
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    Margin="0,0,0,40"/>
+
+                <!-- The Edit/Done button. -->
+                <sightSign:CircularGazeButton Grid.Row="4"
+                    x:Name="EditButton"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    GazeClick="EditButton_Click"
+                    ButtonText="Edit"
+                    SegmentColor="Black"
+                    StrokeThickness="5"
+                    />
+            </Grid>
+
+            <!--Signature Bank Grid that will display when the user selects Load.-->
+            <Grid
+                x:Name="SigBank"
+                Grid.Column="1" Grid.ColumnSpan="2"
+                Width="900"
+                Height="600"
+                Background="Coral"
+                Panel.ZIndex="1"
                 Visibility="Collapsed"
-                Style="{StaticResource SimpleButton}"
-                Foreground="{Binding ButtonTextColor,
-                    Converter={StaticResource ColorToSolidBrushConverter}}"
-                Content="Clear" Click="ClearButton_Click" Margin="0 0 0 20" />
-            <Button Grid.Row="1" 
-                x:Name="SaveButton"                
-                Visibility="Collapsed"
-                Style="{StaticResource SimpleButton}"
-                Foreground="{Binding ButtonTextColor,
-                    Converter={StaticResource ColorToSolidBrushConverter}}"
-                Content="Save" Click="SaveButton_Click" Margin="0 0 0 20" />
-            <Button Grid.Row="2"
-                x:Name="LoadButton"
-                Visibility="Collapsed"
-                Style="{StaticResource SimpleButton}"
-                Foreground="{Binding ButtonTextColor,
-                    Converter={StaticResource ColorToSolidBrushConverter}}"
-                Content="Load" Click="LoadButton_Click" Margin="0 0 0 20" />
+                VerticalAlignment="Center" 
+                HorizontalAlignment="Center"
+            >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
 
-            <!-- The Edit/Done button. -->
-            <Button Grid.Row="4" 
-                x:Name="EditButton"
-                Style="{StaticResource SimpleButton}"
-                Foreground="{Binding ButtonTextColor,
-                    Converter={StaticResource ColorToSolidBrushConverter}}"
-                Content="Edit" Click="EditButton_Click" />
-        </Grid>
+            <!-- The main area showing the ink and animating dot. -->
+            <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
 
-        <!-- The main area showing the ink and animating dot. -->
-        <Grid x:Name="canvas" Grid.Column="1" Grid.ColumnSpan="2">
-            
-            <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
-            <InkCanvas 
+                <Grid x:Name="canvasBackground">
+                    <Grid.Background>
+                        <ImageBrush x:Name="backGroundd" Opacity="0.4" />
+                    </Grid.Background>
+                </Grid>
+
+                <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
+                <InkCanvas 
                 AutomationProperties.Name="Background ink canvas"
                 x:Name="inkCanvas" 
                 Background="Transparent"
                 IsEnabled="False" />
-            
-            <!-- The InkCanvas showing the ink as it's being traced out. -->
-            <InkCanvas 
+
+                <!-- The InkCanvas showing the ink as it's being traced out. -->
+                <InkCanvas 
                 AutomationProperties.Name="Tracing ink canvas"
                 x:Name="inkCanvasAnimations" 
                 Background="Transparent"
@@ -154,29 +272,29 @@
                 IsEnabled="False" 
                 Visibility="Collapsed" />
 
-            <!-- The animating dot which runs along the ink. -->
-            <Button 
-                x:Name="dot"
-                AutomationProperties.Name="Dot"
-                Visibility="Collapsed"
-                Width="{Binding Arm.ArmIsDown,
-                    Converter={StaticResource ArmStateToDotWidthConverter}}"
-                Height="{Binding Arm.ArmIsDown,
-                    Converter={StaticResource ArmStateToDotWidthConverter}}"
-                HorizontalAlignment="Center" 
-                VerticalAlignment="Center"
-                Click="Dot_OnClick">
+                <!-- The animating dot which runs along the ink. -->
+                <Button 
+                    x:Name="dot"
+                    AutomationProperties.Name="Dot"
+                    Visibility="Collapsed"
+                    Width="{Binding Arm.ArmIsDown,
+                        Converter={StaticResource ArmStateToDotWidthConverter}}"
+                    Height="{Binding Arm.ArmIsDown,
+                        Converter={StaticResource ArmStateToDotWidthConverter}}"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"
+                    Click="Dot_OnClick">
 
-                <Button.RenderTransform>
-                    <TranslateTransform x:Name="dotTranslateTransform"/>
-                </Button.RenderTransform>
+                    <Button.RenderTransform>
+                        <TranslateTransform x:Name="dotTranslateTransform"/>
+                    </Button.RenderTransform>
 
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Ellipse 
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Ellipse 
                                         Width="{Binding Arm.ArmIsDown,
                                             Converter={StaticResource ArmStateToDotWidthConverter}}"
                                         Height="{Binding Arm.ArmIsDown,
@@ -186,16 +304,16 @@
                                         Stroke="{Binding ButtonTextColor,
                                             Converter={StaticResource ColorToSolidBrushConverter}}"
                                         StrokeThickness="1" />
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Style.Triggers>
-                            <Trigger Property="IsKeyboardFocused" Value="True">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type Button}">
-                                            <Grid x:Name="Grid">
-                                                <Ellipse 
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <Grid x:Name="Grid">
+                                                    <Ellipse 
                                                     Width="{Binding Arm.ArmIsDown,
                                                         Converter={StaticResource ArmStateToDotWidthConverter}}"
                                                     Height="{Binding Arm.ArmIsDown,
@@ -205,36 +323,63 @@
                                                     Stroke="{Binding ButtonBorderColor,
                                                         Converter={StaticResource ColorToSolidBrushConverter}}"
                                                     StrokeThickness="2" />
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+
+            <!-- A grid column showing the Settings button at the right of the window. -->
+            <Grid Grid.Column="2" x:Name="settingsGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <sightSign:CircularGazeButton Grid.Row="1"
+                    x:Name="SettingsButton"
+                    AutomationProperties.Name="Settings"
+                    AutomationProperties.HelpText="{Binding Arm.Connected,
+                        Converter={StaticResource ArmConnectedToHelpTextConverter}}"
+                    Foreground="{Binding ButtonTextColor,
+                        Converter={StaticResource ColorToSolidBrushConverter}}"
+                    Radius="60"
+                    GazeClick="SettingsButton_Click"
+                    ButtonText="{Binding Arm.Connected,
+                        Converter={StaticResource ArmConnectedToContentConverter}}"
+                    SegmentColor="Black"
+                    StrokeThickness="5"        
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="48"
+                    Margin="0,0,0,20"/>
+
+                <TextBlock 
+                    x:Name="areaText" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Top"
+                    FontSize="25" 
+                    Foreground="AntiqueWhite"
+                    Padding="0" 
+                    Margin="0,-10,0,0" 
+                    Height="auto" 
+                    Width="auto" 
+                    Text="" />
+                <Button
+                  x:Name="ImportButton"
+                  Visibility="Collapsed"
+                  Height="50"
+                  Width="50"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Top"
+                  Click="ImportButton_Click">
+                    <!--<Image Source="/Icons/Import.jpg"/>-->
+                </Button>
+            </Grid>
         </Grid>
-        
-        <!-- A grid column showing the Settings button at the right of the window. -->
-        <Grid Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
-            <Button Grid.Row="1"
-                x:Name="SettingsButton"
-                AutomationProperties.Name="Settings"
-                AutomationProperties.HelpText="{Binding Arm.Connected,
-                    Converter={StaticResource ArmConnectedToHelpTextConverter}}"
-                Style="{StaticResource SimpleButton}"
-                Foreground="{Binding ButtonTextColor,
-                    Converter={StaticResource ColorToSolidBrushConverter}}"
-                Content="{Binding Arm.Connected,
-                    Converter={StaticResource ArmConnectedToContentConverter}}"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="48"
-                Click="SettingsButton_Click" />
-        </Grid>
-    </Grid>
+    </Border>
+
 </Window>
