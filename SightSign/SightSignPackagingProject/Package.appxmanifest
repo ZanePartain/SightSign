@@ -8,12 +8,12 @@
 
   <Identity
     Name="5bcfa8bc-6375-4559-a128-8b6b52463737"
-    Publisher="CN=brcamp13"
+    Publisher="CN=Sight Sign"
     Version="1.0.2.0" />
 
   <Properties>
     <DisplayName>SightSignPackagingProject</DisplayName>
-    <PublisherDisplayName>brcam</PublisherDisplayName>
+    <PublisherDisplayName>Sight Sign</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
