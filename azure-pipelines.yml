@@ -27,12 +27,12 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $createcert = New-SelfSignedCertificate -Type Custom -Subject "CN=Contoso Software, O=Contoso Corporation, C=US" -KeyUsage DigitalSignature -FriendlyName "Zane Partain" -CertStoreLocation "Cert:\CurrentUser\My" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
-      $buildtp = $createcert.Thumbprint
-      Write-Host "##vso[task.setvariable variable=buildtp;]$buildtp"
+      New-SelfSignedCertificate -Type Custom -Subject "CN=Contoso Software, O=Contoso Corporation, C=US" -KeyUsage DigitalSignature -FriendlyName "Zane Partain" -CertStoreLocation "Cert:\CurrentUser\My" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}"
+      #$buildtp = $createcert.Thumbprint
+      #Write-Host "##vso[task.setvariable variable=buildtp;]$buildtp"
       Set-Location Cert:\CurrentUser\My
       Get-ChildItem | Format-Table Subject, FreindlyName, Thumbprint
-      
+      Write-Host Thumbprint
       Get-ChildItem -Path Cert:\CurrentUser\My\
       
       $pwd = ConvertTo-SecureString -String $(SigningCert.Password) -Force -AsPlainText
