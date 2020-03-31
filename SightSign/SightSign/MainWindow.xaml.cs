@@ -298,7 +298,7 @@ namespace SightSign
         {
             // Stop any in-progress writing.
             ResetWriting();
-
+            dot.IsEnabled = true;
             WriteSignature();
         }
 
@@ -589,8 +589,12 @@ namespace SightSign
                 EditButton.ButtonText = "Done";
 
                 StampButton.Visibility = Visibility.Collapsed;
+                StampButton.IsEnabled = false;
+
                 ClearButton.Visibility = Visibility.Visible;
                 ImportButton.Visibility = Visibility.Visible;
+                ClearButton.IsEnabled = true;
+                ImportButton.IsEnabled = true;
 
 
                 inkCanvas.IsEnabled = true;
@@ -604,6 +608,12 @@ namespace SightSign
                 StampButton.Visibility = Visibility.Visible;
                 ClearButton.Visibility = Visibility.Collapsed;
                 ImportButton.Visibility = Visibility.Collapsed;
+
+                SigBank.IsEnabled = true;
+                StampButton.IsEnabled = true;
+                ClearButton.IsEnabled = false;
+                ImportButton.IsEnabled = false;
+
                 backGroundd.ImageSource = null;
                 inkCanvas.IsEnabled = false;
 
@@ -615,12 +625,34 @@ namespace SightSign
             WriteButton.Visibility = StampButton.Visibility;
             AreaButton.Visibility = StampButton.Visibility;
 
+            if (StampButton.Visibility == Visibility.Collapsed)
+            {
+                WriteButton.IsEnabled = false;
+                AreaButton.IsEnabled = false;
+            }
+            else
+            {
+                WriteButton.IsEnabled = true;
+                AreaButton.IsEnabled = true;
+            }
+
             SaveButton.Visibility = ClearButton.Visibility;
             LoadButton.Visibility = ClearButton.Visibility;
+
+            if (ClearButton.Visibility == Visibility.Collapsed)
+            {
+                SaveButton.IsEnabled = false;
+                LoadButton.IsEnabled = false;
+            }
+            else
+            {
+                SaveButton.IsEnabled = true;
+                LoadButton.IsEnabled = true;
+            }
         }
 
-        // Clear all ink from the app.
-        private void ClearButton_Click(object sender, RoutedEventArgs e)
+            // Clear all ink from the app.
+            private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
             inkCanvasAnimations.Strokes.Clear();
@@ -777,12 +809,14 @@ namespace SightSign
                     SigBank.Children.Add(btn);
                 }
 
-                SigBank.Visibility = Visibility.Visible;               
+                SigBank.Visibility = Visibility.Visible;
+                SigBank.IsEnabled = true;
             }
             else
             {
                 LoadButton.ButtonText = "Load";
                 SigBank.Visibility = Visibility.Collapsed;
+                SigBank.IsEnabled = false;
             }
 
         }
@@ -871,6 +905,12 @@ namespace SightSign
                 this.DoneDrawingAreaButton.Visibility = Visibility.Visible;
                 this.areaText.Visibility = Visibility.Visible;
 
+                // Enable the drawing buttons. Used for testing.
+                this.IncreaseDrawingAreaButton.IsEnabled = true;
+                this.DecreaseDrawingAreaButton.IsEnabled = true;
+                this.DrawAreaButton.IsEnabled = true;
+                this.DoneDrawingAreaButton.IsEnabled = true;
+
                 // set all of the Drawing buttons visibility to collapsed
                 this.StampButton.Visibility = Visibility.Collapsed;
                 this.WriteButton.Visibility = Visibility.Collapsed;
@@ -886,6 +926,12 @@ namespace SightSign
                 this.DrawAreaButton.Visibility = Visibility.Collapsed;
                 this.DoneDrawingAreaButton.Visibility = Visibility.Collapsed;
                 this.areaText.Visibility = Visibility.Collapsed;
+
+                // Disable the area buttons. Used for testing. 
+                this.IncreaseDrawingAreaButton.IsEnabled = false;
+                this.DecreaseDrawingAreaButton.IsEnabled = false;
+                this.DrawAreaButton.IsEnabled = false;
+                this.DoneDrawingAreaButton.IsEnabled = false;
 
                 // set all of the Drawing buttons visibility to visible
                 this.StampButton.Visibility = Visibility.Visible;

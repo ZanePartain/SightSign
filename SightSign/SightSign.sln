@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SightSign", "SightSign\Sigh
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "SightSignPackagingProject", "SightSignPackagingProject\SightSignPackagingProject.wapproj", "{2CF2A05C-1987-41F6-B5E7-3DA813152E1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UITests", "UITests\UITests.csproj", "{4FDDD081-B176-48E6-B2B8-9EA6648BD810}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,26 @@ Global
 		{2CF2A05C-1987-41F6-B5E7-3DA813152E1C}.Release|x86.ActiveCfg = Release|x86
 		{2CF2A05C-1987-41F6-B5E7-3DA813152E1C}.Release|x86.Build.0 = Release|x86
 		{2CF2A05C-1987-41F6-B5E7-3DA813152E1C}.Release|x86.Deploy.0 = Release|x86
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Debug|ARM.Build.0 = Debug|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Debug|x64.Build.0 = Debug|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Debug|x86.Build.0 = Debug|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Release|ARM.ActiveCfg = Release|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Release|ARM.Build.0 = Release|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Release|ARM64.Build.0 = Release|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Release|x64.ActiveCfg = Release|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Release|x64.Build.0 = Release|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Release|x86.ActiveCfg = Release|Any CPU
+		{4FDDD081-B176-48E6-B2B8-9EA6648BD810}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
