@@ -85,3 +85,12 @@ steps:
     archiveType: 'zip'
     replaceExistingArchive: true
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+
+- task: store-publish@0
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  inputs:
+    serviceEndpoint: 'Dev Center Publish Dev Branch'
+    appId: '9P1X7MTB0FJV'
+    packagePath: 
+    force: false
+    skipPolling: false
