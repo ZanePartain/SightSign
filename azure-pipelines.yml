@@ -11,7 +11,7 @@ variables:
   buildPlatform: 'x86|x64|ARM'
   buildConfiguration: 'Release'
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
-  version: $(Build.SourceBranch)-$(date:yyyyMMdd)$(rev:.r)
+  version: $(Build.SourceBranch)-$(Build.BuildNumber)
   buildtp: ''
 
 steps:
