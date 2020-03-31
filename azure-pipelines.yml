@@ -32,7 +32,7 @@ steps:
       #Write-Host "##vso[task.setvariable variable=buildtp;]$buildtp"
       Set-Location Cert:\CurrentUser\My
       Get-ChildItem | Format-Table Subject, FreindlyName, Thumbprint
-      Write-Host Thumbprint
+      Write-Host $Thumbprint
       Get-ChildItem -Path Cert:\CurrentUser\My\
       
       $pwd = ConvertTo-SecureString -String $(SigningCert.Password) -Force -AsPlainText
