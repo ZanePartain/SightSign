@@ -58,7 +58,7 @@ steps:
       $store.Close()
 - task: VSBuild@1
   inputs:
-    platform: ''
+    platform: 'x86'
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
     msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:PackageCertificateKeyFile="$(System.DefaultWorkingDirectory)\$(buildtp).pfx" /p:PackageCertificateThumbprint="$(buildtp)" /p:PackageCertificatePassword="$(SigningCert.Password)"'
