@@ -27,7 +27,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $createcert = New-SelfSignedCertificate -Type Custom -Subject "CN=Contoso Software, O=Contoso Corporation, C=US" -KeyUsage DigitalSignature -FriendlyName "Zane Partain" -CertStoreLocation "Cert:\CurrentUser\My" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
+      $createcert = New-SelfSignedCertificate -Type Custom -Subject "CN=brcamp13, O=MSEnable, C=US" -KeyUsage DigitalSignature -FriendlyName "Zane Partain" -CertStoreLocation "Cert:\CurrentUser\My" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
       $buildtp = $createcert.Thumbprint
       Write-Host "##vso[task.setvariable variable=buildtp;]$buildtp"
       echo local: $buildtp global: $(buildtp)
@@ -72,3 +72,8 @@ steps:
   inputs:
     OperationType: 'Stop'
 
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: '$(version)'
+    publishLocation: 'Container'
