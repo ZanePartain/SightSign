@@ -8,7 +8,7 @@ pool:
 
 variables:
   solution: 'SightSign/SightSign.sln'
-  buildPlatform: 'x86|x64|ARM'
+  buildPlatform: 'x64'
   buildConfiguration: 'Release'
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
   version: $(Build.SourceBranch)-$(Build.BuildNumber)
@@ -57,7 +57,7 @@ steps:
       $store.Close()
 - task: VSBuild@1
   inputs:
-    platform: 'x86'
+    platform: 'x64'
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
     msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:PackageCertificateKeyFile="$(System.DefaultWorkingDirectory)\$(buildtp).pfx" /p:PackageCertificateThumbprint="$(buildtp)" /p:PackageCertificatePassword="$(SigningCert.Password)"'
