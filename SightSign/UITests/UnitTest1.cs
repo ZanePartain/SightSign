@@ -13,7 +13,7 @@ namespace UITests
     {
 
         protected const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
-        private const string SightSignAppId = @"..\SightSign\bin\Debug\SightSign.exe";
+        private const string SightSignAppId = @"..\SightSign\bin\Release\SightSign.exe";
 
         protected static WindowsDriver<WindowsElement> session;
 
