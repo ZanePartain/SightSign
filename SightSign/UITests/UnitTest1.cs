@@ -48,7 +48,7 @@ namespace UITests
             editButton.Click();
 
             Thread.Sleep(TimeSpan.FromSeconds(3));
-
+            
             Assert.IsTrue(clearButton.Enabled);
             Assert.IsTrue(loadButton.Enabled);
             Assert.IsTrue(saveButton.Enabled);
@@ -68,6 +68,9 @@ namespace UITests
             Thread.Sleep(TimeSpan.FromSeconds(3));
             loadButton.Click();
             Thread.Sleep(TimeSpan.FromSeconds(3));
+
+            editButton = session.FindElementByAccessibilityId("EditButton");
+            loadButton = session.FindElementByAccessibilityId("LoadButton");
 
             Assert.IsTrue(loadButton.Text == "Close");
         }
