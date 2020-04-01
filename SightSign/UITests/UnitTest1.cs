@@ -13,7 +13,7 @@ namespace UITests
     {
 
         protected const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
-        private const string SightSignAppExe = @"SightSign\bin\Release\SightSign.exe";
+        private const string SightSignAppId = @"..\..\SightSign\bin\Release\SightSign.exe";
 
         protected static WindowsDriver<WindowsElement> session;
 
@@ -22,9 +22,9 @@ namespace UITests
         {
             if (session == null)
             {
-                var parentDirPath = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory());
-                Console.WriteLine(parentDirPath);
-                var SightSignAppId = parentDirPath + SightSignAppExe;
+                //var parentDirPath = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory());
+                //Console.WriteLine(parentDirPath);
+                //var SightSignAppId = parentDirPath + SightSignAppExe;
                 Console.WriteLine(SightSignAppId);
                 var appiumOptions = new AppiumOptions();
                 appiumOptions.AddAdditionalCapability("app", SightSignAppId);
@@ -72,6 +72,8 @@ namespace UITests
             Thread.Sleep(TimeSpan.FromSeconds(3));
             loadButton.Click();
             Thread.Sleep(TimeSpan.FromSeconds(3));
+
+            Console.WriteLine("Load Button Text: " + loadButton.Text);
 
             Assert.IsTrue(loadButton.Text == "Close");
         }
