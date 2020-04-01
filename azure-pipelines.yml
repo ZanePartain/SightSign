@@ -65,6 +65,12 @@ steps:
     OperationType: 'Start'
     AgentResolution: '1080p'
 
+- task: VSTest@2
+  inputs:
+    testSelector: 'testRun'
+    searchFolder: '$(System.DefaultWorkingDirectory)/SightSign/UITests/'
+    testRunTitle: 'UI Tests'
+
 - task: Windows Application Driver@0
   inputs:
     OperationType: 'Stop'
