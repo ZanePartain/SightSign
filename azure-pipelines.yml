@@ -68,8 +68,8 @@ steps:
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
-    testAssemblyVer2: '*bin*UITests.dll'
-    searchFolder: '$(System.DefaultWorkingDirectory)/SightSign/UITests/'
+    testAssemblyVer2: '*UITests.dll'
+    searchFolder: '$(System.DefaultWorkingDirectory)/SightSign/'
 
 - task: Windows Application Driver@0
   inputs:
