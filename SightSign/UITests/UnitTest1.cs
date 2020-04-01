@@ -29,12 +29,6 @@ namespace UITests
                     //Console.WriteLine("Full Path: " + curDirPath);
                     //Console.WriteLine("Cur Dir: " + System.IO.Path.GetDirectoryName(curDirPath));
                     Console.WriteLine("Parent Dir: " + System.IO.Directory.GetParent(curDirPath).Name);
-                    Console.WriteLine("Files: ");
-                    var files = System.IO.Directory.GetFiles(curDirPath);
-                    foreach (var file in files)
-                    {
-                        Console.WriteLine(file);
-                    }
                     
                     curDirPath = System.IO.Directory.GetParent(curDirPath).FullName;
                 }
@@ -83,13 +77,13 @@ namespace UITests
             var loadButton = session.FindElementByAccessibilityId("LoadButton");
 
             editButton.Click();
-            Thread.Sleep(TimeSpan.FromSeconds(3));
+            Thread.Sleep(3000);
             loadButton.Click();
-            Thread.Sleep(TimeSpan.FromSeconds(3));
+            Thread.Sleep(3000);
 
-            Console.WriteLine("Load Button Text: " + loadButton.ToString());
+            Console.WriteLine("Load Button Text: " + loadButton.Text;
 
-            Assert.IsTrue(loadButton.ToString() == "Close");
+            Assert.IsTrue(loadButton.Text == "Close");
         }
 
         // Save button test - nothing really to test with the UI
