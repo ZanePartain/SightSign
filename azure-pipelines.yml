@@ -68,7 +68,7 @@ steps:
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
-    script: 'Get-ChildItem -Path $(System.DefaultWorkingDirectory)/SightSign/UITests/bin'
+    script: 'Get-ChildItem -Path $(System.DefaultWorkingDirectory)/SightSign/UITests/bin/Release/'
 
 - task: VSTest@2
   inputs:
