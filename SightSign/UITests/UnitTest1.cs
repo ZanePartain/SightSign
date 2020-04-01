@@ -136,6 +136,8 @@ namespace UITests
             var minusButton = session.FindElementByAccessibilityId("DecreaseDrawingAreaButton");
             var areaText = session.FindElementByAccessibilityId("AreaText");
 
+            Assert.AreEqual("8 x 6", areaText.Text);
+
             minusButton.Click();
             Thread.Sleep(TimeSpan.FromSeconds(3));
 
@@ -152,6 +154,7 @@ namespace UITests
             var areaText = session.FindElementByAccessibilityId("AreaText");
             var doneButton = session.FindElementByAccessibilityId("DoneDrawingAreaButton");
 
+            Assert.AreEqual("6 x 4", areaText.Text);
 
             plusButton.Click();
             Thread.Sleep(TimeSpan.FromSeconds(3));
