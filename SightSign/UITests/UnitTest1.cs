@@ -87,9 +87,9 @@ namespace UITests
             loadButton.Click();
             Thread.Sleep(TimeSpan.FromSeconds(3));
 
-            Console.WriteLine("Load Button Text: " + loadButton.Text);
+            Console.WriteLine("Load Button Text: " + loadButton.ToString());
 
-            Assert.IsTrue(loadButton.Text == "Close");
+            Assert.IsTrue(loadButton.ToString() == "Close");
         }
 
         // Save button test - nothing really to test with the UI
