@@ -24,11 +24,17 @@ namespace UITests
             {
                 var curDirPath = System.IO.Directory.GetCurrentDirectory();
                 Console.WriteLine(curDirPath);
-                while (System.IO.Path.GetDirectoryName(curDirPath) != "SightSign")
+                while (System.IO.Directory.GetParent(curDirPath).Name != "SightSign")
                 {
-                    Console.WriteLine("Full Path: " + curDirPath);
-                    Console.WriteLine("Cur Dir: " + System.IO.Path.GetDirectoryName(curDirPath));
+                    //Console.WriteLine("Full Path: " + curDirPath);
+                    //Console.WriteLine("Cur Dir: " + System.IO.Path.GetDirectoryName(curDirPath));
                     Console.WriteLine("Parent Dir: " + System.IO.Directory.GetParent(curDirPath).Name);
+                    Console.WriteLine("Files: ");
+                    var files = System.IO.Directory.GetFiles(curDirPath);
+                    foreach (var file in files)
+                    {
+                        Console.WriteLine(file);
+                    }
                     
                     curDirPath = System.IO.Directory.GetParent(curDirPath).FullName;
                 }
