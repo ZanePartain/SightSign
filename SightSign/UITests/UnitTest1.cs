@@ -53,6 +53,11 @@ namespace UITests
             var loadButton = session.FindElementByAccessibilityId("LoadButton");
             var saveButton = session.FindElementByAccessibilityId("SaveButton");
 
+            Console.WriteLine("Edit Button Text: " + editButton.Text);
+            Console.WriteLine("Clear Button Text: " + clearButton.Text);
+            Console.WriteLine("Load Button Text: " + loadButton.Text);
+            Console.WriteLine("Save Button Text: " + saveButton.Text);
+
             Assert.IsFalse(clearButton.Enabled);
             Assert.IsFalse(loadButton.Enabled);
             Assert.IsFalse(saveButton.Enabled);
@@ -81,7 +86,7 @@ namespace UITests
             loadButton.Click();
             Thread.Sleep(3000);
 
-            Console.WriteLine("Load Button Text: " + loadButton.ButtonText);
+            Console.WriteLine("Load Button Text: " + loadButton.Text);
 
             Assert.IsTrue(loadButton.Text == "Close");
         }
