@@ -69,6 +69,7 @@ steps:
   inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: '*UITests.dll'
+    uiTests: true
     searchFolder: '$(System.DefaultWorkingDirectory)/SightSign/UITests/bin/Release/'
 
 - task: Windows Application Driver@0
