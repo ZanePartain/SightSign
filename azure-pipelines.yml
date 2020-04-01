@@ -67,11 +67,9 @@ steps:
 
 - task: VSTest@2
   inputs:
-    testSelector: 'testPlan'
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: '*bin*UITests.dll'
     searchFolder: '$(System.DefaultWorkingDirectory)/SightSign/UITests/'
-    testRunTitle: 'UI Tests'
-    platform: $(buildPlatform)
-    configuration: $(buildConfiguration)
 
 - task: Windows Application Driver@0
   inputs:
