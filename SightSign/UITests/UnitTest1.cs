@@ -53,7 +53,7 @@ namespace UITests
             var loadButton = session.FindElementByAccessibilityId("LoadButton");
             var saveButton = session.FindElementByAccessibilityId("SaveButton");
 
-            Console.WriteLine("Edit Button Text: " + editButton.Text);
+            Console.WriteLine("Edit Button Text: " + editButton.GetAttribute("ButtonText"));
             Console.WriteLine("Clear Button Text: " + clearButton.Text);
             Console.WriteLine("Load Button Text: " + loadButton.Text);
             Console.WriteLine("Save Button Text: " + saveButton.Text);
