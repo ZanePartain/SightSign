@@ -27,7 +27,8 @@ namespace UITests
                 while (System.IO.Path.GetDirectoryName(curDirPath) != "SightSign")
                 {
                     Console.WriteLine(curDirPath);
-                    curDirPath = System.IO.Directory.GetParent(curDirPath);
+                    curDirPath = System.IO.Directory.GetParent(curDirPath).FullName;
+                    curDirPath = System.IO.Directory.GetParent(curDirPath).Name;
                 }
                 var SightSignAppId = curDirPath + SightSignAppExe;
                 Console.WriteLine(SightSignAppId);
