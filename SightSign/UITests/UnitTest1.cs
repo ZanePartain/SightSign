@@ -13,7 +13,7 @@ namespace UITests
     {
 
         protected const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
-        private const string SightSignAppExe = @"..\..\SightSign\bin\Release\SightSign.exe";
+        private const string SightSignAppExe = @"\SightSign\bin\Release\SightSign.exe";
 
         protected static WindowsDriver<WindowsElement> session;
 
@@ -32,6 +32,7 @@ namespace UITests
                     
                     curDirPath = System.IO.Directory.GetParent(curDirPath).FullName;
                 }
+                curDirPath = System.IO.Directory.GetParent(curDirPath).FullName;
                 var SightSignAppId = curDirPath + SightSignAppExe;
                 Console.WriteLine(SightSignAppId);
                 var appiumOptions = new AppiumOptions();
