@@ -58,7 +58,7 @@ namespace UITests
             Console.WriteLine("Load Button Text: " + loadButton.Text);
             Console.WriteLine("Save Button Text: " + saveButton.Text);
 
-            Assert.IsFalse(clearButton.Enabled);
+            Assert.IsTrue(clearButton.Enabled);
             Assert.IsFalse(loadButton.Enabled);
             Assert.IsFalse(saveButton.Enabled);
 
