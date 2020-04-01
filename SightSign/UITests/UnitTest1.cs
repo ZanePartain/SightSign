@@ -81,7 +81,7 @@ namespace UITests
             loadButton.Click();
             Thread.Sleep(3000);
 
-            Console.WriteLine("Load Button Text: " + loadButton.Text;
+            Console.WriteLine("Load Button Text: " + loadButton.ButtonText);
 
             Assert.IsTrue(loadButton.Text == "Close");
         }
