@@ -95,6 +95,12 @@ namespace UITests
 
             //var editButtonText = editButton.GetAttribute("Text");
             var loadButtonText = loadButton.GetAttribute("ButtonText");
+            foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(loadButton))
+            {
+                string name=descriptor.Name;
+                object value=descriptor.GetValue(obj);
+                Console.WriteLine("{0}={1}",name,value);
+            }
             Assert.AreEqual("Load", loadButtonText);
             Console.WriteLine("Load Button Text: " + loadButtonText);
             Console.WriteLine("Load Button Text Null? " + (loadButtonText == null).ToString());
