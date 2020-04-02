@@ -65,7 +65,7 @@ namespace UITests
 
             editButton.Click();
 
-            Thread.Sleep(TimeSpan.FromSeconds(3));
+            Thread.Sleep(3000);
             
             Assert.IsTrue(clearButton.Enabled);
             Assert.IsTrue(loadButton.Enabled);
@@ -86,9 +86,9 @@ namespace UITests
             Assert.AreNotEqual(loadButton,null);
 
             editButton.Click();
-            Thread.Sleep(3000);
+            Thread.Sleep(10000);
             loadButton.Click();
-            Thread.Sleep(3000);
+            Thread.Sleep(10000);
 
             Console.WriteLine("Edit Button Text: " + editButton.GetAttribute("ButtonTextProperty"));
             Console.WriteLine("Load Button Type: " + loadButton.GetType());
@@ -130,9 +130,9 @@ namespace UITests
             Assert.IsFalse(doneButton.Enabled);
 
             editButton.Click();
-            Thread.Sleep(TimeSpan.FromSeconds(3));
+            Thread.Sleep(10000);
             areaButton.Click();
-            Thread.Sleep(TimeSpan.FromSeconds(2));
+            Thread.Sleep(10000);
 
             Assert.IsTrue(plusButton.Enabled);
             Assert.IsTrue(minusButton.Enabled);
@@ -154,7 +154,7 @@ namespace UITests
             Assert.AreEqual("8'' X 6''", areaText.Text);    
 
             minusButton.Click();
-            Thread.Sleep(TimeSpan.FromSeconds(3));
+            Thread.Sleep(10000);
 
             Assert.AreNotEqual("8'' X 6''", areaText.Text);
         }
@@ -175,11 +175,11 @@ namespace UITests
             Assert.AreEqual("6'' X 4''", areaText.Text);
 
             plusButton.Click();
-            Thread.Sleep(TimeSpan.FromSeconds(3));
+            Thread.Sleep(10000);
 
             Assert.AreNotEqual("6'' X 4''", areaText.Text);
             doneButton.Click();
-            Thread.Sleep(TimeSpan.FromSeconds(3.5));
+            Thread.Sleep(10000);
         }
 
         [TestMethod]
@@ -195,7 +195,7 @@ namespace UITests
             Assert.AreNotEqual(dotButton,null);
 
             writeButton.Click();
-            Thread.Sleep(TimeSpan.FromSeconds(4));
+            Thread.Sleep(10000);
             Assert.IsTrue(dotButton.Enabled);
         }
 
