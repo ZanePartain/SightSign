@@ -90,8 +90,12 @@ namespace UITests
             loadButton.Click();
             Thread.Sleep(10000);
 
-            Console.WriteLine("Edit Button Text: " + editButton.GetProperty("FontSize"));
+            var editButtonText = editButton.GetAtribute("FontSize");
+            Console.WriteLine("Edit Button Text: " + editButtonText);
+            Console.WriteLine("Edit Button Text Null? " + (editButtonText == null).ToString());
             Console.WriteLine("Load Button Text: " + loadButton.Text);
+
+            
 
             Assert.IsTrue(loadButton.Text == "Close");
         }
