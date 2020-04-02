@@ -117,7 +117,7 @@ namespace UITests
             var drawAreaButton = session.FindElementByAccessibilityId("DrawAreaButton");
             var doneButton = session.FindElementByAccessibilityId("DoneDrawingAreaButton");
 
-            Assert.AreNotEqual(loadButton,null);
+            Assert.AreNotEqual(editButton,null);
             Assert.AreNotEqual(areaButton,null);
             Assert.AreNotEqual(plusButton,null);
             Assert.AreNotEqual(minusButton,null);
