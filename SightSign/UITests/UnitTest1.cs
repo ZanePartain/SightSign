@@ -65,7 +65,7 @@ namespace UITests
 
             editButton.Click();
 
-            Thread.Sleep(3000);
+            Thread.Sleep(10000);
             
             Assert.IsTrue(clearButton.Enabled);
             Assert.IsTrue(loadButton.Enabled);
@@ -91,8 +91,6 @@ namespace UITests
             Thread.Sleep(10000);
 
             Console.WriteLine("Edit Button Text: " + editButton.GetAttribute("ButtonTextProperty"));
-            Console.WriteLine("Load Button Type: " + loadButton.GetType());
-
             Console.WriteLine("Load Button Text: " + loadButton.Text);
 
             Assert.IsTrue(loadButton.Text == "Close");
@@ -156,7 +154,7 @@ namespace UITests
             minusButton.Click();
             Thread.Sleep(10000);
 
-            Assert.AreNotEqual("8'' X 6''", areaText.Text);
+            Assert.AreEqual("6'' X 4''", areaText.Text);
         }
 
         [TestMethod]
@@ -177,7 +175,7 @@ namespace UITests
             plusButton.Click();
             Thread.Sleep(10000);
 
-            Assert.AreNotEqual("6'' X 4''", areaText.Text);
+            Assert.AreEqual("8'' X 6''", areaText.Text);
             doneButton.Click();
             Thread.Sleep(10000);
         }
