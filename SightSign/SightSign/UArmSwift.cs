@@ -26,6 +26,7 @@ namespace SightSign
         {
             _arm.Disconnect();
             _arm = null;
+            _port = null;
         }
 
         public void Move(double x, double y, double z, bool scara)
