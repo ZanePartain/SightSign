@@ -7,7 +7,7 @@ namespace SightSign
 {
     public class UArmSwiftPro : IArm
     {
-        private readonly string _port;
+        //private readonly string _port;
         private UArmSwift _arm;
 
         public UArmSwiftPro()
@@ -17,7 +17,8 @@ namespace SightSign
 
         public void Connect()
         {
-            _arm = new UArmSwift(_port);
+            //_arm = new UArmSwift(_port);
+            _arm = new UArmSwift(null);
             _arm.Connect();
             _arm.Mode(Mode.UniversalHolder);
         }
