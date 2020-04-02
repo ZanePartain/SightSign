@@ -13,7 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.HandsFree.Mouse;
 using Microsoft.Win32;
-using System.Windows.Media.Imaging;
 
 namespace SightSign
 {
