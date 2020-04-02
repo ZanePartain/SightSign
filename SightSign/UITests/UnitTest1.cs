@@ -70,7 +70,7 @@ namespace UITests
             Assert.IsTrue(clearButton.Enabled);
             Assert.IsTrue(loadButton.Enabled);
             Assert.IsTrue(saveButton.Enabled);
-            Assert.AreEqual("Load",loadButton.GetAttribute("*"));
+            Assert.AreEqual("Load",loadButton.GetAttribute("ProgressButton"));
         }
 
         // Load button test. Couldn't access sigbank, testing load button text instead.
