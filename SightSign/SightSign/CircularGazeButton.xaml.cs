@@ -80,11 +80,11 @@ namespace SightSign
         public static readonly DependencyProperty AngleProperty =
             DependencyProperty.Register("Angle", typeof(double), typeof(CircularGazeButton), new PropertyMetadata(120d, new PropertyChangedCallback(OnPropertyChanged)));
 
-        // Using a DependencyProperty as the backing store for Angle.
+        // Using a DependencyProperty as the backing store for Click.
         public static readonly DependencyProperty GazeClickProperty =
             DependencyProperty.Register("GazeClick", typeof(RoutedEventHandler), typeof(CircularGazeButton), new PropertyMetadata((object)null));
 
-        // Using a DependencyProperty as the backing store for Angle.
+        // Using a DependencyProperty as the backing store for ButtonText.
         public static readonly DependencyProperty ButtonTextProperty =
             DependencyProperty.Register("ButtonText", typeof(string), typeof(CircularGazeButton), new PropertyMetadata(new string("Content".ToCharArray())));
 
