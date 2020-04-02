@@ -95,7 +95,7 @@ namespace UITests
 
             //var editButtonText = editButton.GetAttribute("Text");
             var loadButtonText = loadButton.GetAttribute("Content");
-            Assert.AreEqual("Load", loadButtonText.Value);
+            Assert.AreEqual("Load", loadButtonText);
             Console.WriteLine("Load Button Text: " + loadButtonText);
             Console.WriteLine("Load Button Text Null? " + (loadButtonText == null).ToString());
             Console.WriteLine("Load Button Text: " + loadButton.Text);
