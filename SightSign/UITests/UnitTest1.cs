@@ -206,6 +206,13 @@ namespace UITests
             doneButton.Click();
             Thread.Sleep(10000);
 
+            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(writeButton))
+            {
+                string name=descriptor.Name;
+                object value=descriptor.GetValue(writeButton);
+                Console.WriteLine("{0}={1}",name,value);
+            }
+
             writeButton.Click();
             Thread.Sleep(10000);
             Assert.IsTrue(dotButton.Enabled);
