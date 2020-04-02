@@ -204,7 +204,7 @@ namespace UITests
             Assert.AreNotEqual(doneButton,null);
 
             doneButton.Click();
-            Thread.Sleep(10000);
+            Thread.Sleep(20000);
 
             foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(writeButton))
             {
