@@ -70,7 +70,7 @@ namespace UITests
             Assert.IsTrue(clearButton.Enabled);
             Assert.IsTrue(loadButton.Enabled);
             Assert.IsTrue(saveButton.Enabled);
-            Assert.IsTrue(loadButton.Text == "Load");
+            Assert.AreEqual(loadButton.Text,"Load");
         }
 
         // Load button test. Couldn't access sigbank, testing load button text instead.
@@ -90,6 +90,9 @@ namespace UITests
             Thread.Sleep(10000);
             loadButton.Click();
             Thread.Sleep(10000);
+
+            editButton = session.FindElementByAccessibilityId("EditButton");
+            loadButton = session.FindElementByAccessibilityId("LoadButton");
 
             //var editButtonText = editButton.GetAttribute("Text");
             var loadButtonText = loadButton.GetProperty("Content");
