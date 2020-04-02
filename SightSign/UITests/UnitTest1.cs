@@ -54,6 +54,11 @@ namespace UITests
             var loadButton = session.FindElementByAccessibilityId("LoadButton");
             var saveButton = session.FindElementByAccessibilityId("SaveButton");
 
+            Assert.AreNotEqual(editButton,null);
+            Assert.AreNotEqual(clearButton,null);
+            Assert.AreNotEqual(loadButton,null);
+            Assert.AreNotEqual(saveButton,null);
+
             Assert.IsFalse(clearButton.Enabled);
             Assert.IsFalse(loadButton.Enabled);
             Assert.IsFalse(saveButton.Enabled);
@@ -76,6 +81,9 @@ namespace UITests
 
             var editButton = session.FindElementByAccessibilityId("EditButton");
             var loadButton = session.FindElementByAccessibilityId("LoadButton");
+
+            Assert.AreNotEqual(editButton,null);
+            Assert.AreNotEqual(loadButton,null);
 
             editButton.Click();
             Thread.Sleep(3000);
@@ -109,6 +117,13 @@ namespace UITests
             var drawAreaButton = session.FindElementByAccessibilityId("DrawAreaButton");
             var doneButton = session.FindElementByAccessibilityId("DoneDrawingAreaButton");
 
+            Assert.AreNotEqual(loadButton,null);
+            Assert.AreNotEqual(areaButton,null);
+            Assert.AreNotEqual(plusButton,null);
+            Assert.AreNotEqual(minusButton,null);
+            Assert.AreNotEqual(drawAreaButton,null);
+            Assert.AreNotEqual(doneButton,null);
+
             Assert.IsFalse(plusButton.Enabled);
             Assert.IsFalse(minusButton.Enabled);
             Assert.IsFalse(drawAreaButton.Enabled);
@@ -134,7 +149,9 @@ namespace UITests
             var minusButton = session.FindElementByAccessibilityId("DecreaseDrawingAreaButton");
             var areaText = session.FindElementByAccessibilityId("AreaText");
 
-            Assert.AreEqual("8'' X 6''", areaText.Text);
+            Assert.AreNotEqual(minusButton,null);
+
+            Assert.AreEqual("8'' X 6''", areaText.Text);    
 
             minusButton.Click();
             Thread.Sleep(TimeSpan.FromSeconds(3));
@@ -151,6 +168,9 @@ namespace UITests
             var plusButton = session.FindElementByAccessibilityId("IncreaseDrawingAreaButton");
             var areaText = session.FindElementByAccessibilityId("AreaText");
             var doneButton = session.FindElementByAccessibilityId("DoneDrawingAreaButton");
+
+            Assert.AreNotEqual(plusButton,null);
+            Assert.AreNotEqual(doneButton,null);
 
             Assert.AreEqual("6'' X 4''", areaText.Text);
 
@@ -170,6 +190,9 @@ namespace UITests
 
             var writeButton = session.FindElementByAccessibilityId("WriteButton");
             var dotButton = session.FindElementByAccessibilityId("Dot");
+
+            Assert.AreNotEqual(writeButton,null);
+            Assert.AreNotEqual(dotButton,null);
 
             writeButton.Click();
             Thread.Sleep(TimeSpan.FromSeconds(4));
