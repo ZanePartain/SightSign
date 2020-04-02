@@ -94,7 +94,7 @@ namespace UITests
             loadButton = session.FindElementByAccessibilityId("LoadButton");
 
             //var editButtonText = editButton.GetAttribute("Text");
-            var loadButtonText = loadButton.GetAttribute("Text");
+            var loadButtonText = loadButton.GetAttribute("ButtonText");
             Assert.AreEqual("Load", loadButtonText);
             Console.WriteLine("Load Button Text: " + loadButtonText);
             Console.WriteLine("Load Button Text Null? " + (loadButtonText == null).ToString());
