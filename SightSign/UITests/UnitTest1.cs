@@ -82,7 +82,7 @@ namespace UITests
             loadButton.Click();
             Thread.Sleep(3000);
 
-            Console.WriteLine("Edit Button Text: " + editButton.GetAttribute("Radius"));
+            Console.WriteLine("Edit Button Text: " + editButton.GetAttribute("Radius").GetType());
             Console.WriteLine("Load Button Type: " + loadButton.GetType());
 
             Console.WriteLine("Load Button Text: " + loadButton.Text);
