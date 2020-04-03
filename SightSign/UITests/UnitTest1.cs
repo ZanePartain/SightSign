@@ -276,4 +276,5 @@ namespace UITests
                 session = null;
             }
         }
+    }
 }
