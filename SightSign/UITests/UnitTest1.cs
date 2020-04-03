@@ -217,13 +217,6 @@ namespace UITests
                 object value=descriptor.GetValue(stampButton);
                 Console.WriteLine("{0}={1}",name,value);
             }
-            Console.WriteLine("***** EDIT BUTTON *****");
-            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(editButton))
-            {
-                string name=descriptor.Name;
-                object value=descriptor.GetValue(editButton);
-                Console.WriteLine("{0}={1}",name,value);
-            }
             Console.WriteLine("***** AREA BUTTON *****");
             foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(areaButton))
             {
@@ -240,6 +233,8 @@ namespace UITests
             }
             
 
+            editButton.Click();
+            Thread.Sleep(10000);
             writeButton.Click();
             Thread.Sleep(10000);
             Assert.IsTrue(dotButton.Enabled);
