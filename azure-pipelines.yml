@@ -75,8 +75,8 @@ steps:
       #     - if branch is master increment minor
       #     - if branch is dev increment patch
       #     - else increment revision
-      $versiondetails = $oldversion -match "\d+"
-      Write-Host "Version Details   $versiondetails"
+      $versiondetails = $oldversion -match "[0-9]+"
+      Write-Host "Version Details   $Matches"
       if("$(Build.SourceBranch)" -eq "refs/heads/master") {
         $major = $Matches.0
         $minor = $Matches.1 -as [int]
