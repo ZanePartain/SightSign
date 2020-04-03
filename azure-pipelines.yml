@@ -104,9 +104,10 @@ steps:
       [XML]$packageman = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
       $oldpackagever = $packageman.Package.Identity.Version
       Write-Host "Old Package Version $oldpackagever"
-      
-      (Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest).replace('Version="$oldpackagever"','Version="$newnersion"') | Set-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
 
+      $packageman.Package.Identity.Version.value = $newversion
+      $packageman.Save($(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest)
+      
       $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
       Write-Host "Package Manifest $con"
 
