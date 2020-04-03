@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Interactions;
@@ -103,7 +104,7 @@ namespace UITests
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            IWebElement element = driver.FindElement(By.Id("myButton"));
+            IWebElement element = session.FindElement(loadButton.Id);
 
             Console.WriteLine("Elements: " + element.GetAttribute("outerHTML"));
 
