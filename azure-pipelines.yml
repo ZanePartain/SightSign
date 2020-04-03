@@ -101,12 +101,13 @@ steps:
 
       
       # 3) Replace version with updated version in package.appxmanifest
+      [XML]$packageman = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+      $oldpackagever = $packageman.Package.Identity.Version
+      Write-Host "Old Package Version $oldpackagever"
+      
+      (Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest).replace('Version="$oldpackagever"','Version="$newnersion"') | Set-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+
       $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
-      $con -match ' Version="[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" '
-      $conversion = $Matches.0
-      $con | % { $_.Replace('Version="$conversion"', 'Version="$newnersion"') } | Set-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
-      $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
-      Write-Host "Con Version $conversion"
       Write-Host "Package Manifest $con"
 
       $zeroo = 0
