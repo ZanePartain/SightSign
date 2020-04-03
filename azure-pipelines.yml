@@ -1,5 +1,10 @@
 # Pipeline to build and test UWP SightSign App
 
+trigger:
+  branches:
+    include:
+      - /refs/heads/*
+
 pool:
   vmImage: 'windows-latest'
 
