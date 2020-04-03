@@ -100,12 +100,8 @@ namespace UITests
                 object value=descriptor.GetValue(loadButton);
                 Console.WriteLine("{0}={1}",name,value);
             }
-            Assert.AreEqual("Load", loadButtonText);
-            Console.WriteLine("Load Button Text: " + loadButtonText);
-            Console.WriteLine("Load Button Text Null? " + (loadButtonText == null).ToString());
-            Console.WriteLine("Load Button Text: " + loadButton.Text);
 
-            Assert.IsTrue(loadButton.Text == "Close");
+            Assert.IsEqual("Close",loadButton.Text);
         }
 
         // Save button test - nothing really to test with the UI
