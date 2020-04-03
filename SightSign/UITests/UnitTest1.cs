@@ -201,27 +201,24 @@ namespace UITests
             Assert.AreNotEqual(areaButton,null);
 
             doneButton.Click();
-            Thread.Sleep(20000);
+            Thread.Sleep(10000);
 
-            Console.WriteLine("***** DONE BUTTON *****");
-            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(doneButton))
+            Console.WriteLine("***** EDIT BUTTON *****");
+            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(editButton))
             {
                 string name=descriptor.Name;
-                object value=descriptor.GetValue(doneButton);
+                object value=descriptor.GetValue(editButton);
                 Console.WriteLine("{0}={1}",name,value);
             }
+
+            editButton.Click();
+            Thread.Sleep(10000);
+
             Console.WriteLine("***** STAMP BUTTON *****");
             foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(stampButton))
             {
                 string name=descriptor.Name;
                 object value=descriptor.GetValue(stampButton);
-                Console.WriteLine("{0}={1}",name,value);
-            }
-            Console.WriteLine("***** AREA BUTTON *****");
-            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(areaButton))
-            {
-                string name=descriptor.Name;
-                object value=descriptor.GetValue(areaButton);
                 Console.WriteLine("{0}={1}",name,value);
             }
             Console.WriteLine("***** WRITE BUTTON *****");
@@ -231,10 +228,7 @@ namespace UITests
                 object value=descriptor.GetValue(writeButton);
                 Console.WriteLine("{0}={1}",name,value);
             }
-            
 
-            editButton.Click();
-            Thread.Sleep(10000);
             writeButton.Click();
             Thread.Sleep(10000);
             Assert.IsTrue(dotButton.Enabled);
