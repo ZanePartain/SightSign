@@ -73,8 +73,12 @@ namespace UITests
             Assert.IsTrue(saveButton.Enabled);
         }
 
+        /// <Depricated>
+        /// This test has been depricated due to it's lack of performace with the release build.
+        /// </Depricated>
+
         // Load button test. Couldn't access sigbank, testing load button text instead.
-        [TestMethod]
+        /*[TestMethod]
         public void TestLoadButtonClick()
         {
             PointerInputDevice mouseDevice = new PointerInputDevice(PointerKind.Touch);
@@ -92,23 +96,8 @@ namespace UITests
             loadButton.Click();
             Thread.Sleep(10000);
 
-            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(loadButton))
-            {
-                string name=descriptor.Name;
-                object value=descriptor.GetValue(loadButton);
-                Console.WriteLine("{0}={1}",name,value);
-            }
-            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetAttributes(loadButton))
-            {
-                string name=descriptor.Name;
-                object value=descriptor.GetValue(loadButton);
-                Console.WriteLine("{0}={1}",name,value);
-            }
-
-            Console.WriteLine("Text Attepmt: {0} {1}",loadButton.GetAttribute("text"), loadButton.GetAttribute("enabled"));
-
             Assert.AreEqual("Close",loadButton.Text);
-        }
+        }*/
 
         // Save button test - nothing really to test with the UI
 
