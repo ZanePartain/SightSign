@@ -117,9 +117,9 @@ steps:
 
       # 4) push changes to package.appxmanifest with tag
       git add SightSign/SightSignPackagingProject/Package.appxmanifest
-      git commit -m "Updating version to $newVersion"
+      git commit -m "Updating version to $newversion"
       git push origin $(Build.SourceBranch)
-      git tag $newVersion
+      git tag $newversion
       git push origin --tags
 
       $zeroo = 0
