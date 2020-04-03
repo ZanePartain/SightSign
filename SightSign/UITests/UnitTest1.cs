@@ -203,7 +203,7 @@ namespace UITests
 
             doneButton.Click();
             Thread.Sleep(20000);
-            foreach (var element in session.FindElementByClassName("*"))
+            foreach (var element in session.FindElementsByClassName("*"))
             {
                 foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(element))
                 {

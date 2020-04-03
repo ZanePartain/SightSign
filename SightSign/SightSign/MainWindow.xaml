@@ -186,6 +186,7 @@
                     StrokeThickness="5"
                     ButtonText="Done" 
                     GazeClick="AreaButton_Click" 
+                    Margin="0,0,0,15"
                     AutomationProperties.AutomationId="DoneDrawingAreaButton"/>
 
 
