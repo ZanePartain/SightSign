@@ -105,7 +105,7 @@ steps:
       $oldpackagever = $packageman.Package.Identity.Version
       Write-Host "Old Package Version $oldpackagever"
 
-      $packageman.Package.Identity.Version.value = $newversion
+      $packageman.Package.Identity.Version.Value = $newversion
       $newpackagever = $packageman.Package.Identity.Version
       Write-Host "Old Package Version $newpackagever"
 
