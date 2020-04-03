@@ -203,12 +203,14 @@ namespace UITests
 
             doneButton.Click();
             Thread.Sleep(20000);
-
-            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(writeButton))
+            foreach (var element in session.FindElementByClassName("*"))
             {
-                string name=descriptor.Name;
-                object value=descriptor.GetValue(writeButton);
-                Console.WriteLine("{0}={1}",name,value);
+                foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(element))
+                {
+                    string name=descriptor.Name;
+                    object value=descriptor.GetValue(element);
+                    Console.WriteLine("{0}={1}",name,value);
+                }
             }
 
             writeButton.Click();
