@@ -102,9 +102,7 @@ namespace UITests
                 Console.WriteLine("{0}={1}",name,value);
             }
 
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-
-            IWebElement element = session.FindElement(loadButton.Id);
+            IWebElement element = session.FindElement(By.Id("LoadButton"));
 
             Console.WriteLine("Elements: " + element.GetAttribute("outerHTML"));
 
