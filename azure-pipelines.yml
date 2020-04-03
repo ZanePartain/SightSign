@@ -65,7 +65,8 @@ steps:
       Set-Location $(System.DefaultWorkingDirectory)
       # (Major).(Minor).(Patch).(Revision)
       # 1) Get Version from tags
-      $versions = git tag -l --sort=-v:refname | -match "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*"
+      $tagversions = git tag -l --sort=-v:refname
+      $versions = $tagversions -match "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*"
       $oldversion = $versions[0]
 
       Write-Host "Old Version   $oldversion"
