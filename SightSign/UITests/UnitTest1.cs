@@ -71,6 +71,11 @@ namespace UITests
             Assert.IsTrue(clearButton.Enabled);
             Assert.IsTrue(loadButton.Enabled);
             Assert.IsTrue(saveButton.Enabled);
+
+            editButton.Click();
+            Thread.Sleep(10000);
+            loadButton.Click();
+            Thread.Sleep(10000);
         }
 
         /// <Depricated>
@@ -90,11 +95,6 @@ namespace UITests
             Assert.AreNotEqual(loadButton,null);
             Console.WriteLine("Type={0}",loadButton.GetType());
             Console.WriteLine("Type={0}",loadButton.Text);
-
-            editButton.Click();
-            Thread.Sleep(10000);
-            loadButton.Click();
-            Thread.Sleep(10000);
 
             Assert.AreEqual("Close",loadButton.Text);
         }*/
