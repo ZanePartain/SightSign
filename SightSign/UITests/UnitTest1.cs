@@ -77,7 +77,6 @@ namespace UITests
         [TestMethod]
         public void TestLoadButtonClick()
         {
-
             PointerInputDevice mouseDevice = new PointerInputDevice(PointerKind.Touch);
 
             var editButton = session.FindElementByAccessibilityId("EditButton");
@@ -85,17 +84,21 @@ namespace UITests
 
             Assert.AreNotEqual(editButton,null);
             Assert.AreNotEqual(loadButton,null);
+            Console.WriteLine("Type={0}",loadButton.GetType());
+            Console.WriteLine("Type={0}",loadButton.Text);
 
             editButton.Click();
             Thread.Sleep(10000);
             loadButton.Click();
             Thread.Sleep(10000);
 
-            editButton = session.FindElementByAccessibilityId("EditButton");
-            loadButton = session.FindElementByAccessibilityId("LoadButton");
-
-            Console.WriteLine("Type={0}",loadButton.GetType());
             foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(loadButton))
+            {
+                string name=descriptor.Name;
+                object value=descriptor.GetValue(loadButton);
+                Console.WriteLine("{0}={1}",name,value);
+            }
+            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetAttributes(loadButton))
             {
                 string name=descriptor.Name;
                 object value=descriptor.GetValue(loadButton);
