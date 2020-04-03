@@ -203,8 +203,8 @@ namespace UITests
 
             doneButton.Click();
             Thread.Sleep(20000);
-            var mainwindow = session.FindElementByClassName("SightSign.MainWindow");
-            foreach (var element in mainwindow.findElements(By.xpath("*/*")))
+            //var mainwindow = session.FindElementByClassName("SightSign.MainWindow");
+            foreach (var element in session.findElements(By.xpath("*/*")))
             {
                 foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(element))
                 {
