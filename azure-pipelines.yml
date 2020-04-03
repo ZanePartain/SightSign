@@ -115,15 +115,15 @@ steps:
       $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
       Write-Host "Package Manifest $con"
 
+      # 4) push changes to package.appxmanifest with tag
+      git add SightSign/SightSignPackagingProject/Package.appxmanifest
+      git commit -m "Updating version to $newVersion"
+      git push origin $(Build.SourceBranch)
+      git tag $newVersion
+      git push origin --tags
+
       $zeroo = 0
       $fail = 1 / $zeroo
-      
-      # 4) push changes to package.appxmanifest with tag
-      #git add SightSign/SightSignPackagingProject/Package.appxmanifest
-      #git commit -m "Updating version to $newVersion"
-      #git push origin $(Build.SourceBranch)
-      #git tag $newVersion
-      #git push origin --tags
 
 - task: VSBuild@1
   inputs:
