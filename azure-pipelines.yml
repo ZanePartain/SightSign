@@ -103,7 +103,7 @@ steps:
       # 3) Replace version with updated version in package.appxmanifest
       $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
       $conversion = $con -match "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*"
-      $con | % { $_.Replace('Version=".*"', 'Version="$newnersion"') } | Set-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+      $con | % { $_.Replace('Version="$conversion"', 'Version="$newnersion"') } | Set-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
       $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
       Write-Host $con
 
