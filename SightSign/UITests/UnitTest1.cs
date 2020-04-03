@@ -188,10 +188,17 @@ namespace UITests
             var writeButton = session.FindElementByAccessibilityId("WriteButton");
             var dotButton = session.FindElementByAccessibilityId("Dot");
             var doneButton = session.FindElementByAccessibilityId("DoneDrawingAreaButton");
+            var stampButton = session.FindElementByAccessibilityId("StampButton");
+            var editButton = session.FindElementByAccessibilityId("EditButton");
+            var areaButton = session.FindElementByAccessibilityId("AreaButton");
+
 
             Assert.AreNotEqual(writeButton,null);
             Assert.AreNotEqual(dotButton,null);
             Assert.AreNotEqual(doneButton,null);
+            Assert.AreNotEqual(stampButton,null);
+            Assert.AreNotEqual(editButton,null);
+            Assert.AreNotEqual(areaButton,null);
 
             doneButton.Click();
             Thread.Sleep(20000);
@@ -201,6 +208,27 @@ namespace UITests
             {
                 string name=descriptor.Name;
                 object value=descriptor.GetValue(doneButton);
+                Console.WriteLine("{0}={1}",name,value);
+            }
+            Console.WriteLine("***** STAMP BUTTON *****");
+            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(stampButton))
+            {
+                string name=descriptor.Name;
+                object value=descriptor.GetValue(stampButton);
+                Console.WriteLine("{0}={1}",name,value);
+            }
+            Console.WriteLine("***** EDIT BUTTON *****");
+            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(editButton))
+            {
+                string name=descriptor.Name;
+                object value=descriptor.GetValue(editButton);
+                Console.WriteLine("{0}={1}",name,value);
+            }
+            Console.WriteLine("***** AREA BUTTON *****");
+            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(areaButton))
+            {
+                string name=descriptor.Name;
+                object value=descriptor.GetValue(areaButton);
                 Console.WriteLine("{0}={1}",name,value);
             }
             Console.WriteLine("***** WRITE BUTTON *****");
