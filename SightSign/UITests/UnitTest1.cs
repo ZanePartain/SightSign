@@ -102,7 +102,7 @@ namespace UITests
                 Console.WriteLine("{0}={1}",name,value);
             }
 
-            Console.WriteLine("Text Attepmt: {0}",loadButton.GetAttribute("text"));
+            Console.WriteLine("Text Attepmt: {0} {1}",loadButton.GetAttribute("text"), loadButton.GetAttribute("enabled"));
 
             Assert.AreEqual("Close",loadButton.Text);
         }
