@@ -101,7 +101,13 @@ namespace UITests
                 Console.WriteLine("{0}={1}",name,value);
             }
 
-            Assert.IsEqual("Close",loadButton.Text);
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            IWebElement element = driver.FindElement(By.Id("myButton"));
+
+            Console.WriteLine("Elements: " + element.GetAttribute("outerHTML"));
+
+            Assert.AreEqual("Close",loadButton.Text);
         }
 
         // Save button test - nothing really to test with the UI
