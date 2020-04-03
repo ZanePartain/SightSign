@@ -68,11 +68,14 @@ steps:
       $versions = git tag -l --sort=-v:refname | grep '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*'
       $oldversion = $versions[0]
 
+      Write-Host "Old Version   $oldversion"
+
       # 2) Get Branch
       #     - if branch is master increment minor
       #     - if branch is dev increment patch
       #     - else increment revision
       $versiondetails = $oldversion -match "\d+"
+      Write-Host "Version Details   $versiondetails"
       if("$(Build.SourceBranch)" -eq "refs/heads/master") {
         $major = $Matches.0
         $minor = $Matches.1 -as [int]
@@ -93,7 +96,7 @@ steps:
         $newversion = "$major.$minor.$patch.$revision"
       }
 
-      Write-Host "$newversion"
+      Write-Host "New Version   $newversion"
 
       $versionfail = 0
       $failure = 1 / $versionfail
