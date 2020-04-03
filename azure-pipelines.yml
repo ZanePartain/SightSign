@@ -102,9 +102,12 @@ steps:
       
       # 3) Replace version with updated version in package.appxmanifest
       $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
-      $con | % { $_.Replace('Version="$oldversion"', 'Version="$newnersion"') } | Set-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+      $con | % { $_.Replace('Version=".*"', 'Version="$newnersion"') } | Set-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
       $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
       Write-Host $con
+
+      $zeroo = 0
+      $fail = 1 / $zeroo
       
       # 4) push changes to package.appxmanifest with tag
       #git add SightSign/SightSignPackagingProject/Package.appxmanifest
