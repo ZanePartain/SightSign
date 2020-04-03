@@ -1,0 +1,100 @@
+# Pipeline to build and test UWP SightSign App
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: 'SightSign/SightSign.sln'
+  buildPlatform: 'x64'
+  buildConfiguration: 'Release'
+  appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
+  version: $(Build.SourceBranch)-$(Build.BuildNumber)
+  buildtp: ''
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host $(version)
+      $createcert = New-SelfSignedCertificate -Type Custom -Subject "CN=A4764957-824E-49FA-8C66-DB48E7177019" -KeyUsage DigitalSignature -FriendlyName "Sight Sign" -CertStoreLocation "Cert:\CurrentUser\My" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
+      $buildtp = $createcert.Thumbprint
+      Write-Host "##vso[task.setvariable variable=buildtp;]$buildtp"
+      echo local: $buildtp global: $(buildtp)
+
+      Set-Location Cert:\CurrentUser\My
+      Get-ChildItem | Format-Table Subject, FreindlyName, Thumbprint
+
+      Get-ChildItem -Path Cert:\CurrentUser\My\
+      
+      $pwd = ConvertTo-SecureString -String $(SigningCert.Password) -Force -AsPlainText
+      Export-PfxCertificate -cert "Cert:\CurrentUser\My\$buildtp" -FilePath $(System.DefaultWorkingDirectory)\$buildtp.pfx -Password $pwd
+      
+      Get-ChildItem -Path $(System.DefaultWorkingDirectory)
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $pfxpath = '$(System.DefaultWorkingDirectory)\$(buildtp).pfx'
+      $password = '$(SigningCert.Password)'      
+            
+      Add-Type -AssemblyName System.Security
+      $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+      $cert.Import($pfxpath, $password, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]"PersistKeySet")
+      $store = new-object system.security.cryptography.X509Certificates.X509Store -argumentlist "MY", CurrentUser
+      $store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]"ReadWrite")
+      $store.Add($cert)
+      $store.Close()
+      
+- task: VSBuild@1
+  inputs:
+    platform: 'x64'
+    solution: '$(solution)'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:PackageCertificateKeyFile="$(System.DefaultWorkingDirectory)\$(buildtp).pfx" /p:PackageCertificateThumbprint="$(buildtp)" /p:PackageCertificatePassword="$(SigningCert.Password)"'
+
+- task: Windows Application Driver@0
+  inputs:
+    OperationType: 'Start'
+    AgentResolution: '1080p'
+
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: '*UITests.dll'
+    uiTests: true
+    searchFolder: '$(System.DefaultWorkingDirectory)/SightSign/UITests/bin/Release/'
+
+- task: Windows Application Driver@0
+  inputs:
+    OperationType: 'Stop'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+    
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    replaceExistingArchive: true
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+
+- task: store-publish@0
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  inputs:
+    serviceEndpoint: 'Dev Center Publish Dev Branch'
+    appId: '9P1X7MTB0FJV'
+    packagePath: 
+    force: false
+    skipPolling: false

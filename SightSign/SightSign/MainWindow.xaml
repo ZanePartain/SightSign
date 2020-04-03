@@ -86,7 +86,8 @@
             <Grid
                 x:Name="NavGrid"
                 HorizontalAlignment="Left"
-                Background="Transparent">
+                Background="Transparent"
+                AutomationProperties.AutomationId="NavGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
@@ -103,7 +104,8 @@
                     ButtonText="Stamp"
                     SegmentColor="Black"
                     StrokeThickness="5"
-                    Margin="0,0,0,15"/>
+                    Margin="0,0,0,15"
+                    AutomationProperties.AutomationId="StampButton"/>
 
                 <sightSign:CircularGazeButton Grid.Row="1"
                     x:Name="WriteButton"
@@ -114,7 +116,8 @@
                     ButtonText="Write"
                     SegmentColor="Black"
                     StrokeThickness="5"
-                    Margin="0,0,0,15"/>
+                    Margin="0,0,0,15"
+                    AutomationProperties.AutomationId="WriteButton"/>
 
                 <sightSign:CircularGazeButton Grid.Row="2"
                     x:Name="AreaButton"
@@ -125,12 +128,14 @@
                     SegmentColor="Black"
                     StrokeThickness="5"
                     GazeClick="AreaButton_Click"
-                    Margin="0,0,0,40" />
+                    Margin="0,0,0,40" 
+                    AutomationProperties.AutomationId="AreaButton"/>
 
                 <!-- The buttons related to increasing or decreasing the Drawing Area 
                  Only displayed when the are button is clicked -->
                 <sightSign:CircularGazeButton
                     x:Name="IncreaseDrawingAreaButton"
+                    IsEnabled="False"
                     Visibility="Collapsed"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
@@ -139,9 +144,12 @@
                     SegmentColor="Black"
                     StrokeThickness="5"
                     GazeClick="AdjustDrawingAreaButton_Click" 
-                    Margin="0,0,0,15" />
+                    Margin="0,0,0,15"
+                    AutomationProperties.AutomationId="IncreaseDrawingAreaButton"/>
+                
                 <sightSign:CircularGazeButton Grid.Row="1"
                     x:Name="DecreaseDrawingAreaButton"
+                    IsEnabled="False"
                     Visibility="Collapsed"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
@@ -150,9 +158,12 @@
                     StrokeThickness="5"
                     ButtonText="-" 
                     GazeClick="AdjustDrawingAreaButton_Click"
-                    Margin="0,0,0,15" />
+                    Margin="0,0,0,15"
+                    AutomationProperties.AutomationId="DecreaseDrawingAreaButton"/>
+                
                 <sightSign:CircularGazeButton Grid.Row="2"
                     x:Name="DrawAreaButton"
+                    IsEnabled="False"
                     Visibility="Collapsed"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
@@ -161,9 +172,12 @@
                     StrokeThickness="5"
                     ButtonText="Draw" 
                     GazeClick="DrawAreaButton_Click" 
-                    Margin="0,0,0,40" />
+                    Margin="0,0,0,40"
+                    AutomationProperties.AutomationId="DrawAreaButton"/>
+                
                 <sightSign:CircularGazeButton Grid.Row="4"
                     x:Name="DoneDrawingAreaButton"
+                    IsEnabled="False"
                     Visibility="Collapsed"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
@@ -172,13 +186,15 @@
                     StrokeThickness="5"
                     ButtonText="Done" 
                     GazeClick="AreaButton_Click" 
-                    />
+                    Margin="0,0,0,15"
+                    AutomationProperties.AutomationId="DoneDrawingAreaButton"/>
 
 
                 <!-- The inking-related Clear, Save and Load buttons. -->
                 <sightSign:CircularGazeButton Grid.Row="0"
                     x:Name="ClearButton"
                     Visibility="Collapsed"
+                    IsEnabled="False"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
                     Radius="60"
@@ -186,11 +202,13 @@
                     ButtonText="Clear"
                     SegmentColor="Black"
                     StrokeThickness="5"
-                    Margin="0,0,0,15"/>
+                    Margin="0,0,0,15"
+                    AutomationProperties.AutomationId="ClearButton"/>
 
                 <sightSign:CircularGazeButton Grid.Row="1"
                     x:Name="SaveButton"
                     Visibility="Collapsed"
+                    IsEnabled="False"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
                     Radius="60"
@@ -198,11 +216,13 @@
                     ButtonText="Save"
                     SegmentColor="Black"
                     StrokeThickness="5"
-                    Margin="0,0,0,15"/>
+                    Margin="0,0,0,15"
+                    AutomationProperties.AutomationId="SaveButton"/>
 
                 <sightSign:CircularGazeButton Grid.Row="2"
                     x:Name="LoadButton"
                     Visibility="Collapsed"
+                    IsEnabled="False"
                     Foreground="{Binding ButtonTextColor,
                         Converter={StaticResource ColorToSolidBrushConverter}}"
                     Radius="60"
@@ -210,7 +230,8 @@
                     ButtonText="Load"
                     SegmentColor="Black"
                     StrokeThickness="5"
-                    Margin="0,0,0,40"/>
+                    Margin="0,0,0,40"
+                    AutomationProperties.AutomationId="LoadButton"/>
 
                 <!-- The Edit/Done button. -->
                 <sightSign:CircularGazeButton Grid.Row="4"
@@ -222,12 +243,13 @@
                     ButtonText="Edit"
                     SegmentColor="Black"
                     StrokeThickness="5"
-                    />
+                    AutomationProperties.AutomationId="EditButton"/>
             </Grid>
 
             <!--Signature Bank Grid that will display when the user selects Load.-->
             <Grid
                 x:Name="SigBank"
+                IsEnabled="False"
                 Grid.Column="1" Grid.ColumnSpan="2"
                 Width="900"
                 Height="600"
@@ -236,6 +258,7 @@
                 Visibility="Collapsed"
                 VerticalAlignment="Center" 
                 HorizontalAlignment="Center"
+                AutomationProperties.AutomationId="SigBank"
             >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -259,6 +282,7 @@
                 <!-- The InkCanvas showing the default ink of the ink drawn by the user. -->
                 <InkCanvas 
                 AutomationProperties.Name="Background ink canvas"
+                AutomationProperties.AutomationId="BackgroundInkCanvas"
                 x:Name="inkCanvas" 
                 Background="Transparent"
                 IsEnabled="False" />
@@ -266,6 +290,7 @@
                 <!-- The InkCanvas showing the ink as it's being traced out. -->
                 <InkCanvas 
                 AutomationProperties.Name="Tracing ink canvas"
+                AutomationProperties.AutomationId="TracingInkCanvas"
                 x:Name="inkCanvasAnimations" 
                 Background="Transparent"
                 IsHitTestVisible="True"
@@ -276,6 +301,7 @@
                 <Button 
                     x:Name="dot"
                     AutomationProperties.Name="Dot"
+                    AutomationProperties.AutomationId="Dot"
                     Visibility="Collapsed"
                     Width="{Binding Arm.ArmIsDown,
                         Converter={StaticResource ArmStateToDotWidthConverter}}"
@@ -343,6 +369,7 @@
                 <sightSign:CircularGazeButton Grid.Row="1"
                     x:Name="SettingsButton"
                     AutomationProperties.Name="Settings"
+                    AutomationProperties.AutomationId="SettingsButton"
                     AutomationProperties.HelpText="{Binding Arm.Connected,
                         Converter={StaticResource ArmConnectedToHelpTextConverter}}"
                     Foreground="{Binding ButtonTextColor,
@@ -358,7 +385,8 @@
                     Margin="0,0,0,20"/>
 
                 <TextBlock 
-                    x:Name="areaText" 
+                    x:Name="areaText"
+                    AutomationProperties.AutomationId="AreaText"
                     HorizontalAlignment="Right" 
                     VerticalAlignment="Top"
                     FontSize="25" 
