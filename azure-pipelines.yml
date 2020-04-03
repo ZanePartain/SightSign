@@ -75,24 +75,24 @@ steps:
       #     - if branch is master increment minor
       #     - if branch is dev increment patch
       #     - else increment revision
-      $oldversion -split "."
-      $versiondetails = $oldversion -split "."
+      "$oldversion" -split "."
+      $versiondetails = "$oldversion" -split "."
       Write-Host "Version Details   $versiondetails"
       if("$(Build.SourceBranch)" -eq "refs/heads/master") {
-        $major = $versiondetails.0
+        $major = "$versiondetails.0"
         $minor = $versiondetails.1 -as [int]
         $minor = $minor + 1
         $newversion = "$major.$minor.0.0"
       }elseif("$(Build.SourceBranch)" -eq "refs/heads/dev") {
-        $major = $versiondetails.0
-        $minor = $versiondetails.1
+        $major = "$versiondetails.0"
+        $minor = "$versiondetails.1"
         $patch = $versiondetails.2 -as [int]
         $patch = $patch + 1
         $newversion = "$major.$minor.$patch.0"
       }else {
-        $major = $versiondetails.0
-        $minor = $versiondetails.1
-        $patch = $versiondetails.2
+        $major = "$versiondetails.0"
+        $minor = "$versiondetails.1"
+        $patch = "$versiondetails.2"
         $revision = $versiondetails.3 -as [int]
         $revision = $revision + 1
         $newversion = "$major.$minor.$patch.$revision"
