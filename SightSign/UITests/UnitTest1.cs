@@ -206,15 +206,18 @@ namespace UITests
 
             doneButton.Click();
             Thread.Sleep(20000);
-            //var mainwindow = session.FindElementByClassName("SightSign.MainWindow");
-            foreach (var element in session.findElements(By.xpath("*/*")))
+
+            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(writeButton))
             {
-                foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(element))
-                {
-                    string name=descriptor.Name;
-                    object value=descriptor.GetValue(element);
-                    Console.WriteLine("{0}={1}",name,value);
-                }
+                string name=descriptor.Name;
+                object value=descriptor.GetValue(writeButton);
+                Console.WriteLine("{0}={1}",name,value);
+            }
+            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetAttributes(writeButton))
+            {
+                string name=descriptor.Name;
+                object value=descriptor.GetValue(writeButton);
+                Console.WriteLine("{0}={1}",name,value);
             }
 
             writeButton.Click();
