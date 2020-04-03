@@ -237,7 +237,6 @@ namespace UITests
                 }
                 curDirPath = System.IO.Directory.GetParent(curDirPath).FullName;
                 var SightSignAppId = curDirPath + SightSignAppExe;
-                Console.WriteLine(SightSignAppId);
                 var appiumOptions = new AppiumOptions();
                 appiumOptions.AddAdditionalCapability("app", SightSignAppId);
                 appiumOptions.AddAdditionalCapability("deviceName", "WindowsPC");
