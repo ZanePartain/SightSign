@@ -102,18 +102,6 @@ namespace UITests
                 Console.WriteLine("{0}={1}",name,value);
             }
 
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-
-            parameters.Add("id", loadButton.Id);
-            parameters.Add("name", loadButton.Id);
-
-            var elements = session.Execute(FindElementsById,parameters);
-
-            foreach (var element in elements)
-            {
-                Console.WriteLine(element.Content);
-            }
-
             Assert.AreEqual("Close",loadButton.Text);
         }
 
