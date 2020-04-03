@@ -196,18 +196,21 @@ namespace UITests
             doneButton.Click();
             Thread.Sleep(20000);
 
+            Console.WriteLine("***** DONE BUTTON *****");
+            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(doneButton))
+            {
+                string name=descriptor.Name;
+                object value=descriptor.GetValue(doneButton);
+                Console.WriteLine("{0}={1}",name,value);
+            }
+            Console.WriteLine("***** WRITE BUTTON *****");
             foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(writeButton))
             {
                 string name=descriptor.Name;
                 object value=descriptor.GetValue(writeButton);
                 Console.WriteLine("{0}={1}",name,value);
             }
-            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetAttributes(writeButton))
-            {
-                string name=descriptor.Name;
-                object value=descriptor.GetValue(writeButton);
-                Console.WriteLine("{0}={1}",name,value);
-            }
+            
 
             writeButton.Click();
             Thread.Sleep(10000);
