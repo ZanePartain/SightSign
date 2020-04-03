@@ -107,10 +107,10 @@ steps:
 
       $packageman.Package.Identity.Version = $newversion
       $newpackagever = $packageman.Package.Identity.Version
-      Write-Host "Old Package Version $newpackagever"
+      Write-Host "New Package Version $newpackagever"
 
 
-      $packageman.Save()#$(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest)
+      $packageman.Save("$(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest")
       
       $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
       Write-Host "Package Manifest $con"
