@@ -3,7 +3,7 @@
 trigger:
   branches:
     include:
-      - /refs/heads/*
+      - refs/heads/*
 
 pool:
   vmImage: 'windows-latest'
