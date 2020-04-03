@@ -93,8 +93,7 @@ namespace UITests
             editButton = session.FindElementByAccessibilityId("EditButton");
             loadButton = session.FindElementByAccessibilityId("LoadButton");
 
-            //var editButtonText = editButton.GetAttribute("Text");
-            var loadButtonText = loadButton.GetAttribute("ButtonText");
+            Console.WriteLine("Type={0}",loadButton.GetType());
             foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(loadButton))
             {
                 string name=descriptor.Name;
