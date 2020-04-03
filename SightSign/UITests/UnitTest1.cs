@@ -10,7 +10,7 @@ using OpenQA.Selenium.Interactions;
 namespace UITests
 {
     [TestClass]
-    public class SightSignUITests
+    public class SightSignUITestsFirst
     {
 
         protected const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
@@ -208,6 +208,17 @@ namespace UITests
                 session = null;
             }
         }
+    }
+
+
+    [TestClass]
+    public class SightSignUITestsSecond
+    {
+
+        protected const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
+        private const string SightSignAppExe = @"\SightSign\bin\Release\SightSign.exe";
+
+        protected static WindowsDriver<WindowsElement> session;
 
         [ClassInitialize]
         public static void SetupTwo(TestContext context)
@@ -265,5 +276,4 @@ namespace UITests
                 session = null;
             }
         }
-    }
 }
