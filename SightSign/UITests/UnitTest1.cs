@@ -180,6 +180,62 @@ namespace UITests
         }
 
         [TestMethod]
+        public void TestDoneButtonClick()
+        {
+
+            PointerInputDevice mouseDevice = new PointerInputDevice(PointerKind.Touch);
+
+            var doneButton = session.FindElementByAccessibilityId("DoneDrawingAreaButton");
+            var editButton = session.FindElementByAccessibilityId("EditButton");
+
+            Assert.AreNotEqual(doneButton,null);
+            Assert.AreNotEqual(editButton,null);
+
+            doneButton.Click();
+            Thread.Sleep(10000);
+
+            Assert.IsTrue(editButton.Enabled);
+        }
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            // Close the application and delete the session
+            if (session != null)
+            {
+                session.Close();
+                session.Quit();
+                session = null;
+            }
+        }
+
+        [ClassInitialize]
+        public static void SetupTwo(TestContext context)
+        {
+            if (session == null)
+            {
+                var curDirPath = System.IO.Directory.GetCurrentDirectory();
+                Console.WriteLine(curDirPath);
+                while (System.IO.Directory.GetParent(curDirPath).Name != "SightSign")
+                {
+                    //Console.WriteLine("Full Path: " + curDirPath);
+                    //Console.WriteLine("Cur Dir: " + System.IO.Path.GetDirectoryName(curDirPath));
+                    Console.WriteLine("Parent Dir: " + System.IO.Directory.GetParent(curDirPath).Name);
+                    
+                    curDirPath = System.IO.Directory.GetParent(curDirPath).FullName;
+                }
+                curDirPath = System.IO.Directory.GetParent(curDirPath).FullName;
+                var SightSignAppId = curDirPath + SightSignAppExe;
+                Console.WriteLine(SightSignAppId);
+                var appiumOptions = new AppiumOptions();
+                appiumOptions.AddAdditionalCapability("app", SightSignAppId);
+                appiumOptions.AddAdditionalCapability("deviceName", "WindowsPC");
+                session = new WindowsDriver<WindowsElement>(new Uri(WindowsApplicationDriverUrl), appiumOptions);
+
+            }
+        }
+
+        [TestMethod]
         public void TestWriteButtonClick()
         {
 
@@ -187,55 +243,19 @@ namespace UITests
 
             var writeButton = session.FindElementByAccessibilityId("WriteButton");
             var dotButton = session.FindElementByAccessibilityId("Dot");
-            var doneButton = session.FindElementByAccessibilityId("DoneDrawingAreaButton");
-            var stampButton = session.FindElementByAccessibilityId("StampButton");
-            var editButton = session.FindElementByAccessibilityId("EditButton");
-            var areaButton = session.FindElementByAccessibilityId("AreaButton");
-
 
             Assert.AreNotEqual(writeButton,null);
             Assert.AreNotEqual(dotButton,null);
-            Assert.AreNotEqual(doneButton,null);
-            Assert.AreNotEqual(stampButton,null);
-            Assert.AreNotEqual(editButton,null);
-            Assert.AreNotEqual(areaButton,null);
-
-            doneButton.Click();
-            Thread.Sleep(10000);
-
-            Console.WriteLine("***** EDIT BUTTON *****");
-            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(editButton))
-            {
-                string name=descriptor.Name;
-                object value=descriptor.GetValue(editButton);
-                Console.WriteLine("{0}={1}",name,value);
-            }
-
-            editButton.Click();
-            Thread.Sleep(10000);
-
-            Console.WriteLine("***** STAMP BUTTON *****");
-            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(stampButton))
-            {
-                string name=descriptor.Name;
-                object value=descriptor.GetValue(stampButton);
-                Console.WriteLine("{0}={1}",name,value);
-            }
-            Console.WriteLine("***** WRITE BUTTON *****");
-            foreach(System.ComponentModel.PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(writeButton))
-            {
-                string name=descriptor.Name;
-                object value=descriptor.GetValue(writeButton);
-                Console.WriteLine("{0}={1}",name,value);
-            }
 
             writeButton.Click();
             Thread.Sleep(10000);
+
             Assert.IsTrue(dotButton.Enabled);
         }
+        
 
         [ClassCleanup]
-        public static void ClassCleanup()
+        public static void ClassCleanupTwo()
         {
             // Close the application and delete the session
             if (session != null)
