@@ -73,18 +73,18 @@ steps:
       #     - if branch is dev increment patch
       #     - else increment revision
       $versiondetails = $oldversion -match "\d+"
-      if("$(Build.SourceBranch)"" -eq "refs/heads/master") {
+      if("$(Build.SourceBranch)" -eq "refs/heads/master") {
         $major = $Matches.0
         $minor = $Matches.1 -as [int]
         $minor = $minor + 1
         $newversion = "$major.$minor.0.0"
-      }elseif("$(Build.SourceBranch)"" -eq "refs/heads/dev") {
+      }elseif("$(Build.SourceBranch)" -eq "refs/heads/dev") {
         $major = $Matches.0
         $minor = $Matches.1
         $patch = $Matches.2 -as [int]
         $patch = $patch + 1
         $newversion = "$major.$minor.$patch.0"
-      }else{
+      }else {
         $major = $Matches.0
         $minor = $Matches.1
         $patch = $Matches.2
