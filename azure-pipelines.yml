@@ -58,6 +58,59 @@ steps:
       $store.Add($cert)
       $store.Close()
       
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Set-Location $(System.DefaultWorkingDirectory)
+      # (Major).(Minor).(Patch).(Revision)
+      # 1) Get Version from tags
+      $versions = git tag -l --sort=-v:refname | grep '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*'
+      $oldversion = $version[0]
+
+      # 2) Get Branch
+      #     - if branch is master increment minor
+      #     - if branch is dev increment patch
+      #     - else increment revision
+      $versiondetails = $oldversion -match "\d+"
+      if($(Build.SourceBranch) -eq "refs/heads/master") {
+        $major = $Matches.0
+        $minor = $Matches.1 -as [int]
+        $minor = $minor + 1
+        $newversion = "$major.$minor.0.0"
+      }elseif($(Build.SourceBranch) -eq "refs/heads/dev") {
+        $major = $Matches.0
+        $minor = $Matches.1
+        $patch = $Matches.2 -as [int]
+        $patch = $patch + 1
+        $newversion = "$major.$minor.$patch.0"
+      }else{
+        $major = $Matches.0
+        $minor = $Matches.1
+        $patch = $Matches.2
+        $revision = $Matches.3 -as [int]
+        $revision = $revision + 1
+        $newversion = "$major.$minor.$patch.$revision"
+      }
+
+      Write-Host "$newversion"
+
+      $versionfail = 0
+      $failure = 1 / $versionfail
+
+      # 3) Checkout Source Branch
+      #git checkout $(Build.SourceBranch)
+      # 4) Replace version with updated version in package.appxmanifest
+      #$con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+      #$con | % { $_.Replace('Version="$oldversion"', 'Version="$newnersion"') } | Set-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+      
+      # 5) push changes to package.appxmanifest with tag
+      #git add SightSign/SightSignPackagingProject/Package.appxmanifest
+      #git commit -m "Updating version to $newVersion"
+      #git push origin $(Build.SourceBranch)
+      #git tag $newVersion
+      #git push origin --tags
+
 - task: VSBuild@1
   inputs:
     platform: 'x64'
