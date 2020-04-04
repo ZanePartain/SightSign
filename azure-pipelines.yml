@@ -119,7 +119,7 @@ steps:
       git add SightSign/SightSignPackagingProject/Package.appxmanifest
       & cmd \c 'git commit -m "Updating version to $newversion" 2>&1'
       $sbranch = Split-Path $(Build.SourceBranch) -leaf
-      git push origin #sbranch
+      git push origin $sbranch
       git tag $newversion
       git push origin --tags
 
