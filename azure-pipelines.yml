@@ -118,12 +118,12 @@ steps:
       # 4) push changes to package.appxmanifest with tag
       git config --global user.email "$(git.email)"
       git config --global user.name "$(git.name)"
-      #git remote set-url origin https://oauth2:$(git.token)@gitlab.com/SightSignOrg/SightSign.git
       git fetch
       $gitadd = git add SightSign/SightSignPackagingProject/Package.appxmanifest
       Write-Host "git add $gitadd"
       $gitcommit = & cmd /c 'git commit -m "Updating version to $newversion" 2>&1' 
       Write-Host "git commit $gitcommit"
+      git show-ref
       $sbranch = Split-Path $(Build.SourceBranch) -leaf
       $gitpush = git push origin $sbranch 
       Write-Host "git push $gitpush"
