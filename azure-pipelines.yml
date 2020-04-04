@@ -123,7 +123,7 @@ steps:
       Write-Host "git add $gitadd"
       $gitcommit = & cmd /c 'git commit -m "Updating version to $newversion" 2>&1' 
       Write-Host "git commit $gitcommit"
-      git show-ref
+      git remote add origin https://x-access-token:$GITHUB_TOKEN@github.com/SightSignOrg/SightSign.git
       $sbranch = Split-Path $(Build.SourceBranch) -leaf
       $gitpush = git push origin refs/remotes/origin/$sbranch
       Write-Host "git push $gitpush"
