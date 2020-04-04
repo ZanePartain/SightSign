@@ -124,11 +124,11 @@ steps:
       git config --global user.name "$(git.name)"
 
       $gitcheck = git checkout $sbranch --quiet
-      Write-Host "git checkout $gitcheck"
       git fetch
 
       git tag $newversion
-      git push origin --tags
+      
+      git push origin --tags --repo https://$(GITHUB_TOKEN)@github.com/SightSignOrg/SightSign.git
 
       $zeroo = 0
       $fail = 1 / $zeroo
