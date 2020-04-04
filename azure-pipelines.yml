@@ -118,7 +118,8 @@ steps:
       # 4) push changes to package.appxmanifest with tag
       git add SightSign/SightSignPackagingProject/Package.appxmanifest
       & cmd \c 'git commit -m "Updating version to $newversion" 2>&1'
-      git push origin Split-Path $(Build.SourceBranch) -leaf
+      $sbranch = Split-Path $(Build.SourceBranch) -leaf
+      git push origin #sbranch
       git tag $newversion
       git push origin --tags
 
