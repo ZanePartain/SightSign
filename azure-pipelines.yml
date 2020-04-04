@@ -122,7 +122,7 @@ steps:
       $gitcommit = & cmd /c 'git 2>&1' commit -m "Updating version to $newversion"
       Write-Host "git commit $gitcommit"
       $sbranch = Split-Path $(Build.SourceBranch) -leaf
-      $gitpush = 2>$null && git push origin $sbranch 
+      $gitpush = git push origin $sbranch 
       Write-Host "git push $gitpush"
       git tag $newversion
       git push origin --tags
