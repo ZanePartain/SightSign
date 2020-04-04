@@ -123,7 +123,7 @@ steps:
       git config --global user.email "$(git.email)"
       git config --global user.name "$(git.name)"
 
-      $gitcheck = & cmd /c 'git checkout $sbranch 2>&1'
+      $gitcheck = git checkout $sbranch
       Write-Host "git checkout $gitcheck"
       git fetch
 
