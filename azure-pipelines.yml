@@ -116,17 +116,25 @@ steps:
       Write-Host "Package Manifest $con"
 
       # 4) push changes to package.appxmanifest with tag
+      $sbranch = Split-Path $(Build.SourceBranch) -leaf
+
       git config --global user.email "$(git.email)"
       git config --global user.name "$(git.name)"
+
+      git checkout refs/remotes/origin/$sbranch
       git fetch
+
       $gitadd = git add SightSign/SightSignPackagingProject/Package.appxmanifest
       Write-Host "git add $gitadd"
+
       $gitcommit = & cmd /c 'git commit -m "Updating version to $newversion" 2>&1' 
       Write-Host "git commit $gitcommit"
-      git remote add origin https://x-access-token:$GITHUB_TOKEN@github.com/SightSignOrg/SightSign.git
-      $sbranch = Split-Path $(Build.SourceBranch) -leaf
+
+      git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/SightSignOrg/SightSign.git
+
       $gitpush = git push origin refs/remotes/origin/$sbranch
       Write-Host "git push $gitpush"
+
       git tag $newversion
       git push origin --tags
 
