@@ -125,7 +125,7 @@ steps:
       Write-Host "git commit $gitcommit"
       git show-ref
       $sbranch = Split-Path $(Build.SourceBranch) -leaf
-      $gitpush = git push origin refs/remotes/$sbranch\:refs/heads/$sbranch
+      $gitpush = git push origin refs/remotes/origin/$sbranch
       Write-Host "git push $gitpush"
       git tag $newversion
       git push origin --tags
