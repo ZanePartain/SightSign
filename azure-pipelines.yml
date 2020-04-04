@@ -118,7 +118,7 @@ steps:
       # 4) push changes to package.appxmanifest with tag
       git config --global user.email "$(git.email)"
       git config --global user.name "$(git.name)"
-      git remote add origin https://oauth2:$(git.token)@gitlab.com/SightSignOrg/SightSign.git
+      git remote set-url origin https://oauth2:$(git.token)@gitlab.com/SightSignOrg/SightSign.git
       git fetch
       $gitadd = git add SightSign/SightSignPackagingProject/Package.appxmanifest
       Write-Host "git add $gitadd"
