@@ -119,7 +119,7 @@ steps:
       git fetch
       $gitadd = git add SightSign/SightSignPackagingProject/Package.appxmanifest
       Write-Host "git add $gitadd"
-      $gitcommit = & cmd /c 'git commit 2>&1' "-m Updating version to $newversion"
+      $gitcommit = & cmd /c 'git commit -m "Updating version to $newversion" 2>&1' 
       Write-Host "git commit $gitcommit"
       $sbranch = Split-Path $(Build.SourceBranch) -leaf
       $gitpush = git push origin $sbranch 
