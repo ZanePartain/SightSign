@@ -118,10 +118,12 @@ steps:
       # 4) push changes to package.appxmanifest with tag
       $sbranch = Split-Path $(Build.SourceBranch) -leaf
 
+      Write-Host "branch $sbranch"
+
       git config --global user.email "$(git.email)"
       git config --global user.name "$(git.name)"
 
-      $gitcheck = & cmd /c 'git checkout azure-pipeline 2>&1'
+      $gitcheck = & cmd /c 'git checkout $sbranch 2>&1'
       Write-Host "git checkout $gitcheck"
       git fetch
 
