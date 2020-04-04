@@ -121,7 +121,8 @@ steps:
       git config --global user.email "$(git.email)"
       git config --global user.name "$(git.name)"
 
-      git checkout refs/remotes/origin/$sbranch
+      $gitcheck = & cmd /c 'git checkout refs/remotes/origin/$sbranch 2>&1'
+      Write-Host "git commit $gitcheck"
       git fetch
 
       $gitadd = git add SightSign/SightSignPackagingProject/Package.appxmanifest
