@@ -4,6 +4,9 @@ trigger:
   branches:
     include:
       - refs/heads/*
+  paths:
+    exclude:
+      - SightSign/SightSignPackagingProject/Package.appxmanifest
 
 pool:
   vmImage: 'windows-latest'
@@ -167,7 +170,6 @@ steps:
     publishLocation: 'Container'
     
 - task: ArchiveFiles@2
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
     includeRootFolder: true
@@ -177,7 +179,6 @@ steps:
 
 - task: store-publish@0
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
-  condition: and(eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
   inputs:
     serviceEndpoint: 'Dev Center Publish Dev Branch'
     appId: '9P1X7MTB0FJV'
