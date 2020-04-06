@@ -122,13 +122,18 @@ steps:
 
       git config --global user.email "$(git.email)"
       git config --global user.name "$(git.name)"
+      git config remote.origin.url https://sightsignbot:$(GITHUB_TOKEN)@github.com/SightSignOrg/SightSign.git
 
       $gitcheck = git checkout $sbranch --quiet
       git fetch
 
+      git add $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+      git commit -q -m "Updating version to $newversion"
+      git push origin $sbranch --quiet
+
       git tag $newversion
       
-      git push origin --tags --repo https://sightsignbot:$(GITHUB_TOKEN)@github.com/SightSignOrg/SightSign.git
+      git push origin --tags $sbranch --quiet
 
       $zeroo = 0
       $fail = 1 / $zeroo
