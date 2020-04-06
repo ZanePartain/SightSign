@@ -122,7 +122,7 @@ steps:
 
       git config --global user.email "$(git.email)"
       git config --global user.name "$(git.name)"
-      git config remote.origin.url https://sightsignbot:$(GITHUB_TOKEN)@github.com/SightSignOrg/SightSign.git
+      git config remote.origin.url https://$(git.username):$(git.password)@github.com/SightSignOrg/SightSign.git
 
       $gitcheck = git checkout $sbranch --quiet
       git fetch
