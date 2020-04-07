@@ -7,17 +7,18 @@ namespace SightSign
 {
     public class UArmSwiftPro : IArm
     {
-        private readonly string _port;
+        //private readonly string _port;
         private UArmSwift _arm;
 
         public UArmSwiftPro()
         {
-            _port = PortDetails.FindPort();
+            //_port = PortDetails.FindPort();
         }
 
         public void Connect()
         {
-            _arm = new UArmSwift(_port);
+            //_arm = new UArmSwift(_port);
+            _arm = new UArmSwift(null);
             _arm.Connect();
             _arm.Mode(Mode.UniversalHolder);
         }
@@ -31,7 +32,7 @@ namespace SightSign
         public void Move(double x, double y, double z, bool scara)
         {
             // note: scara not supported
-            var scale = 3.0;
+            var scale = 2.0;
             var xx = x * 70.0 * scale + 200.0; 
             var yy = y * 100.0 * scale + 50.0;
             var zz = z * 20.0 + 50;

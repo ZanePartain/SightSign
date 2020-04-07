@@ -10,7 +10,7 @@ For this project, we used the following hardware:
 
 - [Surface Pro 4](https://www.microsoft.com/surface/en-us/devices/surface-pro-4)
 - [Tobii EyeX Controller](http://www.tobii.com/xperience/products/)
-- [uArm Metal](https://www.ufactory.cc/en/uarm_metal/)
+- [uArm Swift Pro](https://www.ufactory.cc/#/en/uarmswift)
 
 Most Windows 10 should work, so long as they meet the requirements for the eye tracker you choose. We have tested on Surface Pro 3 and Surface Pro 4.
 
