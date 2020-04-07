@@ -119,10 +119,10 @@ steps:
 
       if("$(Build.SourceBranch)" -eq "refs/heads/master") {
         $packageman.Package.Identity.Name = "15959SightSign.SightSign"
-        $packageman.Package.Properties.DisplayNam = "Sight Sign"
+        $packageman.Package.Properties.DisplayName = "Sight Sign"
       }elseif("$(Build.SourceBranch)" -eq "refs/heads/dev") {
         $packageman.Package.Identity.Name = "15959SightSign.SightSignDev"
-        $packageman.Package.Properties.DisplayNam = "Sight Sign Dev"
+        $packageman.Package.Properties.DisplayName = "Sight Sign Dev"
       }
 
       $packageman.Save("$(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest")
