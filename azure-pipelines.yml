@@ -4,6 +4,9 @@ trigger:
   branches:
     include:
       - refs/heads/*
+  paths:
+    exclude:
+      - SightSign/SightSignPackagingProject/Package.appxmanifest
 
 pool:
   vmImage: 'windows-latest'
@@ -13,7 +16,7 @@ variables:
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
-  version: $(Build.SourceBranch)-$(Build.BuildNumber)
+  committer: $buildPipeline.value.author.uniqueName
   buildtp: ''
 
 steps:
@@ -27,7 +30,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Write-Host $(version)
+      Write-Host $(Build.SourceBranch)
       $createcert = New-SelfSignedCertificate -Type Custom -Subject "CN=A4764957-824E-49FA-8C66-DB48E7177019" -KeyUsage DigitalSignature -FriendlyName "Sight Sign" -CertStoreLocation "Cert:\CurrentUser\My" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
       $buildtp = $createcert.Thumbprint
       Write-Host "##vso[task.setvariable variable=buildtp;]$buildtp"
@@ -58,6 +61,83 @@ steps:
       $store.Add($cert)
       $store.Close()
       
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Set-Location $(System.DefaultWorkingDirectory)
+      # (Major).(Minor).(Patch).(Revision)
+      # 1) Get Version from tags
+      $tagversions = git tag -l --sort=-v:refname
+      $versions = $tagversions -match "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*"
+      $oldversion = $versions[0]
+
+      Write-Host "Old Version   $oldversion"
+
+      # 2) Get Branch
+      #     - if branch is master increment minor
+      #     - if branch is dev increment patch
+      #     - else increment revision
+      $versiondetails = $oldversion -split ".", 0, "simplematch"
+      Write-Host "Version Details   $versiondetails"
+      if("$(Build.SourceBranch)" -eq "refs/heads/master") {
+        $major = $versiondetails[0]
+        $minor = $versiondetails[1] -as [int]
+        $minor = $minor + 1
+        $newversion = "$major.$minor.0.0"
+      }elseif("$(Build.SourceBranch)" -eq "refs/heads/dev") {
+        $major = $versiondetails[0]
+        $minor = $versiondetails[1]
+        $patch = $versiondetails[2] -as [int]
+        $patch = $patch + 1
+        $newversion = "$major.$minor.$patch.0"
+      }else {
+        $major = $versiondetails[0]
+        $minor = $versiondetails[1]
+        $patch = $versiondetails[2]
+        $revision = $versiondetails[3] -as [int]
+        $revision = $revision + 1
+        $newversion = "$major.$minor.$patch.$revision"
+      }
+
+      Write-Host "New Version   $newversion"
+
+      
+      # 3) Replace version with updated version in package.appxmanifest
+      [XML]$packageman = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+      $oldpackagever = $packageman.Package.Identity.Version
+      Write-Host "Old Package Version $oldpackagever"
+
+      $packageman.Package.Identity.Version = $newversion
+      $newpackagever = $packageman.Package.Identity.Version
+      Write-Host "New Package Version $newpackagever"
+
+
+      $packageman.Save("$(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest")
+      
+      $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+      Write-Host "Package Manifest $con"
+
+      # 4) push changes to package.appxmanifest with tag
+      $sbranch = Split-Path $(Build.SourceBranch) -leaf
+
+      Write-Host "branch $sbranch"
+
+      git config --global user.email "$(git.email)"
+      git config --global user.name "$(git.name)"
+      git config remote.origin.url https://$(git.username):$(git.password)@github.com/SightSignOrg/SightSign.git
+
+      $gitcheck = git checkout $sbranch --quiet
+      git fetch
+
+      git add $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+      git commit -q -m "Updating version to $newversion"
+      git push origin $sbranch --quiet
+
+      git tag $newversion
+      
+      git push origin --tags $sbranch --quiet
+
 - task: VSBuild@1
   inputs:
     platform: 'x64'
