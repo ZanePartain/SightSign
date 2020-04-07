@@ -102,6 +102,11 @@ steps:
 
       Write-Host "New Version   $newversion"
 
+      $sbranch = Split-Path $(Build.SourceBranch) -leaf
+
+      Write-Host "branch $sbranch"
+
+
       
       # 3) Replace version with updated version in package.appxmanifest
       [XML]$packageman = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
@@ -112,6 +117,13 @@ steps:
       $newpackagever = $packageman.Package.Identity.Version
       Write-Host "New Package Version $newpackagever"
 
+      if("$(Build.SourceBranch)" -eq "refs/heads/master") {
+        $packageman.Package.Identity.Name = "15959SightSign.SightSign"
+        $packageman.Package.Properties.DisplayNam = "Sight Sign"
+      }elseif("$(Build.SourceBranch)" -eq "refs/heads/dev") {
+        $packageman.Package.Identity.Name = "15959SightSign.SightSignDev"
+        $packageman.Package.Properties.DisplayNam = "Sight Sign Dev"
+      }
 
       $packageman.Save("$(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest")
       
@@ -119,24 +131,26 @@ steps:
       Write-Host "Package Manifest $con"
 
       # 4) push changes to package.appxmanifest with tag
-      $sbranch = Split-Path $(Build.SourceBranch) -leaf
+      try
+      {
+        git config --global user.email "$(git.email)"
+        git config --global user.name "$(git.name)"
+        git config remote.origin.url https://$(git.username):$(git.password)@github.com/SightSignOrg/SightSign.git
 
-      Write-Host "branch $sbranch"
+        $gitcheck = git checkout $sbranch --quiet
+        git fetch
+        git add $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+        git commit -q -m "Updating version to $newversion"
+        git push --quiet
+        git tag $newversion
+        git push origin --tags $sbranch --quiet
+      }
+      finally
+      {
+        Write-Host "Tried to run git commands but failed to push"
+      }
 
-      git config --global user.email "$(git.email)"
-      git config --global user.name "$(git.name)"
-      git config remote.origin.url https://$(git.username):$(git.password)@github.com/SightSignOrg/SightSign.git
 
-      $gitcheck = git checkout $sbranch --quiet
-      git fetch
-
-      git add $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
-      git commit -q -m "Updating version to $newversion"
-      git push origin $sbranch --quiet
-
-      git tag $newversion
-      
-      git push origin --tags $sbranch --quiet
 
 - task: VSBuild@1
   inputs:
