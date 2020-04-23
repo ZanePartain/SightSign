@@ -8,7 +8,7 @@
         ResizeMode="NoResize"
         Title="Settings"
         Width="260" 
-        Height="354">
+        Height="280">
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="40">
             <CheckBox x:Name="RobotControlCheckBox"
@@ -30,12 +30,6 @@
                 Height="30"
                 Margin="0 6 0 20" 
                 Click="ZDownButton_Click" />
-            <Button x:Name="InkBounds" 
-                Content="Show corners" 
-                Width="120" 
-                Height="30"
-                Margin="0 6 0 40" 
-                Click="ShowCornersButton_Click" />
             <Button HorizontalAlignment="Right" 
                 Content="Close" 
                 Padding="20 4 20 4" 
